@@ -194,9 +194,7 @@ struct ContentView: View {
                         Text("Word, speech, and media controls moved to Settings.")
                             .font(.caption)
                             .foregroundColor(.secondary)
-                        Button(action: {
-                            openAppSettingsWindow()
-                        }) {
+                        SettingsLink {
                             Text("Open Settings")
                         }
                         .buttonStyle(.plain)
@@ -216,9 +214,7 @@ struct ContentView: View {
                     Text("Typing languages, set mode, and flashcards are in Settings.")
                         .font(.caption)
                         .foregroundColor(.secondary)
-                    Button(action: {
-                        openAppSettingsWindow()
-                    }) {
+                    SettingsLink {
                         Text("Open Settings")
                     }
                     .buttonStyle(.plain)
@@ -231,9 +227,7 @@ struct ContentView: View {
                         .foregroundColor(.secondary)
 
                     HStack(spacing: 16) {
-                        Button(action: {
-                            openAppSettingsWindow()
-                        }) {
+                        SettingsLink {
                             Text("Settings")
                         }
                         .buttonStyle(.plain)

@@ -12,7 +12,6 @@ let AnimationWindowID = "animationTransparentWindow"
 let WordDisplayWindowID = "wordDisplayTransparentWindow"
 let VisualEffectsWindowID = "visualEffectsTransparentWindow"
 let MainWindowID = "main"
-let SettingsWindowID = "settings"
 let LearningPoolWindowID = "learningPoolWindow"
 let FeaturedWordsWindowID = "featuredWordsWindow"
 
@@ -47,7 +46,6 @@ struct BabyKeyboardLockApp: App {
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem!
     private var mainWindow: NSWindow?
-    private var settingsWindow: NSWindow?
     private var cancellables = Set<AnyCancellable>()
     private var screenObserver: Any?
     
@@ -179,28 +177,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func hideMainWindow() {
         mainWindow?.orderOut(nil)
     }
-
-    func showSettingsWindow() {
-        if let window = settingsWindow {
-            window.makeKeyAndOrderFront(nil)
-            NSApp.activate(ignoringOtherApps: true)
-            return
-        }
-
-        let controller = NSHostingController(rootView: AdvancedSettingsView())
-        let window = NSWindow(contentViewController: controller)
-        window.title = "Settings"
-        window.identifier = NSUserInterfaceItemIdentifier(SettingsWindowID)
-        window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
-        window.setFrameAutosaveName("Settings Window")
-        window.minSize = NSSize(width: 720, height: 560)
-        window.setContentSize(NSSize(width: 720, height: 560))
-        window.isReleasedWhenClosed = false
-        window.center()
-        window.makeKeyAndOrderFront(nil)
-        NSApp.activate(ignoringOtherApps: true)
-        settingsWindow = window
-    }
     
     @discardableResult
     func hidePopover() -> Bool {
@@ -260,9 +236,4 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let message = "Catalog has missing translations (\(missingSummary.joined(separator: ", ")))."
         NSLog("%@", "WARNING: \(message)")
     }
-}
-
-func openAppSettingsWindow() {
-    guard let appDelegate = NSApp.delegate as? AppDelegate else { return }
-    appDelegate.showSettingsWindow()
 }

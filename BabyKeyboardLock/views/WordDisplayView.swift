@@ -135,7 +135,7 @@ struct WordDisplayView: View {
                                 Image(nsImage: customImage)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(height: cardHeight)
+                                    .frame(width: cardHeight, height: cardHeight)
                                     .rotationEffect(.degrees(customImageRotation))
                             }
                             // Fallback to baby image if it's the baby's name (backward compatibility)
@@ -144,14 +144,14 @@ struct WordDisplayView: View {
                                 Image(nsImage: babyImage)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(height: cardHeight)
+                                    .frame(width: cardHeight, height: cardHeight)
                             }
                             // Finally try generated flashcard images
                             else if let image = wordForMedia.flashcardImage(style: activeFlashcardStyle) {
                                 image
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(height: cardHeight)
+                                    .frame(width: cardHeight, height: cardHeight)
                             }
                         }
 
