@@ -36,6 +36,7 @@ struct ContentView: View {
     @AppStorage("selectedLockEffect") var selectedLockEffect: LockEffect = .none
     @AppStorage("selectedTranslationLanguage") var selectedTranslationLanguage: TranslationLanguage = .none
     @AppStorage("selectedWordSetType") var savedWordSetType: String = WordSetType.randomShortWords.rawValue
+    @AppStorage("wordDisplayDuration") var wordDisplayDuration: Double = DEFAULT_WORD_DISPLAY_DURATION
     
     @State private var showWordSetEditor = false
     @State private var showRandomWordEditor = false
@@ -160,6 +161,26 @@ struct ContentView: View {
                             .foregroundColor(.secondary)
                     }
                 }
+                
+                // Word display duration settings - moved outside the if block to always appear in speakAKeyWord mode
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("Word Display Duration: \(String(format: "%.1f", wordDisplayDuration))s")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
+                    HStack {
+                        Text("1s")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                        
+                        Slider(value: $wordDisplayDuration, in: 1...10, step: 0.5)
+                        
+                        Text("10s")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .padding(.top, 5)
             }
             
             if eventHandler.selectedLockEffect == .speakRandomWord {
@@ -191,6 +212,26 @@ struct ContentView: View {
                 Text("Contains \(RandomWordList.shared.words.count) words")
                     .font(.caption)
                     .foregroundColor(.secondary)
+                
+                // Word display duration settings
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("Word Display Duration: \(String(format: "%.1f", wordDisplayDuration))s")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    
+                    HStack {
+                        Text("1s")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                        
+                        Slider(value: $wordDisplayDuration, in: 1...10, step: 0.5)
+                        
+                        Text("10s")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
+                }
+                .padding(.top, 5)
             }
             
             Toggle(isOn: $lockKeyboardOnLaunch) {
@@ -217,7 +258,8 @@ struct ContentView: View {
             }
             
             debugPrint("onAppear --- ")
-            guard let window = NSApp.windows.first(where: { $0.identifier?.rawValue == MainWindowID }) else { return}
+            // Check if main window exists but don't create an unused variable
+            _ = NSApp.windows.first(where: { $0.identifier?.rawValue == MainWindowID })
         }
         .sheet(isPresented: $showWordSetEditor) {
             WordSetEditorView()
@@ -240,7 +282,7 @@ struct ContentView: View {
     private func showOrCloseAnimationWindow(isLocked: Bool) {
         if (!isLocked) {
             NSApp.windows.forEach { window in
-                if window.identifier?.rawValue == AnimationWindowID {
+                if window.identifier?.rawValue == AnimationWindowID || window.identifier?.rawValue == WordDisplayWindowID {
                     window.close()
                 }
             }
