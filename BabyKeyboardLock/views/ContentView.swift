@@ -43,6 +43,8 @@ struct ContentView: View {
     @StateObject private var customWordSetsManager = CustomWordSetsManager.shared
     
     @State var hoveringMoreButton: Bool = false
+    @State private var babyName: String = ""
+    
     var body: some View {
        VStack(alignment: .leading, spacing: 20) {
             HStack{
@@ -124,6 +126,24 @@ struct ContentView: View {
                     selectedTranslationLanguage = newVal
                 }
                 
+                // Baby's name input field
+                HStack {
+                    Text("Baby's Name")
+                        .foregroundColor(.secondary)
+                        .font(.subheadline)
+                    
+                    Spacer()
+                    
+                    TextField("Enter name", text: $babyName, onCommit: {
+                        // Do nothing, prevents form submission behavior
+                    })
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .frame(width: 150)
+                        .onChange(of: babyName) { newValue in
+                            RandomWordList.shared.setBabyName(newValue)
+                        }
+                }
+                
                 // Word set selection
                 Picker("Word Set", selection: $eventHandler.selectedWordSetType) {
                     ForEach(WordSetType.allCases) { type in
@@ -194,6 +214,24 @@ struct ContentView: View {
                     selectedTranslationLanguage = newVal
                 }
                 
+                // Baby's name input field
+                HStack {
+                    Text("Baby's Name")
+                        .foregroundColor(.secondary)
+                        .font(.subheadline)
+                    
+                    Spacer()
+                    
+                    TextField("Enter name", text: $babyName, onCommit: {
+                        // Do nothing, prevents form submission behavior
+                    })
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+                        .frame(width: 150)
+                        .onChange(of: babyName) { newValue in
+                            RandomWordList.shared.setBabyName(newValue)
+                        }
+                }
+                
                 HStack {
                     Text("Random words")
                         .foregroundColor(.secondary)
@@ -257,6 +295,9 @@ struct ContentView: View {
                 eventHandler.selectedWordSetType = type
             }
             
+            // Load the baby's name
+            babyName = RandomWordList.shared.babyName
+            
             debugPrint("onAppear --- ")
             // Check if main window exists but don't create an unused variable
             _ = NSApp.windows.first(where: { $0.identifier?.rawValue == MainWindowID })
@@ -289,25 +330,45 @@ struct ContentView: View {
             return
         }
            
-        if animationWindow != nil {
-            animationWindow?.orderFront(self)
-            return
+        // Check if animation window exists
+        let existingAnimationWindow = NSApp.windows.first { $0.identifier?.rawValue == AnimationWindowID }
+        if existingAnimationWindow != nil {
+            existingAnimationWindow?.orderFront(self)
+        } else {
+            // Create the animation window
+            animationWindow = AnimationView()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .edgesIgnoringSafeArea(.all)
+                .onAppear {
+                    // Make the window transparent
+                    guard let window = NSApp.windows.first(where: { $0.identifier?.rawValue == AnimationWindowID }) else { return }
+                    window.isOpaque = false
+                    window.level = .floating
+                    window.titlebarAppearsTransparent = true
+                }
+                .openInWindow(id: AnimationWindowID, sender: self)
         }
         
-        animationWindow = AnimationView()
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
-            .edgesIgnoringSafeArea(.all)
-            .onAppear {
-                // Make the window transparent
-                guard let window = NSApp.windows.first(where: { $0.identifier?.rawValue == AnimationWindowID }) else { return }
-                window.isOpaque = false
-                // window.backgroundColor = NSColor.clear
-                window.level = .floating
-                window.titlebarAppearsTransparent = true
-
-                // window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
-            }
-            .openInWindow(id: AnimationWindowID, sender: self)
+        // Check if word display window exists
+        let existingWordDisplayWindow = NSApp.windows.first { $0.identifier?.rawValue == WordDisplayWindowID }
+        if existingWordDisplayWindow != nil {
+            existingWordDisplayWindow?.orderFront(self)
+        } else {
+            // Create the word display window
+            WordDisplayView()
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .edgesIgnoringSafeArea(.all)
+                .onAppear {
+                    // Make the window transparent
+                    guard let window = NSApp.windows.first(where: { $0.identifier?.rawValue == WordDisplayWindowID }) else { return }
+                    window.isOpaque = false
+                    window.backgroundColor = NSColor.clear
+                    window.level = .floating
+                    window.ignoresMouseEvents = true
+                    window.titlebarAppearsTransparent = true
+                }
+                .openInWindow(id: WordDisplayWindowID, sender: self)
+        }
     }
     
 }
