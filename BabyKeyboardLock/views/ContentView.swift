@@ -41,6 +41,7 @@ struct ContentView: View {
     @ObservedObject var eventHandler: EventHandler = EventHandler.shared
     @State private var selectedCategory: EffectCategory = .none
     @AppStorage("showFlashcards") private var showFlashcards: Bool = false
+    @AppStorage("flashcardStyle") private var flashcardStyle: FlashcardStyle = .none
     
     @AppStorage("lockKeyboardOnLaunch") private var lockKeyboardOnLaunch: Bool = false
     @AppStorage("launchOnStartup") private var launchOnStartup: Bool = false {
@@ -182,6 +183,14 @@ struct ContentView: View {
                         Text("Show Flashcards")
                     }
                     .toggleStyle(CheckboxToggleStyle())
+                    
+                    if showFlashcards {
+                        Text("Flashcard Style")
+                            .foregroundColor(.secondary)
+                            .font(.subheadline)
+                        
+                        FlashcardStylePicker(selectedStyle: $flashcardStyle)
+                    }
                     
                     Toggle(isOn: $eventHandler.usePersonalVoice) {
                         HStack {
@@ -331,7 +340,7 @@ struct ContentView: View {
             )
         }
         .padding(20)
-        .frame(width: 320)
+        .frame(width: 600)
         .onAppear {
             debugPrint("ContentView appeared with height: \(preferredHeight)")
             updateWindowForHeight(preferredHeight)
@@ -394,7 +403,7 @@ struct ContentView: View {
         guard height > 0 else { return }
         
         if let window = NSApp.windows.first(where: { $0.title == Bundle.applicationName || $0.title.isEmpty }) {
-            let contentSize = NSSize(width: 320, height: height)
+            let contentSize = NSSize(width: 380, height: height)
             let frameSize = window.frameRect(forContentRect: NSRect(origin: .zero, size: contentSize)).size
             
             // Preserve the window's x and y position
