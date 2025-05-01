@@ -7,8 +7,16 @@
 
 import SwiftUI
 import AppKit
+import AVFoundation
 
-
+// Add custom preference key for height
+struct ContentHeightKey: PreferenceKey {
+    static var defaultValue: CGFloat = 0
+    
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
+    }
+}
 
 struct HoverableMenuStyle: MenuStyle {
     @State private var isHovered = false
@@ -31,12 +39,22 @@ struct HoverableMenuStyle: MenuStyle {
 struct ContentView: View {
     @State private var animationWindow: NSWindow?
     @ObservedObject var eventHandler: EventHandler = EventHandler.shared
+    @State private var selectedCategory: EffectCategory = .none
+    @AppStorage("showFlashcards") private var showFlashcards: Bool = false
     
     @AppStorage("lockKeyboardOnLaunch") private var lockKeyboardOnLaunch: Bool = false
+    @AppStorage("launchOnStartup") private var launchOnStartup: Bool = false {
+        didSet {
+            LaunchAtStartup.shared.setEnabled(launchOnStartup)
+        }
+    }
     @AppStorage("selectedLockEffect") var selectedLockEffect: LockEffect = .none
     @AppStorage("selectedTranslationLanguage") var selectedTranslationLanguage: TranslationLanguage = .none
     @AppStorage("selectedWordSetType") var savedWordSetType: String = WordSetType.randomShortWords.rawValue
     @AppStorage("wordDisplayDuration") var wordDisplayDuration: Double = DEFAULT_WORD_DISPLAY_DURATION
+    @AppStorage("usePersonalVoice") var usePersonalVoice: Bool = false
+    @AppStorage("throttleInterval") private var savedThrottleInterval: Double = 1.0
+    @AppStorage("confettiFadeTime") private var savedConfettiFadeTime: Double = 5.0
     
     @State private var showWordSetEditor = false
     @State private var showRandomWordEditor = false
@@ -45,39 +63,37 @@ struct ContentView: View {
     @State var hoveringMoreButton: Bool = false
     @State private var babyName: String = ""
     
+    // Calculate preferred content size based on effect type
+    private var preferredHeight: CGFloat {
+        var height: CGFloat = 300 // Base height for lock toggle and effect picker
+        
+        if !eventHandler.accessibilityPermissionGranted {
+            height += 120 // Extra space for permission message
+        }
+        
+        // Add space for voice options
+        if eventHandler.selectedLockEffect == .speakTheKey || 
+           eventHandler.selectedLockEffect == .speakAKeyWord || 
+           eventHandler.selectedLockEffect == .speakRandomWord {
+            height += 60
+        }
+        
+        // Add space for word-related options
+        if eventHandler.selectedLockEffect == .speakAKeyWord {
+            height += 300 // Translation picker, baby name, word set selection, edit buttons
+        }
+        
+        // Add space for random word options
+        if eventHandler.selectedLockEffect == .speakRandomWord {
+            height += 180 // Translation picker, edit button
+        }
+        
+        debugPrint("Calculated preferred height: \(height) for effect: \(eventHandler.selectedLockEffect)")
+        return height
+    }
+    
     var body: some View {
-       VStack(alignment: .leading, spacing: 20) {
-            HStack{
-                Spacer() // push the button to right
-                Menu() {
-                    Button("About") {
-                        AboutView().openInWindow(id: "About", sender: self, focus: true)
-                    }
-                    
-                    Button("Quit \(Bundle.applicationName)") {
-                        NSApp.terminate(nil)
-                    }
-                } label: {
-                    Label("", systemImage: "ellipsis").font(.callout)
-                        .onHover { _ in
-                            // TODO
-                        }
-                }
-                .menuStyle(HoverableMenuStyle())
-                .menuStyle(BorderlessButtonMenuStyle())
-                .apply {
-                    if #available(macOS 12.0, *) {
-                          $0.menuIndicator(.hidden)
-                      } else {
-                          $0
-                      }
-                }
-                .fixedSize()
-                .onHover { _ in
-                    hoveringMoreButton = true
-                }
-            }
-            
+        VStack(alignment: .leading, spacing: 22) {
             Toggle(isOn: $eventHandler.isLocked)
             {
                 Label(
@@ -91,222 +107,332 @@ struct ContentView: View {
             .scaledToFill()
             .disabled(!eventHandler.accessibilityPermissionGranted)
             .padding(.bottom, eventHandler.accessibilityPermissionGranted ? 20 : 5)
-            .onChange(of: eventHandler.isLocked) { newVal in
+            .onChange(of: eventHandler.isLocked) { oldVal, newVal in
                 playLockSound(isLocked: newVal)
-            }.onAppear(){
+            
                 if eventHandler.isLocked {
                     playLockSound(isLocked: true)
                 }
             }
             
-            if !eventHandler.accessibilityPermissionGranted {
-                Text("accessibility_permission_grant_hint \(Bundle.applicationName)")
-                    .opacity(eventHandler.accessibilityPermissionGranted ? 0 : 1)
-                    .font(.callout)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            Picker("Effect", selection: $eventHandler.selectedLockEffect) {
-                ForEach(LockEffect.allCases) { effect in
-                    Text(effect.localizedString)
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .onChange(of: eventHandler.selectedLockEffect) { newVal in
-                selectedLockEffect = newVal
-            }
-            
-            if eventHandler.selectedLockEffect == .speakAKeyWord {
-                Picker("Translation", selection: $eventHandler.selectedTranslationLanguage) {
-                    ForEach(TranslationLanguage.allCases) { language in
-                        Text(language.localizedString)
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .onChange(of: eventHandler.selectedTranslationLanguage) { newVal in
-                    selectedTranslationLanguage = newVal
+            Group {
+                if !eventHandler.accessibilityPermissionGranted {
+                    Text("accessibility_permission_grant_hint \(Bundle.applicationName)")
+                        .opacity(eventHandler.accessibilityPermissionGranted ? 0 : 1)
+                        .font(.callout)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 
-                // Baby's name input field
-                HStack {
-                    Text("Baby's Name")
-                        .foregroundColor(.secondary)
-                        .font(.subheadline)
-                    
-                    Spacer()
-                    
-                    TextField("Enter name", text: $babyName, onCommit: {
-                        // Do nothing, prevents form submission behavior
-                    })
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .frame(width: 150)
-                        .onChange(of: babyName) { newValue in
-                            RandomWordList.shared.setBabyName(newValue)
+                // Category selector
+                Picker("Category", selection: $selectedCategory) {
+                    ForEach(EffectCategory.allCases) { category in
+                        Text(category.rawValue).tag(category)
+                    }
+                }
+                .pickerStyle(.segmented)
+                .padding(.bottom, 10)
+                
+                // Effect selector based on category
+                if selectedCategory != .none {
+                    Picker("Effect", selection: $eventHandler.selectedLockEffect) {
+                        ForEach(LockEffect.allCases.filter { $0.category == selectedCategory }) { effect in
+                            Text(effect.localizedString).tag(effect)
                         }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 
-                // Word set selection
-                Picker("Word Set", selection: $eventHandler.selectedWordSetType) {
-                    ForEach(WordSetType.allCases) { type in
-                        Text(type.localizedString)
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .onChange(of: eventHandler.selectedWordSetType) { newVal in
-                    savedWordSetType = newVal.rawValue
-                    if newVal == .mainWords && customWordSetsManager.wordSets.isEmpty {
-                        // If switching to mainWords but no sets exist, show editor
-                        showWordSetEditor = true
+                // Visual effects settings
+                if selectedCategory == .visual {
+                    if eventHandler.selectedLockEffect == .confettiCannon {
+                        Group {
+                            Text("Delay between confetti (seconds)")
+                                .foregroundColor(.secondary)
+                                .font(.subheadline)
+                            
+                            HStack {
+                                Slider(value: $eventHandler.throttleInterval, in: 0.1...2.0, step: 0.1)
+                                    .onChange(of: eventHandler.throttleInterval) { _, newValue in
+                                        savedThrottleInterval = newValue
+                                    }
+                                Text(String(format: "%.1f", eventHandler.throttleInterval))
+                                    .frame(width: 35)
+                            }
+                            
+                            Text("Confetti fade time (seconds)")
+                                .foregroundColor(.secondary)
+                                .font(.subheadline)
+                                .padding(.top, 8)
+                            
+                            HStack {
+                                Slider(value: $eventHandler.confettiFadeTime, in: 1.0...10.0, step: 0.5)
+                                    .onChange(of: eventHandler.confettiFadeTime) { _, newValue in
+                                        savedConfettiFadeTime = newValue
+                                    }
+                                Text(String(format: "%.1f", eventHandler.confettiFadeTime))
+                                    .frame(width: 35)
+                            }
+                        }
                     }
                 }
                 
-                if eventHandler.selectedWordSetType == .mainWords {
+                // Words mode settings
+                if selectedCategory == .words {
+                    Toggle(isOn: $showFlashcards) {
+                        Text("Show Flashcards")
+                    }
+                    .toggleStyle(CheckboxToggleStyle())
+                    
+                    if showFlashcards {
+                        Text("Flashcard Style")
+                            .foregroundColor(.secondary)
+                            .font(.subheadline)
+                        
+                        FlashcardStylePicker(selectedStyle: .init(
+                            get: { UserDefaults.standard.flashcardStyle },
+                            set: { UserDefaults.standard.flashcardStyle = $0 }
+                        ))
+                    }
+                    
+                    Toggle(isOn: $eventHandler.usePersonalVoice) {
+                        HStack {
+                            Text("Use Personal Voice")
+                            
+                            Button(action: {
+                                let alert = NSAlert()
+                                alert.messageText = "About Personal Voice"
+                                alert.informativeText = "Personal Voice uses your own voice created in System Settings > Accessibility > Personal Voice. You need to create a Personal Voice before using this feature."
+                                alert.alertStyle = .informational
+                                alert.addButton(withTitle: "OK")
+                                alert.runModal()
+                            }) {
+                                Image(systemName: "info.circle")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                        }
+                    }
+                    .toggleStyle(CheckboxToggleStyle())
+                    .onChange(of: eventHandler.usePersonalVoice) { oldVal, newVal in
+                        usePersonalVoice = newVal
+                    }
+                    
+                    // Translation picker
+                    Picker("Translation", selection: $eventHandler.selectedTranslationLanguage) {
+                        ForEach(TranslationLanguage.allCases) { language in
+                            Text(language.localizedString)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .onChange(of: eventHandler.selectedTranslationLanguage) { oldVal, newVal in
+                        selectedTranslationLanguage = newVal
+                    }
+                    
+                    // Baby's name input field
                     HStack {
-                        Text("Main words")
+                        Text("Baby's Name")
                             .foregroundColor(.secondary)
                             .font(.subheadline)
                         
                         Spacer()
                         
-                        Button(action: {
-                            showWordSetEditor = true
-                        }) {
-                            Image(systemName: "pencil")
-                        }
-                        .buttonStyle(PlainButtonStyle())
+                        TextField("Enter name", text: $babyName, onCommit: {
+                            // Do nothing, prevents form submission behavior
+                        })
+                            .textFieldStyle(RoundedBorderTextFieldStyle())
+                            .frame(width: 150)
+                            .onChange(of: babyName) { oldValue, newValue in
+                                RandomWordList.shared.setBabyName(newValue)
+                            }
                     }
                     
-                    if let currentSet = customWordSetsManager.currentWordSet {
-                        Text("Contains \(currentSet.words.count) words")
+                    // Word display duration settings
+                    VStack(alignment: .leading, spacing: 5) {
+                        Text("Word Display Duration: \(String(format: "%.1f", wordDisplayDuration))s")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        
+                        HStack {
+                            Text("1s")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                            
+                            Slider(value: $wordDisplayDuration, in: 1...10, step: 0.5)
+                            
+                            Text("10s")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    .padding(.top, 5)
+                    
+                    // Random words editor button
+                    if eventHandler.selectedLockEffect == .speakRandomWord {
+                        HStack {
+                            Text("Random words")
+                                .foregroundColor(.secondary)
+                                .font(.subheadline)
+                            
+                            Spacer()
+                            
+                            Button(action: {
+                                showRandomWordEditor = true
+                            }) {
+                                Image(systemName: "pencil")
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                        }
+                        
+                        Text("Contains \(RandomWordList.shared.words.count) words")
                             .font(.caption)
                             .foregroundColor(.secondary)
                     }
                 }
                 
-                // Word display duration settings - moved outside the if block to always appear in speakAKeyWord mode
-                VStack(alignment: .leading, spacing: 5) {
-                    Text("Word Display Duration: \(String(format: "%.1f", wordDisplayDuration))s")
-                        .font(.caption)
+                Toggle(isOn: $lockKeyboardOnLaunch) {
+                    Text("Lock keyboard on launch")
+                }
+                .toggleStyle(CheckboxToggleStyle())
+                
+                Toggle(isOn: $launchOnStartup) {
+                    Text("Launch on startup")
+                }
+                .toggleStyle(CheckboxToggleStyle())
+                
+                Spacer()
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Keyboard shortcut: Ctrl + Option + U")
+                        .font(.footnote)
+                        .fixedSize(horizontal: false, vertical: true)
                         .foregroundColor(.secondary)
+                    
+                    Divider()
+                        .padding(.vertical, 8)
                     
                     HStack {
-                        Text("1s")
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
+                        Button("About") {
+                            AboutView().openInWindow(id: "About", sender: self, focus: true)
+                        }
+                        .buttonStyle(.plain)
                         
-                        Slider(value: $wordDisplayDuration, in: 1...10, step: 0.5)
+                        Spacer()
                         
-                        Text("10s")
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
+                        Button("Quit \(Bundle.applicationName)") {
+                            NSApp.terminate(nil)
+                        }
+                        .buttonStyle(.plain)
                     }
+                    .padding(.bottom, 4)
                 }
-                .padding(.top, 5)
             }
-            
-            if eventHandler.selectedLockEffect == .speakRandomWord {
-                Picker("Translation", selection: $eventHandler.selectedTranslationLanguage) {
-                    ForEach(TranslationLanguage.allCases) { language in
-                        Text(language.localizedString)
-                    }
-                }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .onChange(of: eventHandler.selectedTranslationLanguage) { newVal in
-                    selectedTranslationLanguage = newVal
-                }
-                
-                // Baby's name input field
-                HStack {
-                    Text("Baby's Name")
-                        .foregroundColor(.secondary)
-                        .font(.subheadline)
-                    
-                    Spacer()
-                    
-                    TextField("Enter name", text: $babyName, onCommit: {
-                        // Do nothing, prevents form submission behavior
-                    })
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
-                        .frame(width: 150)
-                        .onChange(of: babyName) { newValue in
-                            RandomWordList.shared.setBabyName(newValue)
+            // Get the actual size of this content
+            .background(
+                GeometryReader { geo in
+                    Color.clear
+                        .preference(key: ContentHeightKey.self, value: geo.size.height)
+                        .onPreferenceChange(ContentHeightKey.self) { height in
+                            debugPrint("Content height changed to: \(height)")
+                            DispatchQueue.main.async {
+                                updateWindowForHeight(height + 160) // Add padding and space for top elements
+                            }
                         }
                 }
-                
-                HStack {
-                    Text("Random words")
-                        .foregroundColor(.secondary)
-                        .font(.subheadline)
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        showRandomWordEditor = true
-                    }) {
-                        Image(systemName: "pencil")
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                }
-                
-                Text("Contains \(RandomWordList.shared.words.count) words")
-                    .font(.caption)
-                    .foregroundColor(.secondary)
-                
-                // Word display duration settings
-                VStack(alignment: .leading, spacing: 5) {
-                    Text("Word Display Duration: \(String(format: "%.1f", wordDisplayDuration))s")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                    
-                    HStack {
-                        Text("1s")
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                        
-                        Slider(value: $wordDisplayDuration, in: 1...10, step: 0.5)
-                        
-                        Text("10s")
-                            .font(.caption2)
-                            .foregroundColor(.secondary)
-                    }
-                }
-                .padding(.top, 5)
-            }
-            
-            Toggle(isOn: $lockKeyboardOnLaunch) {
-                Text("Lock keyboard on launch")
-            }
-            .toggleStyle(CheckboxToggleStyle())
-            // .frame(maxWidth: .infinity, alignment: .leading)
-            
-            Spacer()
-            Text("unlock_shortcut_hint")
-                .font(.footnote)
-                .fixedSize(horizontal: false, vertical: true)
+            )
         }
-        .padding()
-        .frame(width: 300, height: 400)
-        .onChange(of: eventHandler.isLocked) { newVal in
-            showOrCloseAnimationWindow(isLocked: newVal)
-        }.onReceive(eventHandler.$isLocked) { newVal in
-            showOrCloseAnimationWindow(isLocked: newVal)
-        }.onAppear() {
-            // Update the event handler with the saved word set type
+        .padding(20)
+        .frame(width: 600)
+        .onAppear {
+            debugPrint("ContentView appeared with height: \(preferredHeight)")
+            updateWindowForHeight(preferredHeight)
+            
+            // Update initial values
             if let type = WordSetType(rawValue: savedWordSetType) {
                 eventHandler.selectedWordSetType = type
             }
-            
-            // Load the baby's name
             babyName = RandomWordList.shared.babyName
+            eventHandler.usePersonalVoice = usePersonalVoice
+            launchOnStartup = LaunchAtStartup.shared.isEnabled()
             
-            debugPrint("onAppear --- ")
-            // Check if main window exists but don't create an unused variable
-            _ = NSApp.windows.first(where: { $0.identifier?.rawValue == MainWindowID })
+            // Set initial category based on current effect
+            selectedCategory = eventHandler.selectedLockEffect.category
+            
+            // Set speak random word as default for word mode
+            if selectedCategory == .words && eventHandler.selectedLockEffect == .speakAKeyWord {
+                eventHandler.selectedLockEffect = .speakRandomWord
+            }
+        }
+        .onChange(of: eventHandler.isLocked) { oldVal, newVal in
+            playLockSound(isLocked: newVal)
+        }
+        .onReceive(eventHandler.$isLocked) { newVal in
+            playLockSound(isLocked: newVal)
+        }
+        .onChange(of: eventHandler.selectedLockEffect) { oldVal, newVal in
+            selectedLockEffect = newVal
+            // Force height recalculation immediately since preference might not trigger
+            DispatchQueue.main.async {
+                updateWindowForHeight(preferredHeight)
+            }
+        }
+        .onChange(of: eventHandler.accessibilityPermissionGranted) { _, _ in
+            // Force height recalculation
+            DispatchQueue.main.async {
+                updateWindowForHeight(preferredHeight)
+            }
+        }
+        .onChange(of: selectedCategory) { oldValue, newValue in
+            // When changing category, select appropriate default effect
+            if newValue == .none {
+                eventHandler.selectedLockEffect = .none
+            } else if newValue == .visual {
+                eventHandler.selectedLockEffect = .confettiCannon
+            } else if newValue == .words {
+                eventHandler.selectedLockEffect = .speakRandomWord
+            }
         }
         .sheet(isPresented: $showWordSetEditor) {
             WordSetEditorView()
         }
         .sheet(isPresented: $showRandomWordEditor) {
             RandomWordEditorView()
+        }
+    }
+    
+    private func updateWindowForHeight(_ height: CGFloat) {
+        debugPrint("Updating window to height: \(height)")
+        guard height > 0 else { return }
+        
+        if let window = NSApp.windows.first(where: { $0.title == Bundle.applicationName || $0.title.isEmpty }) {
+            let contentSize = NSSize(width: 380, height: height)
+            let frameSize = window.frameRect(forContentRect: NSRect(origin: .zero, size: contentSize)).size
+            
+            // Preserve the window's x and y position
+            var newFrame = window.frame
+            newFrame.size = frameSize
+            
+            // Force immediate resize without animation for more reliable results
+            window.setFrame(newFrame, display: true)
+            
+            // Also update contentSize directly
+            window.contentView?.setFrameSize(contentSize)
+            
+            // Log after resize
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                debugPrint("Window size after direct resize: \(window.frame.size.height)")
+                
+                // If size doesn't match, try again with animation
+                if abs(window.frame.size.height - frameSize.height) > 5 {
+                    debugPrint("Size mismatch, trying again with animation")
+                    NSAnimationContext.runAnimationGroup { context in
+                        context.duration = 0.2
+                        window.animator().setFrame(newFrame, display: true)
+                    }
+                }
+            }
+        } else {
+            debugPrint("Could not find window to resize")
         }
     }
     
@@ -429,7 +555,7 @@ struct WordSetEditorView: View {
                 }
                 .disabled(words.isEmpty)
             }
-        }
+        } 
         .padding()
         .frame(width: 400, height: 400)
         .onAppear {
@@ -442,7 +568,7 @@ struct WordSetEditorView: View {
     private func addWord() {
         guard !newEnglishWord.isEmpty && !newTranslation.isEmpty else { return }
         
-        let newWord = CustomWordPair(english: newEnglishWord, translation: newTranslation)
+        let newWord = CustomWordPair(english: newEnglishWord, translation: newTranslation) 
         words.append(newWord)
         
         // Clear the input fields

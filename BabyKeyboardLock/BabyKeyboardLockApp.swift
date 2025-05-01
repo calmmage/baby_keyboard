@@ -10,6 +10,7 @@ import Combine
 
 let AnimationWindowID = "animationTransparentWindow"
 let WordDisplayWindowID = "wordDisplayTransparentWindow"
+let VisualEffectsWindowID = "visualEffectsTransparentWindow"
 let MainWindowID = "main"
 
 @main
@@ -39,10 +40,26 @@ struct BabyKeyboardLockApp: App {
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem!
     private var popover: NSPopover!
-    private var cancellables = Set<AnyCancellable>() // Add this property
+    private var cancellables = Set<AnyCancellable>()
+    private var screenObserver: Any?
+    
+    deinit {
+        if let observer = screenObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+    }
+    
     @MainActor func applicationDidFinishLaunching(_ notification: Notification) {
-//        NSApplication.shared.setActivationPolicy(.regular)
-//        NSApplication.shared.activate(ignoringOtherApps: true)
+        // Add screen configuration change observer
+        screenObserver = NotificationCenter.default.addObserver(
+            forName: NSApplication.didChangeScreenParametersNotification,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                self?.updateWindowFrames()
+            }
+        }
         
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         
@@ -109,6 +126,24 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             wordDisplayWindow.ignoresMouseEvents = true // Prevent mouse interaction
             wordDisplayWindow.titlebarAppearsTransparent = true
             wordDisplayWindow.orderFrontRegardless()
+            
+            // Create the visual effects window for additional animations
+            let visualEffectsWindow = NSWindow(
+                contentRect: NSRect(x: 0, y: 0, width: NSScreen.main?.frame.width ?? 1200, height: NSScreen.main?.frame.height ?? 800),
+                styleMask: [.borderless, .fullSizeContentView],
+                backing: .buffered,
+                defer: false
+            )
+            visualEffectsWindow.identifier = NSUserInterfaceItemIdentifier(VisualEffectsWindowID)
+            visualEffectsWindow.backgroundColor = .clear
+            visualEffectsWindow.isReleasedWhenClosed = false
+            visualEffectsWindow.center()
+            visualEffectsWindow.setFrameAutosaveName("Visual Effects Window")
+            visualEffectsWindow.contentView = NSHostingView(rootView: VisualEffectsView())
+            visualEffectsWindow.level = .floating 
+            visualEffectsWindow.ignoresMouseEvents = true
+            visualEffectsWindow.titlebarAppearsTransparent = true
+            visualEffectsWindow.orderFrontRegardless()
         }
     }
     
@@ -151,13 +186,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         case .leftMouseUp:
             EventHandler.shared.setLocked(isLocked: !EventHandler.shared.isLocked)
         case .rightMouseUp:
-            if popover.isShown {
-                hidePopover()
-            } else {
+            // if popover.isShown {
+            //     hidePopover()
+            // } else {
                 showPopover()
-            }
+            // }
         default:
             return
+        }
+    }
+    
+    private func updateWindowFrames() {
+        guard let mainScreen = NSScreen.main else { return }
+        let frame = NSRect(x: 0, y: 0, width: mainScreen.frame.width, height: mainScreen.frame.height)
+        
+        // Update all transparent windows
+        NSApp.windows.forEach { window in
+            if let identifier = window.identifier?.rawValue,
+               [AnimationWindowID, WordDisplayWindowID, VisualEffectsWindowID].contains(identifier) {
+                window.setFrame(frame, display: true)
+            }
         }
     }
 }

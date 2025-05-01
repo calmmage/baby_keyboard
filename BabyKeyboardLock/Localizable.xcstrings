@@ -2,6 +2,7 @@
   "sourceLanguage" : "en",
   "strings" : {
     "" : {
+      "extractionState" : "stale",
       "localizations" : {
         "zh-Hans" : {
           "stringUnit" : {
@@ -58,7 +59,16 @@
     "Cancel" : {
 
     },
+    "Category" : {
+
+    },
+    "Confetti fade time (seconds)" : {
+
+    },
     "Contains %lld words" : {
+
+    },
+    "Delay between confetti (seconds)" : {
 
     },
     "Edit the words used in 'Main Words' set" : {
@@ -118,10 +128,19 @@
         }
       }
     },
+    "Flashcard Style" : {
+
+    },
     "For more information please visit our website" : {
 
     },
     "https://keyboardlock.app" : {
+
+    },
+    "Keyboard shortcut: Ctrl + Option + U" : {
+
+    },
+    "Launch on startup" : {
 
     },
     "Lock" : {
@@ -192,19 +211,41 @@
         }
       }
     },
+    "LockEffect.animals" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bouncing Animals"
+          }
+        }
+      }
+    },
+    "LockEffect.bubbles" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Floating Bubbles"
+          }
+        }
+      }
+    },
     "LockEffect.confettiCannon" : {
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Konfetti"
+            "value" : "Konfettikanone"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Confetti"
+            "value" : "Confetti Cannon"
           }
         },
         "zh-Hans" : {
@@ -234,6 +275,17 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "无效果"
+          }
+        }
+      }
+    },
+    "LockEffect.rainbowTrail" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rainbow Trail"
           }
         }
       }
@@ -295,8 +347,16 @@
         }
       }
     },
-    "Main words" : {
-
+    "LockEffect.stars" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Twinkling Stars"
+          }
+        }
+      }
     },
     "Main Words" : {
 
@@ -330,6 +390,9 @@
 
     },
     "Save" : {
+
+    },
+    "Show Flashcards" : {
 
     },
     "Translation" : {
@@ -561,10 +624,10 @@
         }
       }
     },
-    "Word Display Duration: %@s" : {
+    "Use Personal Voice" : {
 
     },
-    "Word Set" : {
+    "Word Display Duration: %@s" : {
 
     },
     "WordSetType.mainWords" : {
