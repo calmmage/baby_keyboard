@@ -441,7 +441,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 0.3.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.fangxing.BabyKeyboardLockDebug;
+				PRODUCT_BUNDLE_IDENTIFIER = com.petrlavrov.BabyKeyboardLockDebug;
 				PRODUCT_NAME = "$(TARGET_NAME) Debug";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_ENABLE_OPAQUE_TYPE_ERASURE = No;
@@ -479,7 +479,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 0.3.1;
-				PRODUCT_BUNDLE_IDENTIFIER = com.fangxing.BabyKeyboardLock;
+				PRODUCT_BUNDLE_IDENTIFIER = com.petrlavrov.BabyKeyboardLock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_ENABLE_OPAQUE_TYPE_ERASURE = No;
@@ -500,7 +500,7 @@
 				INFOPLIST_FILE = "BabyKeyboardLockTests-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.fangxing.BabyKeyboardLockTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.petrlavrov.BabyKeyboardLockTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -519,7 +519,7 @@
 				INFOPLIST_FILE = "BabyKeyboardLockTests-Info.plist";
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.fangxing.BabyKeyboardLockTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.petrlavrov.BabyKeyboardLockTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -536,7 +536,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.fangxing.BabyKeyboardLockUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.petrlavrov.BabyKeyboardLockUITests;
 				PRODUCT_NAME = "$(TARGET_NAME) Debug";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
@@ -553,7 +553,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.fangxing.BabyKeyboardLockUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.petrlavrov.BabyKeyboardLockUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
