@@ -278,48 +278,21 @@ class EventEffectHandler {
     private var wordSetType: WordSetType = .randomShortWords
     private let customWordSetsManager = CustomWordSetsManager.shared
     
-    private let synthesizer = NSSpeechSynthesizer()
     private let synth = AVSpeechSynthesizer()
     var translationLanguage: TranslationLanguage = .none
+    var usePersonalVoice: Bool = false
     
     func handle(event: CGEvent, eventType: CGEventType, selectedLockEffect: LockEffect) -> String {
-        let keyCode = event.getIntegerValueField(.keyboardEventKeycode)
-        let source = TISCopyCurrentKeyboardInputSource().takeRetainedValue()
-        var keyStr = ""
-        // for virtual keys
-        guard let layoutData = TISGetInputSourceProperty(source, kTISPropertyUnicodeKeyLayoutData) else {
-            return ""
-        }
-        // Properly cast the CFTypeRef to CFData
-        let cfData = unsafeBitCast(layoutData, to: CFData.self)
-        let ptr = CFDataGetBytePtr(cfData)
-        guard let safePtr = ptr else {
-            return ""
-        }
-        let keyLayout = safePtr.withMemoryRebound(to: UCKeyboardLayout.self, capacity: 1) { $0 }
-        var deadKeyState: UInt32 = 0
-        let maxLength = 4
-        var actualLength = 0
-        var actualStr = [UniChar](repeating: 0, count: maxLength)
-        _ = UCKeyTranslate(keyLayout, UInt16(keyCode), UInt16(kUCKeyActionDisplay),
-                      0, UInt32(LMGetKbdType()), OptionBits(kUCKeyTranslateNoDeadKeysMask),
-                      &deadKeyState, maxLength, &actualLength, &actualStr)
-        
-        
-        // debugPrint("Key code: \(actualStr) \(keyStr) \(keyCode) \([keyCode])")
-        // keyString
-        if actualLength > 0 {
-            keyStr = String(utf16CodeUnits: actualStr, count: actualLength)
-        }
+        // Get the key string
+        let keyStr = getKeyString(event: event)
         
         switch selectedLockEffect {
         case .none:
+            // Simple sound playing without checking if already playing
             NSSound(named: "bottle")?.play()
-            // This is the keyString
             return keyStr
         case .confettiCannon:
             // Show confetti
-            // This is the keyString
             return keyStr
         case .speakTheKey:
             // Speak the letter
@@ -327,7 +300,6 @@ class EventEffectHandler {
             let utterance = createUtterance(for: keyStr)
             synth.speak(utterance)
             
-            // This is the keyString
             return keyStr
         case .speakAKeyWord:
             // Speak a word that starts with the letter
@@ -343,7 +315,7 @@ class EventEffectHandler {
                 synth.speak(englishUtterance)
                 
                 // Then with a slight delay, speak the translation
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + EventHandler.shared.wordTranslationDelay) {
                     let translationUtterance: AVSpeechUtterance
                     
                     switch self.translationLanguage {
@@ -404,7 +376,7 @@ class EventEffectHandler {
                 synth.speak(englishUtterance)
                 
                 // Then with a slight delay, speak the translation
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+                DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + EventHandler.shared.wordTranslationDelay) {
                     let translationUtterance: AVSpeechUtterance
                     
                     switch self.translationLanguage {
@@ -435,6 +407,9 @@ class EventEffectHandler {
             }
             
             return englishWord
+        case .bubbles, .stars, .animals, .rainbowTrail:
+            // Visual effects only - no sound
+            return keyStr
         }
     }
     
@@ -474,7 +449,7 @@ class EventEffectHandler {
             
             // Return a random word if we have any
             if let randomWord = possibleWords.randomElement() {
-                debugPrint("getWord from main words set ------- \(key) -- \(randomWord)")
+                debugLog("getWord from main words set ------- \(key) -- \(randomWord)")
                 return randomWord
             }
             return key
@@ -495,7 +470,7 @@ class EventEffectHandler {
         
         // Return a random word if we have any
         if let randomWord = possibleWords.randomElement() {
-            debugPrint("getWord ------- \(key) -- \(randomWord)")
+            debugLog("getWord ------- \(key) -- \(randomWord)")
             return randomWord
         }
         
@@ -504,17 +479,32 @@ class EventEffectHandler {
     
     private func createUtterance(for str: String, language: String? = nil) -> AVSpeechUtterance {
         let utterance = AVSpeechUtterance(string: str)
-        // utterance.rate = AVSpeechUtteranceDefaultSpeechRate * 0.1
         
         let languageCode = language ?? Locale.preferredLanguages[0]
         
-        // https://stackoverflow.com/questions/37512621/avspeechsynthesizer-change-voice
-        let allVoices = AVSpeechSynthesisVoice.speechVoices().filter { voice in
-            guard languageCode == voice.language else { return false}
-            // debugPrint("speaking ------- \(voice.identifier)")
-            return true
+        // Only attempt to use personal voice for English and when no specific language is requested
+        if usePersonalVoice && language == nil && (languageCode.hasPrefix("en") || Locale.preferredLanguages[0].hasPrefix("en")) {
+            if #available(macOS 14.0, *) {
+                let personalVoices = AVSpeechSynthesisVoice.speechVoices().filter { voice in
+                    return voice.voiceTraits.contains(.isPersonalVoice) && voice.language.hasPrefix("en")
+                }
+                
+                if let personalVoice = personalVoices.first {
+                    utterance.voice = personalVoice
+                    return utterance
+                }
+            }
         }
-        utterance.voice = allVoices.first {voice in voice.identifier.contains("siri") } ?? allVoices.first
+        
+        // Fall back to default voice selection if personal voice not available or not requested
+        let allVoices = AVSpeechSynthesisVoice.speechVoices().filter { voice in
+            return voice.language == languageCode
+        }
+        
+        // Prefer Siri voice if available, otherwise use first available voice
+        utterance.voice = allVoices.first { voice in 
+            voice.identifier.contains("siri") 
+        } ?? allVoices.first
         
         return utterance
     }
@@ -557,4 +547,49 @@ class EventEffectHandler {
     func setWordSetType(_ type: WordSetType) {
         wordSetType = type
     }
+    
+    // Helper function to get key string
+    private func getKeyString(event: CGEvent) -> String {
+        let keyCode = event.getIntegerValueField(.keyboardEventKeycode)
+        let source = TISCopyCurrentKeyboardInputSource().takeRetainedValue()
+        var keyStr = ""
+        
+        // Get the layout data
+        guard let layoutData = TISGetInputSourceProperty(source, kTISPropertyUnicodeKeyLayoutData),
+              let cfData = unsafeBitCast(layoutData, to: CFData.self) as Data?,
+              let keyLayout = cfData.withUnsafeBytes({ $0.baseAddress?.assumingMemoryBound(to: UCKeyboardLayout.self) })
+        else {
+            return ""
+        }
+        
+        var deadKeyState: UInt32 = 0
+        let maxLength = 4
+        var actualLength = 0
+        var actualStr = [UniChar](repeating: 0, count: maxLength)
+        
+        _ = UCKeyTranslate(keyLayout,
+                          UInt16(keyCode),
+                          UInt16(kUCKeyActionDisplay),
+                          0,
+                          UInt32(LMGetKbdType()),
+                          OptionBits(kUCKeyTranslateNoDeadKeysMask),
+                          &deadKeyState,
+                          maxLength,
+                          &actualLength,
+                          &actualStr)
+        
+        if actualLength > 0 {
+            keyStr = String(utf16CodeUnits: actualStr, count: actualLength)
+        }
+        
+        return keyStr
+    }
 }
+
+#if DEBUG
+func debugLog(_ message: String) {
+    debugPrint(message)
+}
+#else
+func debugLog(_ message: String) {}
+#endif
