@@ -24,7 +24,9 @@ struct BabyKeyboardLockApp: App {
     @ObservedObject var eventHandler: EventHandler = EventHandler.shared
 
     var body: some Scene {
-        Group { }
+        Settings {
+            AdvancedSettingsView()
+        }
     }
     
     init() {
@@ -83,14 +85,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             .store(in: &cancellables)
         
         self.popover = NSPopover()
-         self.popover.contentSize = NSSize(width: 500, height: 400)
-        // self.popover.appearance = NSAppearance(named: .accessibilityHighContrastVibrantLight)
         self.popover.behavior = .transient
         let rootView = ContentView(eventHandler: EventHandler.shared)
         let nSHostingController = NSHostingController(rootView: rootView)
-        
-        // nSHostingController.preferredContentSize = NSSize(width: 300, height: 300)
-        
+
         self.popover.contentViewController = nSHostingController
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) {
             self.showPopover()
@@ -162,7 +160,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let button = statusItem.button {
             popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
 
-            // Make the popover's window active and adjust position to keep it on screen
+            // Make the popover's window active and keep it on screen
             if let window = popover.contentViewController?.view.window,
                let screen = NSScreen.main {
                 window.makeKey()
@@ -182,7 +180,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                         windowFrame.origin.x = visibleFrame.minX + 10
                     }
 
-                    // Apply the adjusted position
+                    // Apply the adjusted position (but don't change size)
                     window.setFrame(windowFrame, display: true, animate: false)
                 }
             }

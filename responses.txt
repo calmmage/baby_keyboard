@@ -1,0 +1,17 @@
+1) NEW: Now defaults to ALL words (--sample-size=0)
+Previously defaulted to 3 words; changed to process all 145 unique words from RandomWordList.swift by default
+
+2) Yes, using get_words util - unique_english_words() function
+Parses RandomWordList.swift to extract all unique English words from word sets, returns sorted list of 145 total words
+
+3) NEW: Auto-saves to style-specific directories (e.g., simple/, crayon/)
+Output dir now auto-determined from --style flag; filenames prefixed with style (e.g., simple_cat.png)
+
+4) NEW: Generates ALL styles by default (crayon, doodle, elvish, mosaic, pencil, simple, watercolor)
+Script now iterates through all STYLE_PRESETS; use --style <name> to generate single style
+
+5) NEW: Skips existing images automatically
+Script checks if style_word.png exists in output dir, only generates missing images, shows skip count
+
+6) NEW: Makefile still passes zero arguments but defaults changed
+Script now uses all 145 words, auto-determined output dirs (simple/), and skips existing files

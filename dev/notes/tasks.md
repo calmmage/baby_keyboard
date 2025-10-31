@@ -1,33 +1,42 @@
 - a
+    - `key: eca3009a`
+    Find a way to publish and distribute images other than git - upload to storage, download on first launch
+- b
+    - `key: 8bd1d2ea`
+    Fix issues with words meanings and image discrepancies - Orange - color and fruit, drink - verb and noun
+- c
     - `key: 441b4ef3`
     - `cue: My PC turns into a heater when I run my app..`
     - Generate audio samples with TTS and cache on disk to prevent running heavy AI model every time instead of just playing the sound
     - Add 'refresh cache' button in Settings
-- b
+- d
     - `key: 78983d50`
     Test the flashcard display for game mode
-- c
+- e
     - `key: 8938ae62`
     Improve game mode - remove per-letter sound, Allow all words simultaneousl
-- d
+- f
     - `key: 81e9cb8c`
     - Initial request: I've ran make images-main - first step - but where are the files?
     - Latest: what? do uv add..
-- e
+- g
     - `key: bd515a4e`
     - Simplify our window resize logic as much as possible because it's causing issues
     - Allow macOS to handle window sizes, scrolling and positions automatically
     - Experiment in a separate branch
-- f
-    - `key: b394d43b`
-    - Use simple color images if the word selected is a color
-- g
+    - I've made updates in task 8edc4e86 - about style picker menu - and now the app spams windows resizes and relocations and goes off screen
+        "Content height changed to: 121.0"
+        "Updating window to height: 693.0"
+        "Updating window to height: 281.0"
+        "Content height changed to: 533.0"
+        "Content height changed to: 121.0"
+        "Updating window to height: 693.0"
+        "Updating window to height: 281.0"
+        "Content height changed to: 533.0"
+- h
     - `key: 4abc703d`
     - `cue: Couldn't get a specific word - mama - to appear at all`
     - Rework random into pseudo-random that balances probabilities into a more even shuffle
-- h
-    - `key: c0e2f3af`
-    generate images with nano-banana using script
 - i
     - `key: ddd1a65b`
     Publish calmlib, install and download quick draw images
@@ -54,29 +63,11 @@
     Build description path: /Users/annalav/Library/Developer/Xcode/DerivedData/BabyKeyboardLock-bgubpirqszsziihdvtozqvgxmqja/Build/Intermediates.noindex/ArchiveIntermediates/BabyKeyboardLock/IntermediateBuildFilesPath/XCBuildData/c6f264918b4db5acd581c2181fb6fac3.xcbuilddata
     /Users/annalav/Documents/GitHub/baby_keyboard/BabyKeyboardLock.xcodeproj: error: No signing certificate "Mac Development" found: No "Mac Development" signing certificate matching team ID "5XCYR4LUMD" with a private key was found. (in target 'BabyKeyboardLock' from project 'BabyKeyboardLock')
     a
+- n
+    - `key: 8edc4e86`
+    - Rework style selector to be multi-line to fit on screen better
 ## Done
-- [x] n
-    - `key: 3286692c`
-    - Add more images
-    - use planned llm utils to bulk-generate the set (look at ~/calmmage/experiments/llm/dev/notes)
-    - also, first, think if / where can i get nice image collections for basic words on the web
-    - there should be default 'alphabet' images, right?
-    - also there should probably some nice art projects with stylized alphabet images
-      (i mean not only alphabet of course - but in general basic simple words)
 - [x] o
-    - `key: 38b988cb`
-    - Bugfix baby image selector
-        - Doesn't work in prod
-        - Issue occurs after deployment (make deploy)
-        - Investigate root cause of production failure
-- [x] p
-    - `key: f9b55897`
-    - Add 'mother' and 'father' image selectors
-    - All basic family members
-    - Arbitrary images with arbitrary words
-    - Like the custom dictionary feature that we have
-    a
-- [x] q
     - `key: d803f29f`
     - Cancelled (2025-10-26 05:17): There's no 'person' api support on macbook
     - Can we use apple photos people for 'mother' and 'baby'?
@@ -89,7 +80,20 @@
         - use that
         - else
             - raise notimpelented
+- [x] p
+    - `key: f9b55897`
+    - Add 'mother' and 'father' image selectors
+    - All basic family members
+    - Arbitrary images with arbitrary words
+    - Like the custom dictionary feature that we have
+    a
+- [x] q
+    - `key: c0e2f3af`
+    generate images with nano-banana using script
 - [x] r
+    - `key: b394d43b`
+    - Use simple color images if the word selected is a color
+- [x] s
     - `key: 8884e924`
     - `cue: The settings don't fit the screen on Anna's monitor, and can't be scrolled. Also, I'm adding new settings`
     - How do I rework settings menu to contain less items
