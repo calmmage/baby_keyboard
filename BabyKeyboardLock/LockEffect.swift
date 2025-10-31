@@ -6,20 +6,53 @@
 //
 import SwiftUI
 
-enum LockEffect: String, CaseIterable, Identifiable{
+enum EffectCategory: String, CaseIterable, Identifiable {
+    case none = "None"
+    case visual = "Visual Effects"
+    case words = "Words"
+    case games = "Games"
+
+    var id: Self { self }
+}
+
+enum LockEffect: String, CaseIterable, Identifiable {
     case none = "LockEffect.none"
     case confettiCannon = "LockEffect.confettiCannon"
     case speakTheKey = "LockEffect.speakTheKey"
     case speakAKeyWord = "LockEffect.speakAKeyWord"
     case speakRandomWord = "LockEffect.speakRandomWord"
+    // Game modes
+    case typingGame = "LockEffect.typingGame"
+    // New visual effects
+    case bubbles = "LockEffect.bubbles"
+    case stars = "LockEffect.stars"
+    case animals = "LockEffect.animals"
+    case rainbowTrail = "LockEffect.rainbowTrail"
     // TODO add random
+
+    var id: Self { self }
     
-    var id: Self {
-        return self
+    var category: EffectCategory {
+        switch self {
+        case .none:
+            return .none
+        case .confettiCannon, .bubbles, .stars, .animals, .rainbowTrail:
+            return .visual
+        case .speakTheKey, .speakAKeyWord, .speakRandomWord:
+            return .words
+        case .typingGame:
+            return .games
+        }
     }
     
     var localizedString: String {
-        NSLocalizedString(self.rawValue, comment: "Lock effect option")
+        let base = NSLocalizedString(self.rawValue, comment: "Lock effect option")
+        switch self {
+        case .bubbles, .stars, .animals, .rainbowTrail:
+            return base + " (BETA)"
+        default:
+            return base
+        }
     }
 }
 

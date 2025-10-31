@@ -1,0 +1,128 @@
+# Cursor Rules
+
+Imports
+- Always use absolute imports - from repo root
+- Use uv run to ensure imports work
+- Avoid modifying sys.path
+
+Calmlib utils:
+- telegram: get_telegram_cache, get_telethon_client
+- user_interactions: ask_user
+- llm: aquery_llm_text
+- logging: from calmlib.logging import setup_logger_simple
+- utils: find_env_key, find_calmmage_env_key
+
+Botspot - telegram bot framework at ~/work/projects/botspot/
+Botspot template - example for new bots - ~/work/projects/botspot-template/
+
+# More
+- **botspot**: Telegram bot framework with routing and middleware, based and interchangeable with aiogram
+    - Location: `~/work/projects/botspot/`
+    - Import: `from botspot import get_chat_fetcher, llm_provider, commands_menu`
+    - Usage: Component-based architecture with send_safe, chat_binder, user_interactions
+- **calmlib**: Personal utility library with read/write, logging, service registry
+    - Location: `~/work/projects/calmmage/calmlib/`
+    - Import: Look around and see what's available at runtime - structure may be updated
+    - Usage: Various python utils for file operations, logging, service management, llm, telegram etc.
+- **tools**: Collection of CLI utilities and automation tools
+    - Location: `~/work/projects/calmmage/tools/` with subdirectories for each tool
+    - Import: `from tools.section.tool_name.module import Class`
+    - Usage: `uv run typer ~/work/projects/calmmage/tools/tool_name/cli.py run [command]`
+- **docker**: Containerization for local services and deployment
+    - Location: Local Docker Desktop installation
+    - Usage: `docker run -d --name mongodb mongo:latest`, containers accessible on localhost
+- **mongodb**: Document database for data storage and querying
+    - Location: localhost MongoDB via Docker
+    - Usage: Connection string from ~/.env, accessible directly or through botspot mongo_database component - use
+      get_database() util
+- **scripts**: Scheduled jobs and automation scripts
+    - Location: `~/work/projects/calmmage/scripts/` - cronicle, prefect and daily-jobs
+- **~/.env**: Environment variables via planned calmlib env key discovery
+    - Location: `~/.env` file in user home directory
+    - Usage: dotenv loading, planned calmlib utilities for key discovery and management
+- **cronicle**: Job scheduler for automated tasks and workflows
+    - Location: `~/work/projects/calmmage/tools/cronicle_scheduler/cli/cronicle_manager.py`
+    - Usage: `uv run typer ~/work/projects/calmmage/tools/cronicle_scheduler/cli/cronicle_manager.py run [command]`
+- **cronitor**: Health monitoring and alerting for scheduled jobs
+    - Location: `~/work/projects/calmmage/scripts/cronicle/cronitor_ping.py`
+    - Usage: HTTP pings to cronitor.io for job health monitoring
+- **obsidian-ecosystem**: Note management with database-like access to people/contacts, bookmarks, posts/blog/zettelkasten fields
+    - Location: `~/work/projects/calmmage/tools/obsidian_sorter/` for sorting automation
+    - Usage: Database-like access to Obsidian vault with structured data fields for contacts, bookmarks, content
+- **NoNix shell**: Shell configuration, aliases, functions
+    - Location: `~/work/projects/calmmage/nonix/`
+  - Usage: Single merged aliases file at `nonix/shell/aliases.sh`; zsh config at `nonix/shell/.zshrc`, functions
+    at `nonix/shell/functions/`
+
+Docker compose
+- For projects with interlinked components, include Docker file and a docker-compose.yml
+- Specificaly, that concerns frontend + backend applications or other multi-component projects
+
+Monorepo selective commits:
+
+```bash
+git add -A
+git commit <file1> <file2> <file3> -m "message"
+```
+
+Step 1 stages everything, Step 2 commits only specified files. Does NOT unstage other files, does NOT require stashing.
+
+Alternatives:
+- lazygit: Navigate → Space to stage → `c` to commit
+- PyCharm: Commit window (Cmd+K) → select files → commit
+- GUI tools: GitHub Desktop, GitKraken, Fork
+
+We are writing instructions for a smart user, that can figure everything out, has strong intuition and can easily guess reasonable things, given a few hints.
+
+Therefore:
+1) NO HEADERS
+2) BE EXTREMELY CONCISE, JUST MENTION KEY FUNCTIONS / FOLDERS BY NAME, DO NOT GO INTO VERBOSE DETAILS OR YAPPING
+
+Preserve original text and phrasing provided by the user in chats as much as possible.
+
+Makefile - add after prototype, 1-2 essential commands per component max
+
+Minimal prototyping flow
+For ~/calmmage/experiments/prototypes folder
+- Before implementing a new feature - write a minimal working standalone prototype / demo - and test it.
+- After the feature is working - update the existing code with the working code
+
+# Next.js Style (shadcn, v0.dev-inspired)
+
+Build front-ends in Next.js with:
+- App Router, Server Components by default; Client Components only when needed.
+- UI components: use shadcn patterns for UIs.
+
+uv for python:
+- initialize pyproject.toml if missing.
+    - use `fix_repo` alias
+- uv run for execution
+- uv add for dependencies
+
+# Python Libraries
+- pathlib: Filesystem paths with `Path`.
+- dotenv: Load `~/.env` variables.
+- httpx: HTTP client (sync/async) with timeouts.
+- use loguru with calmlib.logging.setup_logger() settings - avoid prints
+- typer for CLI, argparse for simple script flags
+- rich: Rich terminal output (tables, colors).
+- pydantic / pydantic_settings - avoid dataclasses and unstructured Dicts
+- fastapi
+- tqdm
+
+- print_exc - use to show full tracebacks
+- avoid excessive try/except nesting or blocks, always handle errors on external level, unless explicitly
+  requested[6_python_libs.md](6_python_libs.md)
+
+- Type safety - use pydantic, type hints
+- Clean patterns - pathlib over os.path, loguru over print
+- Simplicity
+    - Implement minimal necessary functionality
+    - Avoid major refactorings unless explicitly requested
+- Modularity with utils
+    - Avoid nesting as much as possible - create separate service util functions (private - _func)
+    - Avoid code duplication - instead, create reusable utils
+    
+- CLIs with `typer`;
+- Keep `cli.py` colocated under each tool directory.
+- Provide short docstrings and a quick usage example per command.

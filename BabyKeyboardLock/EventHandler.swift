@@ -5,6 +5,7 @@ import ApplicationServices
 import CoreData
 import SwiftData
 import Combine
+import AVFoundation
 
 enum KeyCode: CGKeyCode, CaseIterable, Identifiable {
     case u = 0x20
@@ -40,27 +41,37 @@ class EventHandler: ObservableObject {
             eventEffectHandler.setWordSetType(selectedWordSetType)
         }
     }
-    @Published var isLocked = true {
+    @Published var usePersonalVoice: Bool = false {
         didSet {
-            if isLocked {
-                startEventLoop()
+            eventEffectHandler.usePersonalVoice = usePersonalVoice
+            if usePersonalVoice {
+                requestPersonalVoicePermission()
             }
         }
     }
+    @Published var isLocked = true
     @Published var accessibilityPermissionGranted = false
+    @Published var personalVoiceAvailable: Bool = false
     @Published var lastKeyString: String = "a" // fix onReceive won't work as expected for first key press
 
     private var lastEventTime: Date = Date()
-    private let throttleInterval: TimeInterval = 1 // seconds
-    private func isThrottled() -> Bool {
+    @Published var throttleInterval: TimeInterval = 1.0 // seconds (for visual effects)
+    @Published var wordsThrottleInterval: TimeInterval = 1.5 // seconds (for word effects)
+    @Published var confettiFadeTime: TimeInterval = 3.0 // seconds
+    @Published var wordTranslationDelay: TimeInterval = 0.8 // seconds
+    
+    private func isThrottled(effectType: LockEffect) -> Bool {
         let now = Date()
         let timeSinceLastEvent = now.timeIntervalSince(lastEventTime)
+        
+        // Use different throttle intervals based on effect category
+        let currentThrottleInterval = effectType.category == .words ? wordsThrottleInterval : throttleInterval
       
-        if timeSinceLastEvent >= throttleInterval {
+        if timeSinceLastEvent >= currentThrottleInterval {
             lastEventTime = now
             return false
         }
-        debugPrint("Throttled >>>>> timeSinceLastEvent: \(timeSinceLastEvent)")
+        debugPrint("Throttled >>>>> timeSinceLastEvent: \(String(format: "%.2f", timeSinceLastEvent)), threshold: \(String(format: "%.2f", currentThrottleInterval))")
         return true
     }
     
@@ -74,12 +85,45 @@ class EventHandler: ObservableObject {
         }
         self.lastKeyString = lastKeyString
         
+        // Initialize throttle interval from UserDefaults
+        self.throttleInterval = UserDefaults.standard.double(forKey: "throttleInterval")
+        if self.throttleInterval == 0 { // If not set yet
+            self.throttleInterval = 1.0
+        }
+        
+        // Initialize words throttle interval from UserDefaults
+        self.wordsThrottleInterval = UserDefaults.standard.double(forKey: "wordsThrottleInterval")
+        if self.wordsThrottleInterval == 0 { // If not set yet
+            self.wordsThrottleInterval = 1.5
+        }
+        
+        // Initialize fade time from UserDefaults
+        self.confettiFadeTime = UserDefaults.standard.double(forKey: "confettiFadeTime")
+        if self.confettiFadeTime == 0 { // If not set yet
+            self.confettiFadeTime = 3.0
+        }
+
+        // Initialize word translation delay from UserDefaults
+        self.wordTranslationDelay = UserDefaults.standard.double(forKey: "wordTranslationDelay")
+        if self.wordTranslationDelay == 0 { // If not set yet
+            self.wordTranslationDelay = 0.8
+        }
+        
         // Initialize wordSetType from UserDefaults
         if let savedTypeRaw = UserDefaults.standard.string(forKey: "selectedWordSetType"),
            let savedType = WordSetType(rawValue: savedTypeRaw) {
             self.selectedWordSetType = savedType
         }
         eventEffectHandler.setWordSetType(self.selectedWordSetType)
+        
+        // Initialize personal voice setting from UserDefaults
+        self.usePersonalVoice = UserDefaults.standard.bool(forKey: "usePersonalVoice")
+        eventEffectHandler.usePersonalVoice = self.usePersonalVoice
+        
+        // Check if personal voice is available
+        if self.usePersonalVoice {
+            checkPersonalVoiceAvailability()
+        }
         
         // Observe changes to the main words set
         NotificationCenter.default.publisher(for: .init("MainWordsUpdated"))
@@ -101,12 +145,9 @@ class EventHandler: ObservableObject {
     func setLocked(isLocked: Bool) {
         if (isLocked && accessibilityPermissionGranted) {
             self.isLocked = true
-            startEventLoop()
         } else {
             self.isLocked = false
         }
-        
-        
     }
 
     func checkAccessibilityPermission(){
@@ -124,12 +165,21 @@ class EventHandler: ObservableObject {
         }
         if processTrusted {
             self.accessibilityPermissionGranted = true
+            // Ensure the event loop starts after permission is granted
+            if !self.eventLoopStarted {
+                self.startEventLoop()
+            }
+            return // Stop checking once permission is granted
         }
-        DispatchQueue.global(qos: .background).async {
-          // Schedule the next check
-            let delay = DispatchTimeInterval.seconds(3)
-            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-                self.checkAccessibilityPermission()
+        
+        // Only continue checking if permission hasn't been granted yet
+        if !self.accessibilityPermissionGranted {
+            DispatchQueue.global(qos: .background).async {
+                // Schedule the next check
+                let delay = DispatchTimeInterval.seconds(3)
+                DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                    self.checkAccessibilityPermission()
+                }
             }
         }
     }
@@ -149,7 +199,12 @@ class EventHandler: ObservableObject {
     
     func stop(){
         isLocked = false
-        CFRunLoopStop(CFRunLoopGetCurrent())
+        if let tap = eventTap {
+            CGEvent.tapEnable(tap: tap, enable: false)
+            eventTap = nil
+        }
+        // Do not stop the main run loop; just mark our loop as stopped
+        eventLoopStarted = false
     }
     
     func startEventLoop() {
@@ -157,15 +212,13 @@ class EventHandler: ObservableObject {
         if(!accessibilityPermissionGranted) { return }
         lock.lock()
         defer { lock.unlock() }
-        
-        setupEventTap() // Setup event tap to capture key events
-        DispatchQueue.main.async {
-            self.eventLoopStarted = true
-            CFRunLoopRun()  // Start the run loop to handle events in a background thread
-        }
+
+        setupEventTap() // Setup event tap to capture key events on the current (main) run loop
+        self.eventLoopStarted = true
     }
     
     private func setupEventTap() {
+        // Combine all event types we want to monitor
         let eventMask = CGEventMask(
             (1 << CGEventType.keyDown.rawValue) |
             (1 << CGEventType.keyUp.rawValue) |
@@ -178,12 +231,10 @@ class EventHandler: ObservableObject {
             options: .defaultTap,
             eventsOfInterest: eventMask,
             callback: globalKeyEventHandler,
-            userInfo: UnsafeMutableRawPointer(Unmanaged
-                .passUnretained(self)
-                .toOpaque())
+            userInfo: UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque())
         )
         
-        guard eventTap != nil else {
+        guard let eventTap = eventTap else {
             fatalError("Failed to create event tap")
         }
         
@@ -193,15 +244,14 @@ class EventHandler: ObservableObject {
             0
         )
         CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource, .commonModes)
-        CGEvent.tapEnable(tap: eventTap!, enable: true)
+        CGEvent.tapEnable(tap: eventTap, enable: true)
     }
     
     func handleKeyEvent(
         proxy: CGEventTapProxy,
         type: CGEventType,
         event: CGEvent
-    ) -> Unmanaged<CGEvent>?{
-
+    ) -> Unmanaged<CGEvent>? {
         // Handle tap disable events first
         if type == .tapDisabledByTimeout || type == .tapDisabledByUserInput {
             debugPrint("Event tap disabled, attempting to re-enable...")
@@ -211,45 +261,36 @@ class EventHandler: ObservableObject {
             return Unmanaged.passRetained(event)
         }
         
-        debugPrint("--- keyup/down: \(type == .keyDown || type == .keyUp), keyboardEventKeyboardType: \(event.getIntegerValueField(.keyboardEventKeyboardType))")
-        // disable media keys, power button
-        if isLocked && event.getIntegerValueField(.keyboardEventKeyboardType) == 0 {
-            return nil
-        }
-        guard type == .keyDown || type == .keyUp else {
+        // If not locked, pass through ALL events immediately without any processing
+        guard isLocked else {
             return Unmanaged.passRetained(event)
         }
         
-        let keyCode = event.getIntegerValueField(.keyboardEventKeycode)
-        let controlFlag = event.flags.contains(.maskControl)
-        let optionFlag = event.flags.contains(.maskAlternate)
-        let eventType = type == .keyDown ? "pressed" : "released"
-        debugPrint("Key Code: \0x\(String(keyCode, radix: 16)),\t" +
-                 "Control Flag: \(controlFlag),\t" +
-                 "Event Type: (\(type.rawValue)) \(eventType)")
-        // Toggle with Ctrl + Option + U
-        if optionFlag && controlFlag && keyCode == KeyCode.u.rawValue && type == .keyDown {
-            debugPrint("Keyboard locked: \(isLocked)")
-            self.isLocked = isLocked ? false : true
-            CFRunLoopStop(CFRunLoopGetCurrent())
+        // Handle keyboard events only when locked
+        if type == .keyDown || type == .keyUp {
+            let keyCode = event.getIntegerValueField(.keyboardEventKeycode)
+            let controlFlag = event.flags.contains(.maskControl)
+            let optionFlag = event.flags.contains(.maskAlternate)
             
-            return nil
-        }
+            // Toggle keyboard lock with Ctrl + Option + U
+            if optionFlag && controlFlag && keyCode == KeyCode.u.rawValue && type == .keyDown {
+                debugPrint("Keyboard locked: \(isLocked)")
+                self.isLocked = false
+                return nil
+            }
 
-        if isLocked {
-            
+            // Handle normal keyboard events when locked
             if type != .keyUp { return nil }
-            
-            if isThrottled() { return nil }
+            if isThrottled(effectType: selectedLockEffect) { return nil }
             
             self.lastKeyString = eventEffectHandler.handle(
                 event: event, eventType: type, selectedLockEffect: selectedLockEffect
             )
-            debugPrint("keyup------- \(lastKeyString), str: \(lastKeyString)")
+            debugPrint("keyup------- \(lastKeyString)")
             return nil
-        } else {
-            return Unmanaged.passRetained(event)
         }
+        
+        return Unmanaged.passRetained(event)
     }
     
     func requestAccessibilityPermissions() -> Bool {
@@ -263,6 +304,87 @@ class EventHandler: ObservableObject {
         return trusted
     }
 
+    private func requestPersonalVoicePermission() {
+        if #available(macOS 14.0, *) {
+            AVSpeechSynthesizer.requestPersonalVoiceAuthorization { status in
+                DispatchQueue.main.async {
+                    if status == .authorized {
+                        self.personalVoiceAvailable = true
+                    } else {
+                        // If not authorized, disable the feature
+                        self.personalVoiceAvailable = false
+                        if self.usePersonalVoice {
+                            // Only show message if user has explicitly enabled the feature
+                            let alert = NSAlert()
+                            alert.messageText = "Personal Voice Not Available"
+                            alert.informativeText = "Please enable Personal Voice in System Settings > Accessibility > Personal Voice and make sure you've created a Personal Voice."
+                            alert.alertStyle = .informational
+                            alert.addButton(withTitle: "OK")
+                            alert.runModal()
+                        }
+                    }
+                }
+            }
+        } else {
+            // Personal Voice is not available on this version of macOS
+            self.personalVoiceAvailable = false
+            if self.usePersonalVoice {
+                let alert = NSAlert()
+                alert.messageText = "Personal Voice Not Supported"
+                alert.informativeText = "Personal Voice requires macOS 14.0 or newer."
+                alert.alertStyle = .informational
+                alert.addButton(withTitle: "OK")
+                alert.runModal()
+                
+                // Disable the feature since not supported
+                self.usePersonalVoice = false
+            }
+        }
+    }
+    
+    private func checkPersonalVoiceAvailability() {
+        if #available(macOS 14.0, *) {
+            // Check if any personal voices are available
+            let personalVoices = AVSpeechSynthesisVoice.speechVoices().filter { voice in
+                return voice.voiceTraits.contains(.isPersonalVoice)
+            }
+            
+            DispatchQueue.main.async {
+                self.personalVoiceAvailable = !personalVoices.isEmpty
+                
+                // If no personal voices available but feature is enabled, show alert
+                if personalVoices.isEmpty && self.usePersonalVoice {
+                    let alert = NSAlert()
+                    alert.messageText = "No Personal Voice Found"
+                    alert.informativeText = "You need to create a Personal Voice in System Settings > Accessibility > Personal Voice before using this feature."
+                    alert.alertStyle = .informational
+                    alert.addButton(withTitle: "OK")
+                    alert.runModal()
+                    
+                    // Disable the feature since no voice is available
+                    self.usePersonalVoice = false
+                }
+            }
+        } else {
+            // Personal Voice is not available on this version of macOS
+            DispatchQueue.main.async {
+                self.personalVoiceAvailable = false
+                
+                if self.usePersonalVoice {
+                    let alert = NSAlert()
+                    alert.messageText = "Personal Voice Not Supported"
+                    alert.informativeText = "Personal Voice requires macOS 14.0 or newer."
+                    alert.alertStyle = .informational
+                    alert.addButton(withTitle: "OK")
+                    alert.runModal()
+                    
+                    // Disable the feature since not supported
+                    self.usePersonalVoice = false
+                }
+            }
+        }
+    }
+
 }
 func globalKeyEventHandler(
     proxy: CGEventTapProxy,
@@ -273,4 +395,3 @@ func globalKeyEventHandler(
     let mySelf = Unmanaged<EventHandler>.fromOpaque(refcon).takeUnretainedValue()
     return mySelf.handleKeyEvent(proxy: proxy, type: type, event: event)
 }
-
