@@ -5,6 +5,12 @@
         - Doesn't work in prod
         - Issue occurs after deployment (make deploy)
         - Investigate root cause of production failure
+- [x] s
+    - `key: 38b988cb`
+    - Bugfix baby image selector
+        - Doesn't work in prod
+        - Issue occurs after deployment (make deploy)
+        - Investigate root cause of production failure
 ## 2025-10-18
 - [x] m
     - `key: 3286692c`
@@ -15,6 +21,14 @@
     - also there should probably some nice art projects with stylized alphabet images
       (i mean not only alphabet of course - but in general basic simple words)
 - [x] r
+    - `key: 3286692c`
+    - Add more images
+    - use planned llm utils to bulk-generate the set (look at ~/calmmage/experiments/llm/dev/notes)
+    - also, first, think if / where can i get nice image collections for basic words on the web
+    - there should be default 'alphabet' images, right?
+    - also there should probably some nice art projects with stylized alphabet images
+      (i mean not only alphabet of course - but in general basic simple words)
+- [x] s
     - `key: 3286692c`
     - Add more images
     - use planned llm utils to bulk-generate the set (look at ~/calmmage/experiments/llm/dev/notes)

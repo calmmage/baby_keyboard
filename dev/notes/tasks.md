@@ -24,6 +24,15 @@
     - Simplify our window resize logic as much as possible because it's causing issues
     - Allow macOS to handle window sizes, scrolling and positions automatically
     - Experiment in a separate branch
+    - I've made updates in task 8edc4e86 - about style picker menu - and now the app spams windows resizes and relocations and goes off screen
+        "Content height changed to: 121.0"
+        "Updating window to height: 693.0"
+        "Updating window to height: 281.0"
+        "Content height changed to: 533.0"
+        "Content height changed to: 121.0"
+        "Updating window to height: 693.0"
+        "Updating window to height: 281.0"
+        "Content height changed to: 533.0"
 - h
     - `key: 4abc703d`
     - `cue: Couldn't get a specific word - mama - to appear at all`
@@ -57,6 +66,7 @@
 - n
     - `key: 8edc4e86`
     - Rework style selector to be multi-line to fit on screen better
+## Done
 - [x] o
     - `key: d803f29f`
     - Cancelled (2025-10-26 05:17): There's no 'person' api support on macbook
@@ -71,34 +81,20 @@
         - else
             - raise notimpelented
 - [x] p
-    - `key: b394d43b`
-    - Use simple color images if the word selected is a color
-- [x] q
     - `key: f9b55897`
     - Add 'mother' and 'father' image selectors
     - All basic family members
     - Arbitrary images with arbitrary words
     - Like the custom dictionary feature that we have
     a
+- [x] q
+    - `key: c0e2f3af`
+    generate images with nano-banana using script
 - [x] r
+    - `key: b394d43b`
+    - Use simple color images if the word selected is a color
+- [x] s
     - `key: 8884e924`
     - `cue: The settings don't fit the screen on Anna's monitor, and can't be scrolled. Also, I'm adding new settings`
     - How do I rework settings menu to contain less items
     - Move additional settings to a separate window
-- [x] s
-    - `key: c0e2f3af`
-    generate images with nano-banana using script
-- [x] q
-    - `key: 38b988cb`
-    - Bugfix baby image selector
-        - Doesn't work in prod
-        - Issue occurs after deployment (make deploy)
-        - Investigate root cause of production failure
-- [x] t
-    - `key: 3286692c`
-    - Add more images
-    - use planned llm utils to bulk-generate the set (look at ~/calmmage/experiments/llm/dev/notes)
-    - also, first, think if / where can i get nice image collections for basic words on the web
-    - there should be default 'alphabet' images, right?
-    - also there should probably some nice art projects with stylized alphabet images
-      (i mean not only alphabet of course - but in general basic simple words)

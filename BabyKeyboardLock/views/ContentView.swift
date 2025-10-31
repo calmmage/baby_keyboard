@@ -9,18 +9,9 @@ import SwiftUI
 import AppKit
 import AVFoundation
 
-// Add custom preference key for height
-struct ContentHeightKey: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value = nextValue()
-    }
-}
-
 struct HoverableMenuStyle: MenuStyle {
     @State private var isHovered = false
-    
+
     func makeBody(configuration: Configuration) -> some View {
         Menu(configuration)
             .padding(5)
@@ -33,103 +24,6 @@ struct HoverableMenuStyle: MenuStyle {
                     isHovered = hovering
                 }
             }
-    }
-}
-
-// MARK: - Window Manager Helper
-class WindowManager: ObservableObject {
-    static let shared = WindowManager()
-    
-    private var cachedMainWindow: NSWindow?
-    private var lastUpdateTime: Date = Date()
-    private let debounceInterval: TimeInterval = 0.1
-    private var pendingHeight: CGFloat?
-    private var updateWorkItem: DispatchWorkItem?
-    
-    private init() {}
-    
-    func updateWindowHeight(_ height: CGFloat, force: Bool = false) {
-        guard height > 0 else { return }
-        
-        let now = Date()
-        let timeSinceLastUpdate = now.timeIntervalSince(lastUpdateTime)
-        
-        // Cancel any pending update
-        updateWorkItem?.cancel()
-        
-        // Store the pending height
-        pendingHeight = height
-        
-        // If forced or enough time has passed, update immediately
-        if force || timeSinceLastUpdate >= debounceInterval {
-            performUpdate(height)
-        } else {
-            // Debounce the update with longer delay to prevent rapid updates
-            let workItem = DispatchWorkItem { [weak self] in
-                if let pendingHeight = self?.pendingHeight {
-                    self?.performUpdate(pendingHeight)
-                }
-            }
-            updateWorkItem = workItem
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2, execute: workItem)
-        }
-    }
-    
-    private func performUpdate(_ height: CGFloat) {
-        lastUpdateTime = Date()
-        pendingHeight = nil
-        
-        let window = getMainWindow()
-        guard let window = window else {
-            return // Don't log this error, it's too noisy
-        }
-        
-        let contentSize = NSSize(width: 500, height: height)
-        let frameSize = window.frameRect(forContentRect: NSRect(origin: .zero, size: contentSize)).size
-        
-        // Check if resize is actually needed
-        if abs(window.frame.size.height - frameSize.height) < 5 {
-            return // Skip unnecessary resize with larger threshold
-        }
-        
-        debugPrint("Updating window to height: \(height)")
-        
-        var newFrame = window.frame
-        newFrame.size = frameSize
-        
-        // Use immediate resize for better performance
-        window.setFrame(newFrame, display: true, animate: false)
-    }
-    
-    private func getMainWindow() -> NSWindow? {
-        // Cache the main window reference for better performance
-        if let cached = cachedMainWindow, cached.isVisible {
-            return cached
-        }
-
-        // Look for popover or main content window
-        // Popovers have empty titles and special window classes
-        let window = NSApp.windows.first(where: { window in
-            // Check if it's the main app window by title
-            if window.title == Bundle.applicationName {
-                return true
-            }
-            // Check if it's a popover window (empty title, has content)
-            if window.title.isEmpty && window.contentView != nil {
-                // Verify it's not one of our transparent windows
-                if let identifier = window.identifier?.rawValue {
-                    return ![AnimationWindowID, WordDisplayWindowID, VisualEffectsWindowID].contains(identifier)
-                }
-                return true
-            }
-            return false
-        })
-        cachedMainWindow = window
-        return window
-    }
-    
-    func invalidateCache() {
-        cachedMainWindow = nil
     }
 }
 
@@ -162,57 +56,12 @@ struct ContentView: View {
     @State private var showCustomWordImageEditor = false
     @StateObject private var customWordSetsManager = CustomWordSetsManager.shared
     @StateObject private var randomWordList = RandomWordList.shared
-    @StateObject private var windowManager = WindowManager.shared
 
     @State var hoveringMoreButton: Bool = false
     @State private var babyName: String = ""
     @State private var babyNameTranslation: String = ""
     @State private var babyNameProbability: Double = 0.125
     @State private var babyImagePath: String = ""
-    @State private var lastCalculatedHeight: CGFloat = 0
-    
-    // Calculate preferred content size based on effect type
-    private var preferredHeight: CGFloat {
-        var height: CGFloat = 300 // Base height for lock toggle and effect picker
-        
-        if !eventHandler.accessibilityPermissionGranted {
-            height += 120 // Extra space for permission message
-        }
-        
-        // Add space for voice options
-        if eventHandler.selectedLockEffect == .speakTheKey || 
-           eventHandler.selectedLockEffect == .speakAKeyWord || 
-           eventHandler.selectedLockEffect == .speakRandomWord {
-            height += 60
-        }
-        
-        // Add space for word-related options
-        if eventHandler.selectedLockEffect == .speakAKeyWord {
-            height += 330 // Translation picker, baby name + translation, word set selection, edit buttons
-        }
-
-        // Add space for random word options
-        if eventHandler.selectedLockEffect == .speakRandomWord {
-            height += 310 // Translation picker, baby name + translation + image, baby name probability, edit button
-        }
-
-        // Add space for game mode options
-        if eventHandler.selectedLockEffect == .typingGame {
-            height += 200 // Reset on error toggle, word set selector, flashcard options
-        }
-
-        return height
-    }
-    
-    private func calculateAndUpdateHeight() {
-        let newHeight = preferredHeight
-        // Only log and update if height actually changed
-        if abs(newHeight - lastCalculatedHeight) > 5 {
-            debugPrint("Calculated preferred height: \(newHeight) for effect: \(eventHandler.selectedLockEffect)")
-            lastCalculatedHeight = newHeight
-            windowManager.updateWindowHeight(newHeight, force: true)
-        }
-    }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 22) {
@@ -668,28 +517,10 @@ struct ContentView: View {
                     .padding(.bottom, 4)
                 }
             }
-            // Get the actual size of this content with better debouncing
-            .background(
-                GeometryReader { geo in
-                    Color.clear
-                        .preference(key: ContentHeightKey.self, value: geo.size.height)
-                        .onPreferenceChange(ContentHeightKey.self) { height in
-                            let totalHeight = height + 160 // Add padding and space for top elements
-                            // Only update if height changed significantly and enough time has passed
-                            if abs(totalHeight - lastCalculatedHeight) > 20 && height > 50 {
-                                debugPrint("Content height changed to: \(height)")
-                                lastCalculatedHeight = totalHeight
-                                // Add small delay to let SwiftUI finish its layout calculations
-                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.05) {
-                                    windowManager.updateWindowHeight(totalHeight)
-                                }
-                            }
-                        }
-                }
-            )
         }
         .padding(20)
         .frame(width: 500)
+        .fixedSize(horizontal: false, vertical: true)
         .onAppear {
             // Set initial values first
             if let type = WordSetType(rawValue: savedWordSetType) {
@@ -715,14 +546,6 @@ struct ContentView: View {
                 NSApp.activate(ignoringOtherApps: true)
                 _ = eventHandler.requestAccessibilityPermissions()
             }
-
-            // Delay window sizing to after UI stabilizes
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                let initialHeight = preferredHeight
-                debugPrint("ContentView appeared with height: \(initialHeight)")
-                lastCalculatedHeight = initialHeight
-                windowManager.updateWindowHeight(initialHeight, force: true)
-            }
         }
         .onChange(of: eventHandler.isLocked) { oldVal, newVal in
             playLockSound(isLocked: newVal)
@@ -732,12 +555,6 @@ struct ContentView: View {
         }
         .onChange(of: eventHandler.selectedLockEffect) { oldVal, newVal in
             selectedLockEffect = newVal
-            // Force height recalculation immediately since preference might not trigger
-            calculateAndUpdateHeight()
-        }
-        .onChange(of: eventHandler.accessibilityPermissionGranted) { _, _ in
-            // Force height recalculation
-            calculateAndUpdateHeight()
         }
         .onChange(of: selectedCategory) { oldValue, newValue in
             // When changing category, only switch if current effect is incompatible

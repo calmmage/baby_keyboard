@@ -24,7 +24,9 @@ struct BabyKeyboardLockApp: App {
     @ObservedObject var eventHandler: EventHandler = EventHandler.shared
 
     var body: some Scene {
-        Group { }
+        Settings {
+            AdvancedSettingsView()
+        }
     }
     
     init() {
@@ -83,14 +85,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             .store(in: &cancellables)
         
         self.popover = NSPopover()
-         self.popover.contentSize = NSSize(width: 500, height: 400)
-        // self.popover.appearance = NSAppearance(named: .accessibilityHighContrastVibrantLight)
         self.popover.behavior = .transient
         let rootView = ContentView(eventHandler: EventHandler.shared)
         let nSHostingController = NSHostingController(rootView: rootView)
-        
-        // nSHostingController.preferredContentSize = NSSize(width: 300, height: 300)
-        
+
         self.popover.contentViewController = nSHostingController
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) {
             self.showPopover()
@@ -162,29 +160,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let button = statusItem.button {
             popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
 
-            // Make the popover's window active and adjust position to keep it on screen
-            if let window = popover.contentViewController?.view.window,
-               let screen = NSScreen.main {
+            // Make the popover's window active
+            if let window = popover.contentViewController?.view.window {
                 window.makeKey()
-
-                // Small delay to let the popover position itself first
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-                    var windowFrame = window.frame
-                    let visibleFrame = screen.visibleFrame
-
-                    // Check if window extends beyond right edge of screen
-                    if windowFrame.maxX > visibleFrame.maxX {
-                        windowFrame.origin.x = visibleFrame.maxX - windowFrame.width - 10
-                    }
-
-                    // Check if window extends beyond left edge of screen
-                    if windowFrame.minX < visibleFrame.minX {
-                        windowFrame.origin.x = visibleFrame.minX + 10
-                    }
-
-                    // Apply the adjusted position
-                    window.setFrame(windowFrame, display: true, animate: false)
-                }
             }
         }
     }
