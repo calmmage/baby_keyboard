@@ -64,29 +64,45 @@ struct ContentView: View {
     @State private var babyImagePath: String = ""
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 22) {
-            Toggle(isOn: $eventHandler.isLocked)
-            {
-                Label(
-                    "Lock Keyboard",
-                    image: eventHandler.isLocked ? "keyboard.locked" : "keyboard.unlocked"
-                )
-                .font(.title)
-                .foregroundColor(eventHandler.accessibilityPermissionGranted ? .primary : .gray)
-            }
-            .toggleStyle(SwitchToggleStyle(tint: .red))
-            .scaledToFill()
-            .disabled(!eventHandler.accessibilityPermissionGranted)
-            .padding(.bottom, eventHandler.accessibilityPermissionGranted ? 20 : 5)
-            .onChange(of: eventHandler.isLocked) { oldVal, newVal in
-                playLockSound(isLocked: newVal)
-            
-                if eventHandler.isLocked {
-                    playLockSound(isLocked: true)
+        VStack(alignment: .leading, spacing: 0) {
+            // Top bar with lock toggle and quit button
+            HStack {
+                Toggle(isOn: $eventHandler.isLocked)
+                {
+                    Label(
+                        "Lock Keyboard",
+                        image: eventHandler.isLocked ? "keyboard.locked" : "keyboard.unlocked"
+                    )
+                    .font(.title)
+                    .foregroundColor(eventHandler.accessibilityPermissionGranted ? .primary : .gray)
                 }
+                .toggleStyle(SwitchToggleStyle(tint: .red))
+                .disabled(!eventHandler.accessibilityPermissionGranted)
+                .onChange(of: eventHandler.isLocked) { oldVal, newVal in
+                    playLockSound(isLocked: newVal)
+
+                    if eventHandler.isLocked {
+                        playLockSound(isLocked: true)
+                    }
+                }
+
+                Spacer()
+
+                Button("Quit") {
+                    NSApp.terminate(nil)
+                }
+                .buttonStyle(.plain)
+                .foregroundColor(.secondary)
             }
-            
-            Group {
+            .padding(.horizontal, 20)
+            .padding(.top, 20)
+            .padding(.bottom, eventHandler.accessibilityPermissionGranted ? 20 : 10)
+
+            Divider()
+
+            // Scrollable content
+            ScrollView {
+                VStack(alignment: .leading, spacing: 22) {
                 if !eventHandler.accessibilityPermissionGranted {
                     VStack(alignment: .leading, spacing: 8) {
                         Text("This app needs Accessibility access to work.")
@@ -484,43 +500,31 @@ struct ContentView: View {
                     Text("Lock keyboard on launch")
                 }
                 .toggleStyle(CheckboxToggleStyle())
-                
+
                 Toggle(isOn: $launchOnStartup) {
                     Text("Launch on startup")
                 }
                 .toggleStyle(CheckboxToggleStyle())
-                
-                Spacer()
-                
+
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Keyboard shortcut: Ctrl + Option + U")
                         .font(.footnote)
                         .fixedSize(horizontal: false, vertical: true)
                         .foregroundColor(.secondary)
-                    
-                    Divider()
-                        .padding(.vertical, 8)
-                    
-                    HStack {
-                        Button("About") {
-                            AboutView().openInWindow(id: "About", sender: self, focus: true)
-                        }
-                        .buttonStyle(.plain)
-                        
-                        Spacer()
-                        
-                        Button("Quit \(Bundle.applicationName)") {
-                            NSApp.terminate(nil)
-                        }
-                        .buttonStyle(.plain)
+
+                    Button("About") {
+                        AboutView().openInWindow(id: "About", sender: self, focus: true)
                     }
-                    .padding(.bottom, 4)
+                    .buttonStyle(.plain)
+                    .padding(.top, 8)
                 }
+                .padding(.top, 8)
+                }
+                .padding(.horizontal, 20)
+                .padding(.bottom, 20)
             }
         }
-        .padding(20)
-        .frame(width: 500)
-        .fixedSize(horizontal: false, vertical: true)
+        .frame(width: 500, height: 600)
         .onAppear {
             // Set initial values first
             if let type = WordSetType(rawValue: savedWordSetType) {
