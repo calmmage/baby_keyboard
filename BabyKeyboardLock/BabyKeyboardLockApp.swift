@@ -160,9 +160,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let button = statusItem.button {
             popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
 
-            // Make the popover's window active
-            if let window = popover.contentViewController?.view.window {
+            // Make the popover's window active and keep it on screen
+            if let window = popover.contentViewController?.view.window,
+               let screen = NSScreen.main {
                 window.makeKey()
+
+                // Small delay to let the popover position itself first
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+                    var windowFrame = window.frame
+                    let visibleFrame = screen.visibleFrame
+
+                    // Check if window extends beyond right edge of screen
+                    if windowFrame.maxX > visibleFrame.maxX {
+                        windowFrame.origin.x = visibleFrame.maxX - windowFrame.width - 10
+                    }
+
+                    // Check if window extends beyond left edge of screen
+                    if windowFrame.minX < visibleFrame.minX {
+                        windowFrame.origin.x = visibleFrame.minX + 10
+                    }
+
+                    // Apply the adjusted position (but don't change size)
+                    window.setFrame(windowFrame, display: true, animate: false)
+                }
             }
         }
     }
