@@ -366,6 +366,16 @@ struct ContentView: View {
                         .padding(.top, 5)
                     }
 
+                    if eventHandler.selectedLockEffect == .speakRandomWord {
+                        Toggle(isOn: Binding(
+                            get: { eventHandler.gamifyRandomWordEnabled },
+                            set: { eventHandler.setGamifyRandomWordEnabled($0) }
+                        )) {
+                            Text("Gamify: find the letter before reward")
+                        }
+                        .toggleStyle(CheckboxToggleStyle())
+                    }
+
                     // Word display duration settings
                     VStack(alignment: .leading, spacing: 5) {
                         Text("Word Display Duration: \(String(format: "%.1f", wordDisplayDuration))s")
@@ -722,12 +732,12 @@ struct WordSetEditorView: View {
             }
             
             HStack {
-                Spacer()
-                
                 Button("Cancel") {
                     presentationMode.wrappedValue.dismiss()
                 }
-                
+
+                Spacer()
+
                 Button("Save") {
                     customWordSetsManager.updateMainWords(words: words)
                     presentationMode.wrappedValue.dismiss()
@@ -738,9 +748,13 @@ struct WordSetEditorView: View {
         .padding()
         .frame(width: 400, height: 400)
         .onAppear {
+            centerMenuWindow()
             if let currentSet = customWordSetsManager.currentWordSet {
                 words = currentSet.words
             }
+        }
+        .onExitCommand {
+            presentationMode.wrappedValue.dismiss()
         }
     }
     
@@ -757,6 +771,12 @@ struct WordSetEditorView: View {
     
     private func deleteWord(at offsets: IndexSet) {
         words.remove(atOffsets: offsets)
+    }
+
+    private func centerMenuWindow() {
+        if let window = NSApp.windows.first(where: { $0.isSheet }) {
+            window.center()
+        }
     }
 }
 
@@ -861,17 +881,20 @@ struct CustomWordImageEditorView: View {
             }
 
             HStack {
-                Spacer()
-
                 Button("Done") {
                     presentationMode.wrappedValue.dismiss()
                 }
+                Spacer()
             }
         }
         .padding()
         .frame(width: 550, height: 450)
         .onAppear {
+            centerMenuWindow()
             loadCustomImages()
+        }
+        .onExitCommand {
+            presentationMode.wrappedValue.dismiss()
         }
     }
 
@@ -908,6 +931,12 @@ struct CustomWordImageEditorView: View {
                 loadCustomImages()
                 newWord = ""
             }
+        }
+    }
+
+    private func centerMenuWindow() {
+        if let window = NSApp.windows.first(where: { $0.isSheet }) {
+            window.center()
         }
     }
 }

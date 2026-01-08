@@ -128,34 +128,37 @@ struct RandomWordEditorView: View {
                 }
 
                 HStack {
-                    Spacer()
-
                     Button("Save Changes") {
                         if let index = selectedSetIndex {
                             randomWordList.updateWordSet(at: index, newWords: words)
                         }
                     }
                     .disabled(words.isEmpty)
+
+                    Spacer()
                 }
             }
 
             Spacer()
 
             HStack {
-                Spacer()
-
                 Button("Close") {
                     presentationMode.wrappedValue.dismiss()
                 }
+                Spacer()
             }
         }
         .padding()
         .frame(width: 600, height: 550)
         .onAppear {
+            centerMenuWindow()
             if selectedSetIndex == nil, !randomWordList.wordSets.isEmpty {
                 selectedSetIndex = 0
                 words = randomWordList.wordSets[0].words
             }
+        }
+        .onExitCommand {
+            presentationMode.wrappedValue.dismiss()
         }
         .alert("New Word Set", isPresented: $showingNewSetDialog) {
             TextField("Set name", text: $newSetName)
@@ -233,4 +236,10 @@ struct RandomWordEditorView: View {
             }
         }
     }
-} 
+
+    private func centerMenuWindow() {
+        if let window = NSApp.windows.first(where: { $0.isSheet }) {
+            window.center()
+        }
+    }
+}
