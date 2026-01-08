@@ -512,11 +512,19 @@ struct ContentView: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .foregroundColor(.secondary)
 
-                    Button("About") {
-                        AboutView().openInWindow(id: "About", sender: self, focus: true)
+                    HStack(spacing: 16) {
+                        Button("Settings") {
+                            AdvancedSettingsView().openInWindow(id: "Settings", sender: self, focus: true)
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.top, 8)
+
+                        Button("About") {
+                            AboutView().openInWindow(id: "About", sender: self, focus: true)
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.top, 8)
                     }
-                    .buttonStyle(.plain)
-                    .padding(.top, 8)
                 }
                 .padding(.top, 8)
                 }
@@ -774,14 +782,21 @@ struct CustomWordImageEditorView: View {
                         Text(customImage.word)
                             .font(.body)
                         Spacer()
-                        Text(URL(fileURLWithPath: customImage.imagePath).lastPathComponent)
+                        Text("\(customImage.imagePaths.count) image(s)")
                             .font(.caption)
                             .foregroundColor(.secondary)
                             .lineLimit(1)
                             .frame(maxWidth: 150)
 
                         Button(action: {
-                            selectImageForWord(customImage.word)
+                            selectImageForWord(customImage.word, replaceExisting: false)
+                        }) {
+                            Image(systemName: "photo.badge.plus")
+                        }
+                        .buttonStyle(PlainButtonStyle())
+
+                        Button(action: {
+                            selectImageForWord(customImage.word, replaceExisting: true)
                         }) {
                             Image(systemName: "photo")
                         }
@@ -808,7 +823,7 @@ struct CustomWordImageEditorView: View {
 
                 Button(action: {
                     if !newWord.isEmpty {
-                        selectImageForWord(newWord)
+                        selectImageForWord(newWord, replaceExisting: false)
                     }
                 }) {
                     Image(systemName: "plus")
@@ -868,14 +883,14 @@ struct CustomWordImageEditorView: View {
         // Check if word already exists
         if customImages.contains(where: { $0.word.lowercased() == word.lowercased() }) {
             // Just select new image
-            selectImageForWord(word)
+            selectImageForWord(word, replaceExisting: false)
         } else {
             newWord = word
-            selectImageForWord(word)
+            selectImageForWord(word, replaceExisting: false)
         }
     }
 
-    private func selectImageForWord(_ word: String) {
+    private func selectImageForWord(_ word: String, replaceExisting: Bool) {
         let panel = NSOpenPanel()
         panel.canChooseFiles = true
         panel.canChooseDirectories = false
@@ -885,7 +900,11 @@ struct CustomWordImageEditorView: View {
 
         panel.begin { response in
             if response == .OK, let url = panel.url {
-                randomWordList.setCustomWordImage(word: word, url: url)
+                if replaceExisting {
+                    randomWordList.setCustomWordImage(word: word, url: url)
+                } else {
+                    randomWordList.addCustomWordImage(word: word, url: url)
+                }
                 loadCustomImages()
                 newWord = ""
             }

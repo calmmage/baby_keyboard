@@ -1,4 +1,4 @@
-.PHONY: generate-images download-openimages
+.PHONY: generate-images download-openimages help
 
 PYTHON := .venv/bin/python3
 .PHONY: test-openimage run-openimage test-gemini run-gemini
@@ -88,3 +88,9 @@ export:
 # Install to Applications folder
 install:
 	@./scripts/install.sh
+
+help:
+	@printf "make deploy\n"
+	@printf "make update\n"
+	@printf "make generate-images\n"
+	@printf "make download-openimages\n"

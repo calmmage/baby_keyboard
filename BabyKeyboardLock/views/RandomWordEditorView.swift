@@ -68,6 +68,8 @@ struct RandomWordEditorView: View {
                             .buttonStyle(.plain)
 
                             Button(action: {
+                                selectedSetIndex = index
+                                words = randomWordList.wordSets[index].words
                                 renameSetIndex = index
                                 renameSetName = randomWordList.wordSets[index].name
                                 showingRenameDialog = true
@@ -115,19 +117,6 @@ struct RandomWordEditorView: View {
             HStack {
                 TextField("English word", text: $newEnglishWord)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                
-                TextField("Translation", text: $newTranslation)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                
-                Button(action: addWord) {
-                    Image(systemName: "plus")
-                }
-                .disabled(newEnglishWord.isEmpty || newTranslation.isEmpty)
-            }
-            
-                HStack {
-                    TextField("English word", text: $newEnglishWord)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
 
                     TextField("Translation", text: $newTranslation)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -162,6 +151,12 @@ struct RandomWordEditorView: View {
         }
         .padding()
         .frame(width: 600, height: 550)
+        .onAppear {
+            if selectedSetIndex == nil, !randomWordList.wordSets.isEmpty {
+                selectedSetIndex = 0
+                words = randomWordList.wordSets[0].words
+            }
+        }
         .alert("New Word Set", isPresented: $showingNewSetDialog) {
             TextField("Set name", text: $newSetName)
             Button("Cancel", role: .cancel) {

@@ -38,13 +38,17 @@ struct TypingGameView: View {
 
                     // Flashcard image if enabled
                     if showFlashcards && flashcardStyle != .none {
-                        if let imagePath = getImagePath() {
-                            if let nsImage = NSImage(contentsOfFile: imagePath) {
+                        if let imageURL = getImageURL() {
+                            let didStartAccessing = imageURL.startAccessingSecurityScopedResource()
+                            if let nsImage = NSImage(contentsOf: imageURL) {
                                 Image(nsImage: nsImage)
                                     .resizable()
                                     .scaledToFit()
                                     .frame(width: CGFloat(flashcardImageSize), height: CGFloat(flashcardImageSize))
                                     .shadow(radius: 10)
+                            }
+                            if didStartAccessing {
+                                imageURL.stopAccessingSecurityScopedResource()
                             }
                         }
                     }
@@ -87,25 +91,25 @@ struct TypingGameView: View {
         }
     }
 
-    private func getImagePath() -> String? {
+    private func getImageURL() -> URL? {
         let word = typingGameState.currentWord.lowercased()
 
         // Check for custom word image first
-        if let customImage = RandomWordList.shared.customWordImages.first(where: { $0.word.lowercased() == word }) {
-            return customImage.imagePath
+        if let customImageURL = RandomWordList.shared.getCustomImageURL(for: word) {
+            return customImageURL
         }
 
         // Check for baby image if word matches baby name
-        if !RandomWordList.shared.babyImagePath.isEmpty &&
-           word == RandomWordList.shared.babyName.lowercased() {
-            return RandomWordList.shared.babyImagePath
+        if word == RandomWordList.shared.babyName.lowercased(),
+           let babyImageURL = RandomWordList.shared.getBabyImageURL() {
+            return babyImageURL
         }
 
         // Try to find image in Resources
         if let resourcePath = Bundle.main.resourcePath {
             let imagePath = "\(resourcePath)/Resources/\(word).png"
             if FileManager.default.fileExists(atPath: imagePath) {
-                return imagePath
+                return URL(fileURLWithPath: imagePath)
             }
         }
 

@@ -10,7 +10,44 @@ struct RandomWord: Codable, Hashable, Identifiable {
 struct CustomWordImage: Codable, Hashable, Identifiable {
     var id = UUID()
     let word: String  // The word this image is for
-    let imagePath: String  // Path to the custom image
+    var imagePaths: [String]  // Paths to custom images
+
+    init(word: String, imagePaths: [String]) {
+        self.word = word
+        self.imagePaths = imagePaths
+    }
+
+    init(word: String, imagePath: String) {
+        self.word = word
+        self.imagePaths = [imagePath]
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case word
+        case imagePaths
+        case imagePath
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decodeIfPresent(UUID.self, forKey: .id) ?? UUID()
+        word = try container.decode(String.self, forKey: .word)
+        if let paths = try container.decodeIfPresent([String].self, forKey: .imagePaths) {
+            imagePaths = paths
+        } else if let path = try container.decodeIfPresent(String.self, forKey: .imagePath) {
+            imagePaths = [path]
+        } else {
+            imagePaths = []
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(word, forKey: .word)
+        try container.encode(imagePaths, forKey: .imagePaths)
+    }
 }
 
 struct RandomWordSet: Codable, Hashable, Identifiable {
@@ -40,7 +77,11 @@ class RandomWordList: ObservableObject {
     @Published var babyImagePath: String = ""
     private var babyImageBookmark: Data?
     @Published var customWordImages: [CustomWordImage] = []
-    private var customWordImageBookmarks: [String: Data] = [:] // word -> bookmark data
+    private var customWordImageBookmarks: [String: [Data]] = [:] // word -> bookmark data
+    private var customImageQueues: [String: [Int]] = [:]
+    private var randomWordQueue: [RandomWord] = []
+    private var lastRandomWordEnglish: String?
+    private var babyNameRngAccumulator: Double = 0.0
 
     var words: [RandomWord] {
         var allWords: [RandomWord] = []
@@ -314,13 +355,20 @@ class RandomWordList: ObservableObject {
     
     func getRandomWord() -> RandomWord? {
         // If baby name is set, include it in the random selection based on configured probability
-        if !babyName.isEmpty && Double.random(in: 0.0...1.0) < babyNameProbability {
+        if shouldPickBabyName() {
             let translation = babyNameTranslation.isEmpty ? babyName : babyNameTranslation
             return RandomWord(english: babyName, translation: translation)
         }
 
         guard !words.isEmpty else { return nil }
-        return words.randomElement()
+        refreshRandomWordQueueIfNeeded()
+        if randomWordQueue.isEmpty {
+            refillRandomWordQueue()
+        }
+        guard !randomWordQueue.isEmpty else { return words.randomElement() }
+        let nextWord = randomWordQueue.removeFirst()
+        lastRandomWordEnglish = nextWord.english.lowercased()
+        return nextWord
     }
     
     func findWord(english: String) -> RandomWord? {
@@ -390,6 +438,7 @@ class RandomWordList: ObservableObject {
 
     func setBabyNameProbability(_ probability: Double) {
         babyNameProbability = max(0.0, min(1.0, probability)) // Clamp between 0 and 1
+        babyNameRngAccumulator = 0.0
         saveBabyNameProbability()
     }
 
@@ -405,7 +454,7 @@ class RandomWordList: ObservableObject {
         // Create security-scoped bookmark for sandboxed access
         do {
             let bookmarkData = try url.bookmarkData(
-                options: .withSecurityScope,
+                options: [.withSecurityScope, .securityScopeAllowOnlyReadAccess],
                 includingResourceValuesForKeys: nil,
                 relativeTo: nil
             )
@@ -436,7 +485,7 @@ class RandomWordList: ObservableObject {
                     debugPrint("Baby image bookmark is stale, recreating...")
                     // Try to recreate the bookmark
                     if let newBookmarkData = try? url.bookmarkData(
-                        options: .withSecurityScope,
+                        options: [.withSecurityScope, .securityScopeAllowOnlyReadAccess],
                         includingResourceValuesForKeys: nil,
                         relativeTo: nil
                     ) {
@@ -561,7 +610,9 @@ class RandomWordList: ObservableObject {
 
     func setCustomWordImage(word: String, url: URL) {
         // Remove existing image for this word if any
-        customWordImages.removeAll { $0.word.lowercased() == word.lowercased() }
+        let lowercasedWord = word.lowercased()
+        customWordImages.removeAll { $0.word.lowercased() == lowercasedWord }
+        customImageQueues.removeValue(forKey: lowercasedWord)
 
         // Add new image
         let customImage = CustomWordImage(word: word, imagePath: url.path)
@@ -570,11 +621,11 @@ class RandomWordList: ObservableObject {
         // Create security-scoped bookmark
         do {
             let bookmarkData = try url.bookmarkData(
-                options: .withSecurityScope,
+                options: [.withSecurityScope, .securityScopeAllowOnlyReadAccess],
                 includingResourceValuesForKeys: nil,
                 relativeTo: nil
             )
-            customWordImageBookmarks[word.lowercased()] = bookmarkData
+            customWordImageBookmarks[lowercasedWord] = [bookmarkData]
             saveCustomWordImageBookmarks()
         } catch {
             debugPrint("Failed to create bookmark for custom image: \(error)")
@@ -584,9 +635,68 @@ class RandomWordList: ObservableObject {
         NotificationCenter.default.post(name: .init("CustomWordImagesUpdated"), object: nil)
     }
 
+    func addCustomWordImage(word: String, url: URL) {
+        let lowercasedWord = word.lowercased()
+        var didAppendPath = false
+        if let index = customWordImages.firstIndex(where: { $0.word.lowercased() == lowercasedWord }) {
+            if !customWordImages[index].imagePaths.contains(url.path) {
+                customWordImages[index].imagePaths.append(url.path)
+                didAppendPath = true
+            }
+        } else {
+            let customImage = CustomWordImage(word: word, imagePath: url.path)
+            customWordImages.append(customImage)
+            didAppendPath = true
+        }
+
+        if didAppendPath {
+            do {
+                let bookmarkData = try url.bookmarkData(
+                    options: [.withSecurityScope, .securityScopeAllowOnlyReadAccess],
+                    includingResourceValuesForKeys: nil,
+                    relativeTo: nil
+                )
+                var bookmarks = customWordImageBookmarks[lowercasedWord] ?? []
+                bookmarks.append(bookmarkData)
+                customWordImageBookmarks[lowercasedWord] = bookmarks
+                saveCustomWordImageBookmarks()
+            } catch {
+                debugPrint("Failed to create bookmark for custom image: \(error)")
+            }
+        }
+
+        customImageQueues.removeValue(forKey: lowercasedWord)
+        saveCustomWordImages()
+        NotificationCenter.default.post(name: .init("CustomWordImagesUpdated"), object: nil)
+    }
+
     func removeCustomWordImage(word: String) {
-        customWordImages.removeAll { $0.word.lowercased() == word.lowercased() }
-        customWordImageBookmarks.removeValue(forKey: word.lowercased())
+        let lowercasedWord = word.lowercased()
+        customWordImages.removeAll { $0.word.lowercased() == lowercasedWord }
+        customWordImageBookmarks.removeValue(forKey: lowercasedWord)
+        customImageQueues.removeValue(forKey: lowercasedWord)
+        saveCustomWordImages()
+        saveCustomWordImageBookmarks()
+        NotificationCenter.default.post(name: .init("CustomWordImagesUpdated"), object: nil)
+    }
+
+    func removeCustomWordImage(word: String, imagePath: String) {
+        let lowercasedWord = word.lowercased()
+        guard let index = customWordImages.firstIndex(where: { $0.word.lowercased() == lowercasedWord }) else {
+            return
+        }
+        if let pathIndex = customWordImages[index].imagePaths.firstIndex(of: imagePath) {
+            customWordImages[index].imagePaths.remove(at: pathIndex)
+            if var bookmarks = customWordImageBookmarks[lowercasedWord], pathIndex < bookmarks.count {
+                bookmarks.remove(at: pathIndex)
+                customWordImageBookmarks[lowercasedWord] = bookmarks.isEmpty ? nil : bookmarks
+            }
+        }
+        if customWordImages[index].imagePaths.isEmpty {
+            customWordImages.remove(at: index)
+            customWordImageBookmarks.removeValue(forKey: lowercasedWord)
+        }
+        customImageQueues.removeValue(forKey: lowercasedWord)
         saveCustomWordImages()
         saveCustomWordImageBookmarks()
         NotificationCenter.default.post(name: .init("CustomWordImagesUpdated"), object: nil)
@@ -594,9 +704,16 @@ class RandomWordList: ObservableObject {
 
     func getCustomImageURL(for word: String) -> URL? {
         let lowercasedWord = word.lowercased()
+        guard let customImage = customWordImages.first(where: { $0.word.lowercased() == lowercasedWord }) else {
+            return nil
+        }
+
+        let paths = customImage.imagePaths
+        guard !paths.isEmpty else { return nil }
+        let imageIndex = nextCustomImageIndex(for: lowercasedWord, count: paths.count)
 
         // Try to resolve from security-scoped bookmark first
-        if let bookmarkData = customWordImageBookmarks[lowercasedWord] {
+        if let bookmarkData = bookmarkDataForWord(lowercasedWord, imageIndex: imageIndex) {
             var isStale = false
             do {
                 let url = try URL(
@@ -610,11 +727,11 @@ class RandomWordList: ObservableObject {
                     debugPrint("Custom image bookmark is stale for '\(word)', recreating...")
                     // Try to recreate the bookmark
                     if let newBookmarkData = try? url.bookmarkData(
-                        options: .withSecurityScope,
+                        options: [.withSecurityScope, .securityScopeAllowOnlyReadAccess],
                         includingResourceValuesForKeys: nil,
                         relativeTo: nil
                     ) {
-                        customWordImageBookmarks[lowercasedWord] = newBookmarkData
+                        setBookmarkData(newBookmarkData, word: lowercasedWord, imageIndex: imageIndex)
                         saveCustomWordImageBookmarks()
                     }
                 }
@@ -626,10 +743,8 @@ class RandomWordList: ObservableObject {
         }
 
         // Fallback to path-based access
-        if let customImage = customWordImages.first(where: { $0.word.lowercased() == lowercasedWord }) {
-            if !customImage.imagePath.isEmpty {
-                return URL(fileURLWithPath: customImage.imagePath)
-            }
+        if imageIndex < paths.count {
+            return URL(fileURLWithPath: paths[imageIndex])
         }
 
         return nil
@@ -647,9 +762,12 @@ class RandomWordList: ObservableObject {
             customWordImages = decodedImages
         }
 
-        if let savedBookmarks = UserDefaults.standard.data(forKey: customWordImageBookmarksKey),
-           let decodedBookmarks = try? JSONDecoder().decode([String: Data].self, from: savedBookmarks) {
-            customWordImageBookmarks = decodedBookmarks
+        if let savedBookmarks = UserDefaults.standard.data(forKey: customWordImageBookmarksKey) {
+            if let decodedBookmarks = try? JSONDecoder().decode([String: [Data]].self, from: savedBookmarks) {
+                customWordImageBookmarks = decodedBookmarks
+            } else if let decodedBookmarks = try? JSONDecoder().decode([String: Data].self, from: savedBookmarks) {
+                customWordImageBookmarks = decodedBookmarks.mapValues { [$0] }
+            }
         }
     }
 
@@ -658,4 +776,69 @@ class RandomWordList: ObservableObject {
             UserDefaults.standard.set(encoded, forKey: customWordImageBookmarksKey)
         }
     }
-} 
+
+    private func shouldPickBabyName() -> Bool {
+        guard !babyName.isEmpty else { return false }
+        guard babyNameProbability > 0 else { return false }
+        babyNameRngAccumulator = min(1.0, babyNameRngAccumulator + babyNameProbability)
+        if Double.random(in: 0.0...1.0) < babyNameRngAccumulator {
+            babyNameRngAccumulator = 0.0
+            return true
+        }
+        return false
+    }
+
+    private func refreshRandomWordQueueIfNeeded() {
+        guard !randomWordQueue.isEmpty else { return }
+        let currentWords = Set(words)
+        if !currentWords.isSuperset(of: randomWordQueue) {
+            randomWordQueue.removeAll()
+        }
+    }
+
+    private func refillRandomWordQueue() {
+        guard !words.isEmpty else { return }
+        randomWordQueue = words.shuffled()
+        if let lastWordEnglish = lastRandomWordEnglish,
+           randomWordQueue.count > 1,
+           randomWordQueue.first?.english.lowercased() == lastWordEnglish {
+            randomWordQueue.shuffle()
+        }
+    }
+
+    private func nextCustomImageIndex(for word: String, count: Int) -> Int {
+        if count <= 1 {
+            return 0
+        }
+        if var queue = customImageQueues[word], !queue.isEmpty {
+            let nextIndex = queue.removeFirst()
+            customImageQueues[word] = queue
+            return nextIndex
+        }
+        var indices = Array(0..<count)
+        indices.shuffle()
+        let nextIndex = indices.removeFirst()
+        customImageQueues[word] = indices
+        return nextIndex
+    }
+
+    private func bookmarkDataForWord(_ word: String, imageIndex: Int) -> Data? {
+        guard let bookmarks = customWordImageBookmarks[word] else {
+            return nil
+        }
+        if imageIndex < bookmarks.count {
+            return bookmarks[imageIndex]
+        }
+        return bookmarks.first
+    }
+
+    private func setBookmarkData(_ bookmarkData: Data, word: String, imageIndex: Int) {
+        var bookmarks = customWordImageBookmarks[word] ?? []
+        if imageIndex < bookmarks.count {
+            bookmarks[imageIndex] = bookmarkData
+        } else {
+            bookmarks.append(bookmarkData)
+        }
+        customWordImageBookmarks[word] = bookmarks
+    }
+}

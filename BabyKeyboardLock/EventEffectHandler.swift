@@ -350,22 +350,7 @@ class EventEffectHandler {
         case .speakRandomWord:
             synth.stopSpeaking(at: .immediate)
             
-            // Get a random word from RandomWordList
-            let randomWord: RandomWord?
-            
-            // Chance to speak baby's name if set
-            if !RandomWordList.shared.babyName.isEmpty && Int.random(in: 1...4) == 1 {
-                // Use baby's name
-                let babyName = RandomWordList.shared.babyName
-                let utterance = createUtterance(for: babyName)
-                synth.speak(utterance)
-                return babyName
-            } else {
-                // Use random word from list
-                randomWord = RandomWordList.shared.getRandomWord()
-            }
-            
-            guard let randomWord = randomWord else {
+            guard let randomWord = RandomWordList.shared.getRandomWord() else {
                 return keyStr
             }
             
