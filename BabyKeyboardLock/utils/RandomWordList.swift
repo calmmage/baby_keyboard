@@ -79,9 +79,8 @@ class RandomWordList: ObservableObject {
     @Published var customWordImages: [CustomWordImage] = []
     private var customWordImageBookmarks: [String: [Data]] = [:] // word -> bookmark data
     private var customImageQueues: [String: [Int]] = [:]
-    private var randomWordQueue: [RandomWord] = []
-    private var lastRandomWordEnglish: String?
     private var babyNameRngAccumulator: Double = 0.0
+    private var recentWordHistory: [String] = []
 
     var words: [RandomWord] {
         var allWords: [RandomWord] = []
@@ -361,14 +360,8 @@ class RandomWordList: ObservableObject {
         }
 
         guard !words.isEmpty else { return nil }
-        refreshRandomWordQueueIfNeeded()
-        if randomWordQueue.isEmpty {
-            refillRandomWordQueue()
-        }
-        guard !randomWordQueue.isEmpty else { return words.randomElement() }
-        let nextWord = randomWordQueue.removeFirst()
-        lastRandomWordEnglish = nextWord.english.lowercased()
-        return nextWord
+        refreshRecentHistoryIfNeeded()
+        return selectWeightedWord(from: words)
     }
     
     func findWord(english: String) -> RandomWord? {
@@ -788,22 +781,68 @@ class RandomWordList: ObservableObject {
         return false
     }
 
-    private func refreshRandomWordQueueIfNeeded() {
-        guard !randomWordQueue.isEmpty else { return }
-        let currentWords = Set(words)
-        if !currentWords.isSuperset(of: randomWordQueue) {
-            randomWordQueue.removeAll()
+    private func refreshRecentHistoryIfNeeded() {
+        guard !recentWordHistory.isEmpty else { return }
+        let currentWords = Set(words.map { $0.english.lowercased() })
+        recentWordHistory = recentWordHistory.filter { currentWords.contains($0) }
+        let limit = recentHistoryLimit(for: currentWords.count)
+        if recentWordHistory.count > limit {
+            recentWordHistory.removeFirst(recentWordHistory.count - limit)
         }
     }
 
-    private func refillRandomWordQueue() {
-        guard !words.isEmpty else { return }
-        randomWordQueue = words.shuffled()
-        if let lastWordEnglish = lastRandomWordEnglish,
-           randomWordQueue.count > 1,
-           randomWordQueue.first?.english.lowercased() == lastWordEnglish {
-            randomWordQueue.shuffle()
+    private func selectWeightedWord(from words: [RandomWord]) -> RandomWord? {
+        guard !words.isEmpty else { return nil }
+        let limit = recentHistoryLimit(for: words.count)
+        let maxDistance = max(1, limit - 1)
+        var weights: [Double] = []
+        weights.reserveCapacity(words.count)
+        var totalWeight: Double = 0.0
+
+        for word in words {
+            let key = word.english.lowercased()
+            let weight: Double
+            if let index = recentWordHistory.lastIndex(of: key) {
+                let distance = recentWordHistory.count - 1 - index
+                let normalized = min(Double(distance) / Double(maxDistance), 1.0)
+                weight = 0.2 + 0.8 * normalized
+            } else {
+                weight = 1.2
+            }
+            weights.append(weight)
+            totalWeight += weight
         }
+
+        guard totalWeight > 0 else { return words.randomElement() }
+        let target = Double.random(in: 0.0..<totalWeight)
+        var running: Double = 0.0
+        for (index, weight) in weights.enumerated() {
+            running += weight
+            if running >= target {
+                let chosen = words[index]
+                recordRecentWord(chosen.english)
+                return chosen
+            }
+        }
+
+        let fallback = words.randomElement()
+        if let fallbackWord = fallback {
+            recordRecentWord(fallbackWord.english)
+        }
+        return fallback
+    }
+
+    private func recordRecentWord(_ english: String) {
+        let key = english.lowercased()
+        recentWordHistory.append(key)
+        let limit = recentHistoryLimit(for: words.count)
+        if recentWordHistory.count > limit {
+            recentWordHistory.removeFirst(recentWordHistory.count - limit)
+        }
+    }
+
+    private func recentHistoryLimit(for wordCount: Int) -> Int {
+        return min(12, max(3, wordCount / 3))
     }
 
     private func nextCustomImageIndex(for word: String, count: Int) -> Int {
