@@ -47,6 +47,34 @@ struct WordDisplayView: View {
                 TypingGameView()
                     .frame(width: geometry.size.width, height: geometry.size.height)
             }
+            else if eventHandler.isLocked,
+                    eventHandler.selectedLockEffect == .speakRandomWord,
+                    eventHandler.gamifyRandomWordEnabled,
+                    !eventHandler.gamifyRandomWordTarget.isEmpty,
+                    !showWord {
+                let bgSize = backgroundSize
+                let maxWidth = min(geometry.size.width * 0.6, bgSize.width)
+                let maxHeight = min(geometry.size.height * 0.6, bgSize.height)
+
+                ZStack {
+                    Rectangle()
+                        .fill(Color.white)
+                        .cornerRadius(20)
+                        .shadow(radius: 10)
+                        .frame(width: maxWidth, height: maxHeight)
+
+                    VStack(spacing: 16) {
+                        Text("Find the letter")
+                            .font(.system(size: 28, weight: .medium))
+                            .foregroundColor(.gray)
+                        Text(eventHandler.gamifyRandomWordTarget.uppercased())
+                            .font(.system(size: 120, weight: .bold))
+                            .foregroundColor(.black)
+                    }
+                }
+                .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
+                .transition(.opacity)
+            }
             else if showWord && !word.isEmpty && showFlashcards {
                 let bgSize = backgroundSize
                 let maxWidth = min(geometry.size.width * 0.9, bgSize.width)

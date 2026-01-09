@@ -38,18 +38,13 @@ struct TypingGameView: View {
 
                     // Flashcard image if enabled
                     if showFlashcards && flashcardStyle != .none {
-                        if let imageURL = getImageURL() {
-                            let didStartAccessing = imageURL.startAccessingSecurityScopedResource()
-                            if let nsImage = NSImage(contentsOf: imageURL) {
-                                Image(nsImage: nsImage)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: CGFloat(flashcardImageSize), height: CGFloat(flashcardImageSize))
-                                    .shadow(radius: 10)
-                            }
-                            if didStartAccessing {
-                                imageURL.stopAccessingSecurityScopedResource()
-                            }
+                        if let imageURL = getImageURL(),
+                           let nsImage = loadImage(from: imageURL) {
+                            Image(nsImage: nsImage)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: CGFloat(flashcardImageSize), height: CGFloat(flashcardImageSize))
+                                .shadow(radius: 10)
                         }
                     }
 
@@ -114,6 +109,16 @@ struct TypingGameView: View {
         }
 
         return nil
+    }
+
+    private func loadImage(from url: URL) -> NSImage? {
+        let didStartAccessing = url.startAccessingSecurityScopedResource()
+        defer {
+            if didStartAccessing {
+                url.stopAccessingSecurityScopedResource()
+            }
+        }
+        return NSImage(contentsOf: url)
     }
 }
 

@@ -278,8 +278,12 @@ class EventEffectHandler {
     private var wordSetType: WordSetType = .randomShortWords
     private let customWordSetsManager = CustomWordSetsManager.shared
     private let typingGameState = TypingGameState.shared
+    private let gamifyLetters = Array("abcdefghijklmnopqrstuvwxyz")
+    private var gamifyTargetLetter: String = ""
+    private var gamifyRandomWordEnabled: Bool = false
 
     private let synth = AVSpeechSynthesizer()
+    var primaryLanguage: TranslationLanguage = .english
     var translationLanguage: TranslationLanguage = .none
     var usePersonalVoice: Bool = false
     
@@ -298,7 +302,7 @@ class EventEffectHandler {
         case .speakTheKey:
             // Speak the letter
             synth.stopSpeaking(at: .immediate)
-            let utterance = createUtterance(for: keyStr)
+            let utterance = createUtterance(for: keyStr, language: utteranceLanguage(for: primaryLanguage, allowPersonalVoice: true))
             synth.speak(utterance)
             
             return keyStr
@@ -309,90 +313,38 @@ class EventEffectHandler {
             let randomWord = getRandomWord(forKey: keyStr)
             synth.stopSpeaking(at: .immediate)
             
-            // Get translation if appropriate
-            if translationLanguage != .none, let translation = getTranslation(word: randomWord, language: translationLanguage) {
-                // First speak English
-                let englishUtterance = createUtterance(for: randomWord)
-                synth.speak(englishUtterance)
-                
-                // Then with a slight delay, speak the translation
+            let primaryWord = resolveWord(english: randomWord, fallbackTranslation: nil, language: primaryLanguage) ?? randomWord
+            let secondaryWord = resolveWord(english: randomWord, fallbackTranslation: nil, language: translationLanguage)
+            let primaryUtterance = createUtterance(for: primaryWord, language: utteranceLanguage(for: primaryLanguage, allowPersonalVoice: true))
+            synth.speak(primaryUtterance)
+
+            if let secondaryWord = secondaryWord {
                 DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + EventHandler.shared.wordTranslationDelay) {
-                    let translationUtterance: AVSpeechUtterance
-                    
-                    switch self.translationLanguage {
-                    case .french:
-                        translationUtterance = self.createUtterance(for: translation, language: "fr-FR")
-                    case .russian:
-                        translationUtterance = self.createUtterance(for: translation, language: "ru-RU")
-                    case .german:
-                        translationUtterance = self.createUtterance(for: translation, language: "de-DE")
-                    case .spanish:
-                        translationUtterance = self.createUtterance(for: translation, language: "es-ES")
-                    case .italian:
-                        translationUtterance = self.createUtterance(for: translation, language: "it-IT")
-                    case .japanese:
-                        translationUtterance = self.createUtterance(for: translation, language: "ja-JP")
-                    case .chinese:
-                        translationUtterance = self.createUtterance(for: translation, language: "zh-CN")
-                    case .none:
-                        return
-                    }
-                    
+                    let translationUtterance = self.createUtterance(
+                        for: secondaryWord,
+                        language: self.utteranceLanguage(for: self.translationLanguage, allowPersonalVoice: false)
+                    )
                     self.synth.speak(translationUtterance)
                 }
-            } else {
-                // Just speak English
-                let utterance = createUtterance(for: randomWord)
-                synth.speak(utterance)
             }
             
             return randomWord
         case .speakRandomWord:
             synth.stopSpeaking(at: .immediate)
-            
-            guard let randomWord = RandomWordList.shared.getRandomWord() else {
-                return keyStr
-            }
-            
-            let englishWord = randomWord.english
-            
-            if translationLanguage != .none {
-                // First speak English
-                let englishUtterance = createUtterance(for: englishWord)
-                synth.speak(englishUtterance)
-                
-                // Then with a slight delay, speak the translation
-                DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + EventHandler.shared.wordTranslationDelay) {
-                    let translationUtterance: AVSpeechUtterance
-                    
-                    switch self.translationLanguage {
-                    case .french:
-                        translationUtterance = self.createUtterance(for: randomWord.translation, language: "fr-FR")
-                    case .russian:
-                        translationUtterance = self.createUtterance(for: randomWord.translation, language: "ru-RU")
-                    case .german:
-                        translationUtterance = self.createUtterance(for: randomWord.translation, language: "de-DE")
-                    case .spanish:
-                        translationUtterance = self.createUtterance(for: randomWord.translation, language: "es-ES")
-                    case .italian:
-                        translationUtterance = self.createUtterance(for: randomWord.translation, language: "it-IT")
-                    case .japanese:
-                        translationUtterance = self.createUtterance(for: randomWord.translation, language: "ja-JP")
-                    case .chinese:
-                        translationUtterance = self.createUtterance(for: randomWord.translation, language: "zh-CN")
-                    case .none:
-                        return
-                    }
-                    
-                    self.synth.speak(translationUtterance)
+            if gamifyRandomWordEnabled {
+                let keyLower = keyStr.lowercased()
+                if gamifyTargetLetter.isEmpty {
+                    selectNewGamifyTarget(announce: true)
+                    return ""
                 }
-            } else {
-                // Just speak English
-                let utterance = createUtterance(for: englishWord)
-                synth.speak(utterance)
+                guard keyLower.count == 1, keyLower == gamifyTargetLetter else {
+                    return ""
+                }
+                gamifyTargetLetter = ""
+                return speakRandomWord() ?? ""
             }
-            
-            return englishWord
+
+            return speakRandomWord() ?? keyStr
         case .typingGame:
             // Typing game mode - validate key press and provide feedback
 
@@ -599,6 +551,80 @@ class EventEffectHandler {
     
     func setWordSetType(_ type: WordSetType) {
         wordSetType = type
+    }
+
+    func setGamifyRandomWordEnabled(_ enabled: Bool) {
+        gamifyRandomWordEnabled = enabled
+        if enabled {
+            if gamifyTargetLetter.isEmpty {
+                selectNewGamifyTarget(announce: false)
+            }
+        } else {
+            gamifyTargetLetter = ""
+        }
+    }
+
+    func getGamifyTargetLetter() -> String {
+        gamifyTargetLetter
+    }
+
+    private func selectNewGamifyTarget(announce: Bool) {
+        guard let letter = gamifyLetters.randomElement() else { return }
+        if gamifyTargetLetter == String(letter), gamifyLetters.count > 1 {
+            gamifyTargetLetter = String(gamifyLetters.randomElement() ?? letter)
+        } else {
+            gamifyTargetLetter = String(letter)
+        }
+        if announce {
+            let utterance = createUtterance(for: gamifyTargetLetter)
+            synth.speak(utterance)
+        }
+    }
+
+    private func speakRandomWord() -> String? {
+        guard let randomWord = RandomWordList.shared.getRandomWord() else {
+            return nil
+        }
+
+        let englishWord = randomWord.english
+
+        if translationLanguage != .none {
+            // First speak English
+            let englishUtterance = createUtterance(for: englishWord)
+            synth.speak(englishUtterance)
+
+            // Then with a slight delay, speak the translation
+            DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + EventHandler.shared.wordTranslationDelay) {
+                let translationUtterance: AVSpeechUtterance
+
+                switch self.translationLanguage {
+                case .french:
+                    translationUtterance = self.createUtterance(for: randomWord.translation, language: "fr-FR")
+                case .russian:
+                    translationUtterance = self.createUtterance(for: randomWord.translation, language: "ru-RU")
+                case .german:
+                    translationUtterance = self.createUtterance(for: randomWord.translation, language: "de-DE")
+                case .spanish:
+                    translationUtterance = self.createUtterance(for: randomWord.translation, language: "es-ES")
+                case .italian:
+                    translationUtterance = self.createUtterance(for: randomWord.translation, language: "it-IT")
+                case .japanese:
+                    translationUtterance = self.createUtterance(for: randomWord.translation, language: "ja-JP")
+                case .chinese:
+                    translationUtterance = self.createUtterance(for: randomWord.translation, language: "zh-CN")
+                case .none:
+                    return
+                }
+
+                self.synth.speak(translationUtterance)
+            }
+        } else {
+            // Just speak English
+            let utterance = createUtterance(for: englishWord)
+            synth.speak(utterance)
+        }
+
+        return englishWord
     }
     
     // Helper function to get key string

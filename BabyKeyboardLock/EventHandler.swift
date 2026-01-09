@@ -31,6 +31,11 @@ class EventHandler: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     @Published var selectedLockEffect: LockEffect = .none
+    @Published var selectedPrimaryLanguage: TranslationLanguage = .english {
+        didSet {
+            eventEffectHandler.primaryLanguage = selectedPrimaryLanguage
+        }
+    }
     @Published var selectedTranslationLanguage: TranslationLanguage = .none {
         didSet {
             eventEffectHandler.translationLanguage = selectedTranslationLanguage
@@ -41,6 +46,8 @@ class EventHandler: ObservableObject {
             eventEffectHandler.setWordSetType(selectedWordSetType)
         }
     }
+    @Published var gamifyRandomWordEnabled: Bool = false
+    @Published var gamifyRandomWordTarget: String = ""
     @Published var usePersonalVoice: Bool = false {
         didSet {
             eventEffectHandler.usePersonalVoice = usePersonalVoice
@@ -59,6 +66,7 @@ class EventHandler: ObservableObject {
     @Published var wordsThrottleInterval: TimeInterval = 1.5 // seconds (for word effects)
     @Published var confettiFadeTime: TimeInterval = 3.0 // seconds
     @Published var wordTranslationDelay: TimeInterval = 0.8 // seconds
+    private var gamifyRewardCooldownUntil: Date?
     
     private func isThrottled(effectType: LockEffect) -> Bool {
         let now = Date()
@@ -115,6 +123,16 @@ class EventHandler: ObservableObject {
             self.selectedWordSetType = savedType
         }
         eventEffectHandler.setWordSetType(self.selectedWordSetType)
+
+        if let savedPrimaryRaw = UserDefaults.standard.string(forKey: "selectedPrimaryLanguage"),
+           let savedPrimary = TranslationLanguage(rawValue: savedPrimaryRaw) {
+            self.selectedPrimaryLanguage = savedPrimary
+        }
+        eventEffectHandler.primaryLanguage = self.selectedPrimaryLanguage
+
+        self.gamifyRandomWordEnabled = UserDefaults.standard.bool(forKey: "gamifyRandomWordEnabled")
+        eventEffectHandler.setGamifyRandomWordEnabled(self.gamifyRandomWordEnabled)
+        self.gamifyRandomWordTarget = eventEffectHandler.getGamifyTargetLetter()
         
         // Initialize personal voice setting from UserDefaults
         self.usePersonalVoice = UserDefaults.standard.bool(forKey: "usePersonalVoice")
@@ -281,11 +299,22 @@ class EventHandler: ObservableObject {
 
             // Handle normal keyboard events when locked
             if type != .keyUp { return nil }
+            if selectedLockEffect == .speakRandomWord && gamifyRandomWordEnabled {
+                if let cooldownUntil = gamifyRewardCooldownUntil, Date() < cooldownUntil {
+                    return nil
+                }
+            }
             if isThrottled(effectType: selectedLockEffect) { return nil }
             
             self.lastKeyString = eventEffectHandler.handle(
                 event: event, eventType: type, selectedLockEffect: selectedLockEffect
             )
+            if selectedLockEffect == .speakRandomWord && gamifyRandomWordEnabled && !lastKeyString.isEmpty {
+                gamifyRewardCooldownUntil = Date().addingTimeInterval(currentWordDisplayDuration())
+            }
+            if selectedLockEffect == .speakRandomWord && gamifyRandomWordEnabled {
+                self.gamifyRandomWordTarget = eventEffectHandler.getGamifyTargetLetter()
+            }
             debugPrint("keyup------- \(lastKeyString)")
             return nil
         }
@@ -302,6 +331,27 @@ class EventHandler: ObservableObject {
             }
         }
         return trusted
+    }
+
+    func setGamifyRandomWordEnabled(_ enabled: Bool) {
+        gamifyRandomWordEnabled = enabled
+        UserDefaults.standard.set(enabled, forKey: "gamifyRandomWordEnabled")
+        eventEffectHandler.setGamifyRandomWordEnabled(enabled)
+        gamifyRandomWordTarget = eventEffectHandler.getGamifyTargetLetter()
+        gamifyRewardCooldownUntil = nil
+    }
+
+    func setPrimaryLanguage(_ language: TranslationLanguage) {
+        selectedPrimaryLanguage = language
+        UserDefaults.standard.set(language.rawValue, forKey: "selectedPrimaryLanguage")
+    }
+
+    private func currentWordDisplayDuration() -> TimeInterval {
+        let savedDuration = UserDefaults.standard.double(forKey: "wordDisplayDuration")
+        if savedDuration == 0 {
+            return DEFAULT_WORD_DISPLAY_DURATION
+        }
+        return savedDuration
     }
 
     private func requestPersonalVoicePermission() {

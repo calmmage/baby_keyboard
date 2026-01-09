@@ -1,3 +1,25 @@
+## 2025-10-26
+- [x] o
+    - `key: d803f29f`
+    - Cancelled (2025-10-26 05:17): There's no 'person' api support on macbook
+    - Can we use apple photos people for 'mother' and 'baby'?
+    - I want to wire like specific persons
+        - by name?
+        - Or how?
+        - I guess they have some contact id, but i don't want to have to enter that
+    - Maybe search + select
+    - Or, for now, if there's a single person in contacts with that name
+        - use that
+        - else
+            - raise notimpelented
+## 2025-10-20
+- [x] q
+    - `key: f9b55897`
+    - Add 'mother' and 'father' image selectors
+    - All basic family members
+    - Arbitrary images with arbitrary words
+    - Like the custom dictionary feature that we have
+    a
 ## 2025-10-19
 - [x] n
     - `key: 38b988cb`
