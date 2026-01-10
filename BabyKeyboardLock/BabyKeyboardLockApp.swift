@@ -20,6 +20,7 @@ struct BabyKeyboardLockApp: App {
     
     @AppStorage("lockKeyboardOnLaunch") var lockKeyboardOnLaunch = false
     @AppStorage("selectedLockEffect") var selectedLockEffect: LockEffect = .none
+    @AppStorage("selectedPrimaryLanguage") var selectedPrimaryLanguage: TranslationLanguage = .english
     @AppStorage("selectedTranslationLanguage") var selectedTranslationLanguage: TranslationLanguage = .none
     @ObservedObject var eventHandler: EventHandler = EventHandler.shared
 
@@ -32,6 +33,7 @@ struct BabyKeyboardLockApp: App {
     init() {
         eventHandler.setLocked(isLocked: lockKeyboardOnLaunch)
         eventHandler.selectedLockEffect = selectedLockEffect
+        eventHandler.selectedPrimaryLanguage = selectedPrimaryLanguage
         eventHandler.selectedTranslationLanguage = selectedTranslationLanguage
     }
 }
@@ -41,7 +43,7 @@ struct BabyKeyboardLockApp: App {
 // https://stackoverflow.com/questions/68884499/make-swiftui-app-appear-in-the-macos-dock
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem!
-    private var popover: NSPopover!
+    private var mainWindow: NSWindow?
     private var cancellables = Set<AnyCancellable>()
     private var screenObserver: Any?
     
@@ -60,9 +62,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            Task { @MainActor in
-                self?.updateWindowFrames()
-            }
+            self?.updateWindowFrames()
         }
 
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
@@ -70,7 +70,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         if let statusButton = statusItem.button {
             statusButton.image = NSImage(named: EventHandler.shared.isLocked ? "keyboard.locked" : "keyboard.unlocked")
             statusButton.image?.accessibilityDescription = Bundle.applicationName
-            statusButton.sendAction(on: [.rightMouseUp, .leftMouseUp])  // Only trigger on mouse click
+            statusButton.sendAction(on: [.rightMouseUp, .leftMouseUp])
             statusButton.target = self
             statusButton.action = #selector(handleStatusBarClick)
         }
@@ -84,14 +84,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
             .store(in: &cancellables)
         
-        self.popover = NSPopover()
-        self.popover.behavior = .transient
-        let rootView = ContentView(eventHandler: EventHandler.shared)
-        let nSHostingController = NSHostingController(rootView: rootView)
-
-        self.popover.contentViewController = nSHostingController
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) {
-            self.showPopover()
+            self.showMainWindow()
             EventHandler.shared.run()
             
             // Create the animation window for confetti animations
@@ -155,42 +149,35 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         EventHandler.shared.stop()
         debugPrint("-------- applicationWillTerminate --------")
     }
-    
-    func showPopover(){
-        if let button = statusItem.button {
-            popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
 
-            // Make the popover's window active and keep it on screen
-            if let window = popover.contentViewController?.view.window,
-               let screen = NSScreen.main {
-                window.makeKey()
-
-                // Small delay to let the popover position itself first
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-                    var windowFrame = window.frame
-                    let visibleFrame = screen.visibleFrame
-
-                    // Check if window extends beyond right edge of screen
-                    if windowFrame.maxX > visibleFrame.maxX {
-                        windowFrame.origin.x = visibleFrame.maxX - windowFrame.width - 10
-                    }
-
-                    // Check if window extends beyond left edge of screen
-                    if windowFrame.minX < visibleFrame.minX {
-                        windowFrame.origin.x = visibleFrame.minX + 10
-                    }
-
-                    // Apply the adjusted position (but don't change size)
-                    window.setFrame(windowFrame, display: true, animate: false)
-                }
-            }
+    func showMainWindow() {
+        if let window = mainWindow {
+            window.center()
+            window.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            return
         }
+
+        let rootView = ContentView(eventHandler: EventHandler.shared)
+        let controller = NSHostingController(rootView: rootView)
+        let window = NSWindow(contentViewController: controller)
+        window.title = "BabyKeyboardLock"
+        window.identifier = NSUserInterfaceItemIdentifier(MainWindowID)
+        window.setFrameAutosaveName("Main Window")
+        window.isReleasedWhenClosed = false
+        window.center()
+        window.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+        mainWindow = window
+    }
+
+    func hideMainWindow() {
+        mainWindow?.orderOut(nil)
     }
     
-    func hidePopover() {
-        if popover.isShown {
-            self.popover.performClose(nil)
-        }
+    @discardableResult
+    func hidePopover() -> Bool {
+        return false
     }
     
     @objc func handleStatusBarClick(_ sender: NSStatusBarButton? = nil) {
@@ -203,7 +190,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             // if popover.isShown {
             //     hidePopover()
             // } else {
-                showPopover()
+                showMainWindow()
             // }
         default:
             return

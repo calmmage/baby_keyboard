@@ -7,6 +7,10 @@ import SwiftData
 import Combine
 import AVFoundation
 
+extension Notification.Name {
+    static let closeMenusRequested = Notification.Name("CloseMenusRequested")
+}
+
 enum KeyCode: CGKeyCode, CaseIterable, Identifiable {
     case u = 0x20
     case delete = 0x33
@@ -278,6 +282,13 @@ class EventHandler: ObservableObject {
             }
             return Unmanaged.passRetained(event)
         }
+
+        // Let Esc close menus before any lock handling.
+        if (type == .keyDown || type == .keyUp),
+           event.getIntegerValueField(.keyboardEventKeycode) == KeyCode.escape.rawValue,
+           closeActiveMenusIfNeeded() {
+            return nil
+        }
         
         // If not locked, pass through ALL events immediately without any processing
         guard isLocked else {
@@ -320,6 +331,22 @@ class EventHandler: ObservableObject {
         }
         
         return Unmanaged.passRetained(event)
+    }
+
+    @discardableResult
+    private func closeActiveMenusIfNeeded() -> Bool {
+        var closed = false
+        if let appDelegate = NSApp.delegate as? AppDelegate {
+            closed = appDelegate.hidePopover() || closed
+        }
+
+        let hasSheet = NSApp.windows.contains(where: { $0.isSheet }) || (NSApp.keyWindow?.isSheet ?? false)
+        if hasSheet {
+            NotificationCenter.default.post(name: .closeMenusRequested, object: nil)
+            closed = true
+        }
+
+        return closed
     }
     
     func requestAccessibilityPermissions() -> Bool {

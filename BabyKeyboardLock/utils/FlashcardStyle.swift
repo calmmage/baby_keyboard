@@ -51,7 +51,7 @@ extension RandomWord {
         }()
 
         // Check if this is a color word and generate color square on-the-fly
-        if let colorImage = generateColorImage(for: english.lowercased()) {
+        if let colorImage = generateColorImage(for: english.lowercased(), clarification: clarification) {
             return colorImage
         }
 
@@ -69,7 +69,10 @@ extension RandomWord {
         return nil
     }
 
-    private func generateColorImage(for word: String) -> Image? {
+    private func generateColorImage(for word: String, clarification: String?) -> Image? {
+        if let clarification, !clarification.isEmpty, clarification.lowercased() != "color" {
+            return nil
+        }
         // Define color mappings
         let colorMap: [String: NSColor] = [
             "red": NSColor(red: 220/255, green: 38/255, blue: 38/255, alpha: 1.0),

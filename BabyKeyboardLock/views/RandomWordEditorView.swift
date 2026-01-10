@@ -16,8 +16,14 @@ struct RandomWordEditorView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Random Word Sets")
-                .font(.headline)
+            HStack {
+                Text("Random Word Sets")
+                    .font(.headline)
+                Spacer()
+                Button("Close") {
+                    presentationMode.wrappedValue.dismiss()
+                }
+            }
 
             HStack {
                 Button(action: { showingNewSetDialog = true }) {
@@ -128,28 +134,24 @@ struct RandomWordEditorView: View {
                 }
 
                 HStack {
+                    Button("Close") {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+
+                    Spacer()
+
                     Button("Save Changes") {
                         if let index = selectedSetIndex {
                             randomWordList.updateWordSet(at: index, newWords: words)
                         }
                     }
                     .disabled(words.isEmpty)
-
-                    Spacer()
                 }
-            }
-
-            Spacer()
-
-            HStack {
-                Button("Close") {
-                    presentationMode.wrappedValue.dismiss()
-                }
-                Spacer()
             }
         }
-        .padding()
-        .frame(width: 600, height: 550)
+        .padding(.horizontal, 28)
+        .padding(.vertical, 24)
+        .frame(width: 700, height: 680)
         .onAppear {
             centerMenuWindow()
             if selectedSetIndex == nil, !randomWordList.wordSets.isEmpty {

@@ -52,14 +52,36 @@ struct TypingGameView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-                // Celebration animation overlay
+                // Completion overlay
                 if showCelebration {
                     VStack {
-                        Text("🎉")
-                            .font(.system(size: 200))
-                            .opacity(celebrationOpacity)
-                            .scaleEffect(celebrationOpacity)
-                            .animation(.spring(response: 0.5, dampingFraction: 0.6), value: celebrationOpacity)
+                        VStack(spacing: 16) {
+                            if let imageURL = getImageURL(),
+                               let nsImage = loadImage(from: imageURL) {
+                                Image(nsImage: nsImage)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: CGFloat(flashcardImageSize), height: CGFloat(flashcardImageSize))
+                                    .shadow(radius: 10)
+                            }
+
+                            Text(typingGameState.currentWord)
+                                .font(.system(size: 48, weight: .bold, design: .rounded))
+
+                            if !typingGameState.currentWordTranslation.isEmpty {
+                                Text(typingGameState.currentWordTranslation)
+                                    .font(.system(size: 32, weight: .semibold, design: .rounded))
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .padding(30)
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(Color.black.opacity(0.6))
+                        )
+                        .opacity(celebrationOpacity)
+                        .scaleEffect(celebrationOpacity)
+                        .animation(.spring(response: 0.5, dampingFraction: 0.6), value: celebrationOpacity)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
@@ -87,10 +109,15 @@ struct TypingGameView: View {
     }
 
     private func getImageURL() -> URL? {
-        let word = typingGameState.currentWord.lowercased()
+        let word = typingGameState.currentEnglishWord.isEmpty
+            ? typingGameState.currentWord.lowercased()
+            : typingGameState.currentEnglishWord.lowercased()
 
         // Check for custom word image first
-        if let customImageURL = RandomWordList.shared.getCustomImageURL(for: word) {
+        if let customImageURL = RandomWordList.shared.getCustomImageURL(
+            for: word,
+            clarification: typingGameState.currentWordClarification
+        ) {
             return customImageURL
         }
 

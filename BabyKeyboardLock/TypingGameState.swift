@@ -17,22 +17,46 @@ class TypingGameState: ObservableObject {
     static let shared = TypingGameState()
 
     @Published var currentWord: String = ""
+    @Published var currentEnglishWord: String = ""
+    @Published var currentWordClarification: String? = nil
     @Published var currentWordTranslation: String = ""
     @Published var typedSoFar: String = ""
     @Published var resetOnError: Bool = false
     @Published var isWordComplete: Bool = false
+    @Published var selectedTypingLanguages: Set<TranslationLanguage> = [.english]
+    @Published var currentTypingLanguage: TranslationLanguage = .english
 
     private let customWordSetsManager = CustomWordSetsManager.shared
     private let randomWordList = RandomWordList.shared
+    private let eventEffectHandler = EventEffectHandler()
 
     private init() {
         // Load reset on error setting from UserDefaults
         self.resetOnError = UserDefaults.standard.bool(forKey: "typingGameResetOnError")
+        if let savedLanguages = UserDefaults.standard.array(forKey: "typingGameLanguages") as? [String] {
+            let languages = savedLanguages.compactMap { TranslationLanguage(rawValue: $0) }
+            if !languages.isEmpty {
+                self.selectedTypingLanguages = Set(languages)
+            }
+        }
     }
 
     func setResetOnError(_ value: Bool) {
         resetOnError = value
         UserDefaults.standard.set(value, forKey: "typingGameResetOnError")
+    }
+
+    func setTypingLanguage(_ language: TranslationLanguage, enabled: Bool) {
+        if enabled {
+            selectedTypingLanguages.insert(language)
+        } else {
+            selectedTypingLanguages.remove(language)
+        }
+        if selectedTypingLanguages.isEmpty {
+            selectedTypingLanguages = [.english]
+        }
+        let rawValues = selectedTypingLanguages.map { $0.rawValue }
+        UserDefaults.standard.set(rawValues, forKey: "typingGameLanguages")
     }
 
     // Validate a key press against the current word
@@ -75,48 +99,86 @@ class TypingGameState: ObservableObject {
     }
 
     // Select a new word from the available word sets
-    func selectNewWord(wordSetType: WordSetType, translationLanguage: TranslationLanguage) {
+    func selectNewWord(wordSetType: WordSetType, secondaryLanguage: TranslationLanguage) {
         // Reset state
         typedSoFar = ""
         isWordComplete = false
         currentWordTranslation = ""
+        currentEnglishWord = ""
+        currentWordClarification = nil
+
+        let typingLanguage = selectedTypingLanguages.randomElement() ?? .english
+        currentTypingLanguage = typingLanguage
+
+        var englishWord: String = ""
+        var fallbackTranslation: String? = nil
 
         if wordSetType == .mainWords {
             // Use custom word sets
             if let wordPairs = customWordSetsManager.currentWordSet?.words, !wordPairs.isEmpty {
                 let randomPair = wordPairs.randomElement()!
-                currentWord = randomPair.english
-                currentWordTranslation = randomPair.translation
+                englishWord = randomPair.english
+                fallbackTranslation = randomPair.translation
             } else {
                 // Fallback to simple words
-                selectFromSimpleWords(translationLanguage: translationLanguage)
+                selectFromSimpleWords(secondaryLanguage: secondaryLanguage)
+                return
             }
         } else if wordSetType == .randomShortWords {
             // Use random word list
-            if let randomWord = randomWordList.getRandomWord() {
-                currentWord = randomWord.english
-                currentWordTranslation = randomWord.translation
+            if let randomWord = randomWordList.getRandomWord(useLearningRotation: false) {
+                englishWord = randomWord.english
+                fallbackTranslation = randomWord.translation
+                currentWordClarification = randomWord.clarification
             } else {
                 // Fallback to simple words
-                selectFromSimpleWords(translationLanguage: translationLanguage)
+                selectFromSimpleWords(secondaryLanguage: secondaryLanguage)
+                return
             }
         } else {
             // Fallback
-            selectFromSimpleWords(translationLanguage: translationLanguage)
+            selectFromSimpleWords(secondaryLanguage: secondaryLanguage)
+            return
+        }
+
+        currentEnglishWord = englishWord
+        currentWord = eventEffectHandler.resolveWordForLanguage(
+            english: englishWord,
+            fallbackTranslation: fallbackTranslation,
+            language: typingLanguage
+        ) ?? englishWord
+
+        if secondaryLanguage != .none && secondaryLanguage != typingLanguage {
+            currentWordTranslation = eventEffectHandler.resolveWordForLanguage(
+                english: englishWord,
+                fallbackTranslation: fallbackTranslation,
+                language: secondaryLanguage
+            ) ?? ""
+        } else if typingLanguage != .english {
+            currentWordTranslation = englishWord
         }
 
         debugPrint("TypingGame: Selected new word '\(currentWord)'")
     }
 
-    private func selectFromSimpleWords(translationLanguage: TranslationLanguage) {
+    private func selectFromSimpleWords(secondaryLanguage: TranslationLanguage) {
         // Fallback to built-in simple words
         let simpleWords = ["cat", "dog", "sun", "moon", "star", "ball", "cup", "hat", "pig", "cow"]
-        currentWord = simpleWords.randomElement() ?? "cat"
+        let englishWord = simpleWords.randomElement() ?? "cat"
+        currentEnglishWord = englishWord
+        let typingLanguage = selectedTypingLanguages.randomElement() ?? .english
+        currentTypingLanguage = typingLanguage
+        currentWord = eventEffectHandler.resolveWordForLanguage(
+            english: englishWord,
+            fallbackTranslation: nil,
+            language: typingLanguage
+        ) ?? englishWord
 
-        // Try to get translation
-        let eventEffectHandler = EventEffectHandler()
-        if let translation = eventEffectHandler.getTranslation(word: currentWord, language: translationLanguage) {
+        if secondaryLanguage != .none && secondaryLanguage != typingLanguage,
+           let translation = eventEffectHandler.getTranslation(word: englishWord, language: secondaryLanguage) {
             currentWordTranslation = translation
+        } else if typingLanguage != .english {
+            currentWordTranslation = englishWord
         }
     }
 
