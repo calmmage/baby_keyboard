@@ -277,7 +277,6 @@ class EventEffectHandler {
     
     private var wordSetType: WordSetType = .randomShortWords
     private let customWordSetsManager = CustomWordSetsManager.shared
-    private let typingGameState = TypingGameState.shared
     private let gamifyLetters = Array("abcdefghijklmnopqrstuvwxyz")
     private var gamifyTargetLetter: String = ""
     private var gamifyRandomWordEnabled: Bool = false
@@ -347,6 +346,7 @@ class EventEffectHandler {
             return speakRandomWord() ?? keyStr
         case .typingGame:
             // Typing game mode - validate key press and provide feedback
+            let typingGameState = TypingGameState.shared
 
             // Initialize game if needed (first key press or word completed)
             if typingGameState.currentWord.isEmpty || typingGameState.isWordComplete {
@@ -389,21 +389,21 @@ class EventEffectHandler {
                         
                         switch self.translationLanguage {
                         case .english:
-                            translationUtterance = self.createUtterance(for: self.typingGameState.currentWordTranslation, language: "en-US")
+                            translationUtterance = self.createUtterance(for: typingGameState.currentWordTranslation, language: "en-US")
                         case .french:
-                            translationUtterance = self.createUtterance(for: self.typingGameState.currentWordTranslation, language: "fr-FR")
+                            translationUtterance = self.createUtterance(for: typingGameState.currentWordTranslation, language: "fr-FR")
                         case .russian:
-                            translationUtterance = self.createUtterance(for: self.typingGameState.currentWordTranslation, language: "ru-RU")
+                            translationUtterance = self.createUtterance(for: typingGameState.currentWordTranslation, language: "ru-RU")
                         case .german:
-                            translationUtterance = self.createUtterance(for: self.typingGameState.currentWordTranslation, language: "de-DE")
+                            translationUtterance = self.createUtterance(for: typingGameState.currentWordTranslation, language: "de-DE")
                         case .spanish:
-                            translationUtterance = self.createUtterance(for: self.typingGameState.currentWordTranslation, language: "es-ES")
+                            translationUtterance = self.createUtterance(for: typingGameState.currentWordTranslation, language: "es-ES")
                         case .italian:
-                            translationUtterance = self.createUtterance(for: self.typingGameState.currentWordTranslation, language: "it-IT")
+                            translationUtterance = self.createUtterance(for: typingGameState.currentWordTranslation, language: "it-IT")
                         case .japanese:
-                            translationUtterance = self.createUtterance(for: self.typingGameState.currentWordTranslation, language: "ja-JP")
+                            translationUtterance = self.createUtterance(for: typingGameState.currentWordTranslation, language: "ja-JP")
                         case .chinese:
-                            translationUtterance = self.createUtterance(for: self.typingGameState.currentWordTranslation, language: "zh-CN")
+                            translationUtterance = self.createUtterance(for: typingGameState.currentWordTranslation, language: "zh-CN")
                         case .none:
                             return
                         }

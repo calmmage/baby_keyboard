@@ -1304,7 +1304,8 @@ class RandomWordList: ObservableObject {
             running += weight
             if running >= target {
                 let chosen = words[index]
-                recordRecentWord(key)
+                let chosenKey = wordKey(word: chosen.english, clarification: chosen.clarification)
+                recordRecentWord(chosenKey)
                 return chosen
             }
         }
