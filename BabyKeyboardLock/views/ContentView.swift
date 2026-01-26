@@ -64,6 +64,12 @@ struct ContentView: View {
     @State private var babyNameTranslation: String = ""
     @State private var babyNameProbability: Double = 0.125
     @State private var babyImagePath: String = ""
+    private let learningPoolDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .short
+        return formatter
+    }()
     
     var body: some View {
         let primaryLanguages = TranslationLanguage.allCases.filter { $0 != .none }
@@ -444,6 +450,23 @@ struct ContentView: View {
                             Text("Learning Rotation")
                         }
                         .toggleStyle(CheckboxToggleStyle())
+
+                        let poolInfo = randomWordList.getLearningPoolInfo()
+                        VStack(alignment: .leading, spacing: 4) {
+                            let lastSync = poolInfo.lastSync.map { learningPoolDateFormatter.string(from: $0) } ?? "never"
+                            Text("Pool: \(poolInfo.count) words")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            Text("Refresh: daily (last: \(lastSync))")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        }
+
+                        Button("Refresh pool now") {
+                            randomWordList.refreshLearningPool(force: true)
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundColor(.secondary)
 
                         VStack(alignment: .leading, spacing: 6) {
                             Text("Known mix: \(Int(randomWordList.learningKnownRatio * 100))%")

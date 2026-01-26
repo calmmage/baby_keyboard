@@ -11,6 +11,8 @@ struct WordDisplayView: View {
     @AppStorage("flashcardStyle") private var flashcardStyle: FlashcardStyle = .none
     @AppStorage("flashcardImageSize") private var flashcardImageSize: Double = 150.0
     @State private var windowSize: CGSize = .zero
+    @State private var englishWordForImage: String = ""
+    @State private var clarificationForImage: String? = nil
     
     // For more reliable timeout handling
     @State private var hideWorkItem: DispatchWorkItem? = nil
@@ -91,20 +93,17 @@ struct WordDisplayView: View {
                     VStack(spacing: 20) {
                         // Flashcard image if available
                         if flashcardStyle != .none {
-                            let lastRandomWord = RandomWordList.shared.getLastSelectedRandomWord()
-                            let lastMatches = lastRandomWord?.english.lowercased() == word.lowercased()
-                            let clarification = (eventHandler.selectedLockEffect == .speakRandomWord && lastMatches)
-                                ? lastRandomWord?.clarification
-                                : nil
+                            let imageLookupWord = englishWordForImage.isEmpty ? word : englishWordForImage
+                            let clarification = clarificationForImage
                             // First check for custom image (for any word including baby's name)
-                            if let customImage = loadCustomImage(for: word, clarification: clarification) {
+                            if let customImage = loadCustomImage(for: imageLookupWord, clarification: clarification) {
                                 Image(nsImage: customImage)
                                     .resizable()
                                     .scaledToFit()
                                     .frame(height: min(flashcardImageSize, maxHeight - 150))
                             }
                             // Fallback to baby image if it's the baby's name (backward compatibility)
-                            else if word.lowercased() == RandomWordList.shared.babyName.lowercased(),
+                            else if imageLookupWord.lowercased() == RandomWordList.shared.babyName.lowercased(),
                                     let babyImage = loadBabyImage() {
                                 Image(nsImage: babyImage)
                                     .resizable()
@@ -112,7 +111,7 @@ struct WordDisplayView: View {
                                     .frame(height: min(flashcardImageSize, maxHeight - 150))
                             }
                             // Finally try generated flashcard images
-                            else if let image = RandomWord(english: word, translation: translation, clarification: clarification)
+                            else if let image = RandomWord(english: imageLookupWord, translation: translation, clarification: clarification)
                                 .flashcardImage(style: flashcardStyle) {
                                 image
                                     .resizable()
@@ -167,6 +166,10 @@ struct WordDisplayView: View {
                 let englishWord = newValue
                 let lastRandomWord = RandomWordList.shared.getLastSelectedRandomWord()
                 let lastMatches = lastRandomWord?.english.lowercased() == englishWord.lowercased()
+                englishWordForImage = englishWord
+                clarificationForImage = (eventHandler.selectedLockEffect == .speakRandomWord && lastMatches)
+                    ? lastRandomWord?.clarification
+                    : nil
                 var fallbackTranslation: String? = nil
                 if eventHandler.selectedLockEffect == .speakRandomWord,
                    lastMatches,

@@ -115,6 +115,7 @@ class RandomWordList: ObservableObject {
     private let learningKnownRatioKey = "learningKnownRatio"
     private let learningFavoriteRatioKey = "learningFavoriteRatio"
     private let learningTagRatiosKey = "learningTagRatios"
+    private let learningLastSyncKey = "learningLastSync"
 
     @Published var wordSets: [RandomWordSet] = []
     @Published var enabledSetIndices: Set<Int> = []
@@ -151,6 +152,7 @@ class RandomWordList: ObservableObject {
     @Published var learningKnownRatio: Double = 0.5
     @Published var learningFavoriteRatio: Double = 0.2
     @Published var learningTagRatios: [String: Double] = [:]
+    @Published private(set) var learningLastSync: Date? = nil
 
     var words: [RandomWord] {
         var allWords: [RandomWord] = []
@@ -180,6 +182,7 @@ class RandomWordList: ObservableObject {
             enabledSetIndices.insert(index)
         }
         saveEnabledSets()
+        syncLearningWordsIfNeeded(force: true)
         objectWillChange.send()
         NotificationCenter.default.post(name: .init("RandomWordSetChanged"), object: nil)
     }
@@ -195,6 +198,7 @@ class RandomWordList: ObservableObject {
         loadCustomWordImages()
         loadEnabledSets()
         loadLearningSettings()
+        loadLearningLastSync()
         loadLearningWords()
         if wordSets.isEmpty {
             // Create default word sets
@@ -710,6 +714,17 @@ class RandomWordList: ObservableObject {
         }
     }
 
+    private func loadLearningLastSync() {
+        if let stored = UserDefaults.standard.object(forKey: learningLastSyncKey) as? Double {
+            learningLastSync = Date(timeIntervalSince1970: stored)
+        }
+    }
+
+    private func saveLearningLastSync(_ date: Date) {
+        learningLastSync = date
+        UserDefaults.standard.set(date.timeIntervalSince1970, forKey: learningLastSyncKey)
+    }
+
     func setLearningRotationEnabled(_ enabled: Bool) {
         learningRotationEnabled = enabled
         UserDefaults.standard.set(enabled, forKey: learningRotationEnabledKey)
@@ -738,15 +753,14 @@ class RandomWordList: ObservableObject {
 
     func openLearningCSV() {
         if learningWords.isEmpty {
-            syncLearningWordsWithCurrentWords()
-            saveLearningWords()
+            syncLearningWordsIfNeeded(force: true)
         }
         let url = learningCSVURL()
         NSWorkspace.shared.open(url)
     }
 
     func getLearningWordList() -> [LearningWord] {
-        syncLearningWordsWithCurrentWords()
+        syncLearningWordsIfNeeded()
         return learningWords.values.sorted { $0.word < $1.word }
     }
 
@@ -860,7 +874,6 @@ class RandomWordList: ObservableObject {
         let url = learningCSVURL()
         guard let contents = try? String(contentsOf: url, encoding: .utf8) else {
             seedLearningWordsIfNeeded()
-            saveLearningWords()
             return
         }
 
@@ -898,8 +911,7 @@ class RandomWordList: ObservableObject {
         }
 
         learningWords = parsed
-        syncLearningWordsWithCurrentWords()
-        saveLearningWords()
+        syncLearningWordsIfNeeded(force: true)
     }
 
     private func saveLearningWords() {
@@ -931,7 +943,28 @@ class RandomWordList: ObservableObject {
         if !learningWords.isEmpty {
             return
         }
-        syncLearningWordsWithCurrentWords()
+        syncLearningWordsIfNeeded(force: true)
+    }
+
+    private func syncLearningWordsIfNeeded(force: Bool = false) {
+        if force || learningWords.isEmpty || shouldSyncLearningWords() {
+            syncLearningWordsWithCurrentWords()
+            saveLearningWords()
+            saveLearningLastSync(Date())
+        }
+    }
+
+    private func shouldSyncLearningWords() -> Bool {
+        guard let lastSync = learningLastSync else { return true }
+        return Date().timeIntervalSince(lastSync) >= 86_400
+    }
+
+    func refreshLearningPool(force: Bool = true) {
+        syncLearningWordsIfNeeded(force: force)
+    }
+
+    func getLearningPoolInfo() -> (count: Int, lastSync: Date?) {
+        (learningWords.count, learningLastSync)
     }
 
     private func syncLearningWordsWithCurrentWords() {
@@ -1319,7 +1352,7 @@ class RandomWordList: ObservableObject {
     }
 
     private func getLearningRandomWord() -> RandomWord? {
-        syncLearningWordsWithCurrentWords()
+        syncLearningWordsIfNeeded()
         let allWords = Array(learningWords.values)
         guard !allWords.isEmpty else { return nil }
 
