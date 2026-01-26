@@ -7,6 +7,10 @@ import SwiftData
 import Combine
 import AVFoundation
 
+extension Notification.Name {
+    static let closeMenusRequested = Notification.Name("CloseMenusRequested")
+}
+
 enum KeyCode: CGKeyCode, CaseIterable, Identifiable {
     case u = 0x20
     case delete = 0x33
@@ -31,6 +35,11 @@ class EventHandler: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     
     @Published var selectedLockEffect: LockEffect = .none
+    @Published var selectedPrimaryLanguage: TranslationLanguage = .english {
+        didSet {
+            eventEffectHandler.primaryLanguage = selectedPrimaryLanguage
+        }
+    }
     @Published var selectedTranslationLanguage: TranslationLanguage = .none {
         didSet {
             eventEffectHandler.translationLanguage = selectedTranslationLanguage
@@ -41,6 +50,8 @@ class EventHandler: ObservableObject {
             eventEffectHandler.setWordSetType(selectedWordSetType)
         }
     }
+    @Published var gamifyRandomWordEnabled: Bool = false
+    @Published var gamifyRandomWordTarget: String = ""
     @Published var usePersonalVoice: Bool = false {
         didSet {
             eventEffectHandler.usePersonalVoice = usePersonalVoice
@@ -59,6 +70,7 @@ class EventHandler: ObservableObject {
     @Published var wordsThrottleInterval: TimeInterval = 1.5 // seconds (for word effects)
     @Published var confettiFadeTime: TimeInterval = 3.0 // seconds
     @Published var wordTranslationDelay: TimeInterval = 0.8 // seconds
+    private var gamifyRewardCooldownUntil: Date?
     
     private func isThrottled(effectType: LockEffect) -> Bool {
         let now = Date()
@@ -115,6 +127,16 @@ class EventHandler: ObservableObject {
             self.selectedWordSetType = savedType
         }
         eventEffectHandler.setWordSetType(self.selectedWordSetType)
+
+        if let savedPrimaryRaw = UserDefaults.standard.string(forKey: "selectedPrimaryLanguage"),
+           let savedPrimary = TranslationLanguage(rawValue: savedPrimaryRaw) {
+            self.selectedPrimaryLanguage = savedPrimary
+        }
+        eventEffectHandler.primaryLanguage = self.selectedPrimaryLanguage
+
+        self.gamifyRandomWordEnabled = UserDefaults.standard.bool(forKey: "gamifyRandomWordEnabled")
+        eventEffectHandler.setGamifyRandomWordEnabled(self.gamifyRandomWordEnabled)
+        self.gamifyRandomWordTarget = eventEffectHandler.getGamifyTargetLetter()
         
         // Initialize personal voice setting from UserDefaults
         self.usePersonalVoice = UserDefaults.standard.bool(forKey: "usePersonalVoice")
@@ -260,6 +282,13 @@ class EventHandler: ObservableObject {
             }
             return Unmanaged.passRetained(event)
         }
+
+        // Let Esc close menus before any lock handling.
+        if (type == .keyDown || type == .keyUp),
+           event.getIntegerValueField(.keyboardEventKeycode) == KeyCode.escape.rawValue,
+           closeActiveMenusIfNeeded() {
+            return nil
+        }
         
         // If not locked, pass through ALL events immediately without any processing
         guard isLocked else {
@@ -281,16 +310,43 @@ class EventHandler: ObservableObject {
 
             // Handle normal keyboard events when locked
             if type != .keyUp { return nil }
+            if selectedLockEffect == .speakRandomWord && gamifyRandomWordEnabled {
+                if let cooldownUntil = gamifyRewardCooldownUntil, Date() < cooldownUntil {
+                    return nil
+                }
+            }
             if isThrottled(effectType: selectedLockEffect) { return nil }
             
             self.lastKeyString = eventEffectHandler.handle(
                 event: event, eventType: type, selectedLockEffect: selectedLockEffect
             )
+            if selectedLockEffect == .speakRandomWord && gamifyRandomWordEnabled && !lastKeyString.isEmpty {
+                gamifyRewardCooldownUntil = Date().addingTimeInterval(currentWordDisplayDuration())
+            }
+            if selectedLockEffect == .speakRandomWord && gamifyRandomWordEnabled {
+                self.gamifyRandomWordTarget = eventEffectHandler.getGamifyTargetLetter()
+            }
             debugPrint("keyup------- \(lastKeyString)")
             return nil
         }
         
         return Unmanaged.passRetained(event)
+    }
+
+    @discardableResult
+    private func closeActiveMenusIfNeeded() -> Bool {
+        var closed = false
+        if let appDelegate = NSApp.delegate as? AppDelegate {
+            closed = appDelegate.hidePopover() || closed
+        }
+
+        let hasSheet = NSApp.windows.contains(where: { $0.isSheet }) || (NSApp.keyWindow?.isSheet ?? false)
+        if hasSheet {
+            NotificationCenter.default.post(name: .closeMenusRequested, object: nil)
+            closed = true
+        }
+
+        return closed
     }
     
     func requestAccessibilityPermissions() -> Bool {
@@ -302,6 +358,27 @@ class EventHandler: ObservableObject {
             }
         }
         return trusted
+    }
+
+    func setGamifyRandomWordEnabled(_ enabled: Bool) {
+        gamifyRandomWordEnabled = enabled
+        UserDefaults.standard.set(enabled, forKey: "gamifyRandomWordEnabled")
+        eventEffectHandler.setGamifyRandomWordEnabled(enabled)
+        gamifyRandomWordTarget = eventEffectHandler.getGamifyTargetLetter()
+        gamifyRewardCooldownUntil = nil
+    }
+
+    func setPrimaryLanguage(_ language: TranslationLanguage) {
+        selectedPrimaryLanguage = language
+        UserDefaults.standard.set(language.rawValue, forKey: "selectedPrimaryLanguage")
+    }
+
+    private func currentWordDisplayDuration() -> TimeInterval {
+        let savedDuration = UserDefaults.standard.double(forKey: "wordDisplayDuration")
+        if savedDuration == 0 {
+            return DEFAULT_WORD_DISPLAY_DURATION
+        }
+        return savedDuration
     }
 
     private func requestPersonalVoicePermission() {

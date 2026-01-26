@@ -11,6 +11,8 @@ struct WordDisplayView: View {
     @AppStorage("flashcardStyle") private var flashcardStyle: FlashcardStyle = .none
     @AppStorage("flashcardImageSize") private var flashcardImageSize: Double = 150.0
     @State private var windowSize: CGSize = .zero
+    @State private var englishWordForImage: String = ""
+    @State private var clarificationForImage: String? = nil
     
     // For more reliable timeout handling
     @State private var hideWorkItem: DispatchWorkItem? = nil
@@ -47,6 +49,34 @@ struct WordDisplayView: View {
                 TypingGameView()
                     .frame(width: geometry.size.width, height: geometry.size.height)
             }
+            else if eventHandler.isLocked,
+                    eventHandler.selectedLockEffect == .speakRandomWord,
+                    eventHandler.gamifyRandomWordEnabled,
+                    !eventHandler.gamifyRandomWordTarget.isEmpty,
+                    !showWord {
+                let bgSize = backgroundSize
+                let maxWidth = min(geometry.size.width * 0.6, bgSize.width)
+                let maxHeight = min(geometry.size.height * 0.6, bgSize.height)
+
+                ZStack {
+                    Rectangle()
+                        .fill(Color.white)
+                        .cornerRadius(20)
+                        .shadow(radius: 10)
+                        .frame(width: maxWidth, height: maxHeight)
+
+                    VStack(spacing: 16) {
+                        Text("Find the letter")
+                            .font(.system(size: 28, weight: .medium))
+                            .foregroundColor(.gray)
+                        Text(eventHandler.gamifyRandomWordTarget.uppercased())
+                            .font(.system(size: 120, weight: .bold))
+                            .foregroundColor(.black)
+                    }
+                }
+                .position(x: geometry.size.width / 2, y: geometry.size.height / 2)
+                .transition(.opacity)
+            }
             else if showWord && !word.isEmpty && showFlashcards {
                 let bgSize = backgroundSize
                 let maxWidth = min(geometry.size.width * 0.9, bgSize.width)
@@ -63,15 +93,17 @@ struct WordDisplayView: View {
                     VStack(spacing: 20) {
                         // Flashcard image if available
                         if flashcardStyle != .none {
+                            let imageLookupWord = englishWordForImage.isEmpty ? word : englishWordForImage
+                            let clarification = clarificationForImage
                             // First check for custom image (for any word including baby's name)
-                            if let customImage = loadCustomImage(for: word) {
+                            if let customImage = loadCustomImage(for: imageLookupWord, clarification: clarification) {
                                 Image(nsImage: customImage)
                                     .resizable()
                                     .scaledToFit()
                                     .frame(height: min(flashcardImageSize, maxHeight - 150))
                             }
                             // Fallback to baby image if it's the baby's name (backward compatibility)
-                            else if word.lowercased() == RandomWordList.shared.babyName.lowercased(),
+                            else if imageLookupWord.lowercased() == RandomWordList.shared.babyName.lowercased(),
                                     let babyImage = loadBabyImage() {
                                 Image(nsImage: babyImage)
                                     .resizable()
@@ -79,7 +111,7 @@ struct WordDisplayView: View {
                                     .frame(height: min(flashcardImageSize, maxHeight - 150))
                             }
                             // Finally try generated flashcard images
-                            else if let image = RandomWord(english: word, translation: translation)
+                            else if let image = RandomWord(english: imageLookupWord, translation: translation, clarification: clarification)
                                 .flashcardImage(style: flashcardStyle) {
                                 image
                                     .resizable()
@@ -130,35 +162,36 @@ struct WordDisplayView: View {
             if eventHandler.isLocked && (eventHandler.selectedLockEffect == .speakAKeyWord || eventHandler.selectedLockEffect == .speakRandomWord) && !newValue.isEmpty {
                 // Cancel any existing hide timers
                 hideWorkItem?.cancel()
-                
-                if eventHandler.selectedLockEffect == .speakAKeyWord {
-                    // Get the current word - lastKeyString already contains the spoken word from EventEffectHandler
-                    self.word = newValue
-                    
-                    // Get translation if available
-                    if eventHandler.selectedTranslationLanguage != .none {
-                        self.translation = eventHandler.eventEffectHandler.getTranslation(
-                            word: self.word,
-                            language: eventHandler.selectedTranslationLanguage
-                        ) ?? ""
-                    } else {
-                        self.translation = ""
-                    }
-                } else if eventHandler.selectedLockEffect == .speakRandomWord {
-                    // Show words for speakRandomWord mode
-                    self.word = newValue
-                    
-                    // For speakRandomWord, get the translation from RandomWordList
-                    if let randomWordObj = RandomWordList.shared.findWord(english: newValue) {
-                        self.translation = randomWordObj.translation
-                    } else if eventHandler.selectedTranslationLanguage != .none {
-                        self.translation = eventHandler.eventEffectHandler.getTranslation(
-                            word: self.word,
-                            language: eventHandler.selectedTranslationLanguage
-                        ) ?? ""
-                    } else {
-                        self.translation = ""
-                    }
+
+                let englishWord = newValue
+                let lastRandomWord = RandomWordList.shared.getLastSelectedRandomWord()
+                let lastMatches = lastRandomWord?.english.lowercased() == englishWord.lowercased()
+                englishWordForImage = englishWord
+                clarificationForImage = (eventHandler.selectedLockEffect == .speakRandomWord && lastMatches)
+                    ? lastRandomWord?.clarification
+                    : nil
+                var fallbackTranslation: String? = nil
+                if eventHandler.selectedLockEffect == .speakRandomWord,
+                   lastMatches,
+                   let randomWordObj = lastRandomWord {
+                    fallbackTranslation = randomWordObj.translation
+                }
+
+                let primaryWord = eventHandler.eventEffectHandler.resolveWordForLanguage(
+                    english: englishWord,
+                    fallbackTranslation: fallbackTranslation,
+                    language: eventHandler.selectedPrimaryLanguage
+                ) ?? englishWord
+                let secondaryWord = eventHandler.eventEffectHandler.resolveWordForLanguage(
+                    english: englishWord,
+                    fallbackTranslation: fallbackTranslation,
+                    language: eventHandler.selectedTranslationLanguage
+                )
+                self.word = primaryWord
+                if let secondaryWord = secondaryWord, secondaryWord != primaryWord {
+                    self.translation = secondaryWord
+                } else {
+                    self.translation = ""
                 }
                 
                 // Show the word with animation
@@ -239,8 +272,8 @@ struct WordDisplayView: View {
         return image
     }
 
-    private func loadCustomImage(for word: String) -> NSImage? {
-        guard let imageURL = RandomWordList.shared.getCustomImageURL(for: word) else {
+    private func loadCustomImage(for word: String, clarification: String?) -> NSImage? {
+        guard let imageURL = RandomWordList.shared.getCustomImageURL(for: word, clarification: clarification) else {
             return nil
         }
 

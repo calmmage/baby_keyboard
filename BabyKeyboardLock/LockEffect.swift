@@ -58,6 +58,7 @@ enum LockEffect: String, CaseIterable, Identifiable {
 
 enum TranslationLanguage: String, CaseIterable, Identifiable {
     case none = "TranslationLanguage.none"
+    case english = "TranslationLanguage.english"
     case french = "TranslationLanguage.french"
     case russian = "TranslationLanguage.russian"
     case german = "TranslationLanguage.german"
@@ -78,6 +79,8 @@ enum TranslationLanguage: String, CaseIterable, Identifiable {
         switch self {
         case .none:
             return ""
+        case .english:
+            return "en-US"
         case .french:
             return "fr-FR"
         case .russian:
@@ -111,4 +114,3 @@ enum WordSetType: String, CaseIterable, Identifiable {
 
 // Default duration for word display in seconds
 let DEFAULT_WORD_DISPLAY_DURATION: Double = 3.0
-

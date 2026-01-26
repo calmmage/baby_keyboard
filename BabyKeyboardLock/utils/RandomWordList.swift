@@ -1,22 +1,102 @@
 import Foundation
 import Combine
+import AppKit
 
 struct RandomWord: Codable, Hashable, Identifiable {
     var id = UUID()
     let english: String
     let translation: String
+    let clarification: String?
+
+    init(english: String, translation: String, clarification: String? = nil) {
+        self.english = english
+        self.translation = translation
+        self.clarification = clarification
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case english
+        case translation
+        case clarification
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decodeIfPresent(UUID.self, forKey: .id) ?? UUID()
+        english = try container.decode(String.self, forKey: .english)
+        translation = try container.decode(String.self, forKey: .translation)
+        clarification = try container.decodeIfPresent(String.self, forKey: .clarification)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(english, forKey: .english)
+        try container.encode(translation, forKey: .translation)
+        try container.encodeIfPresent(clarification, forKey: .clarification)
+    }
 }
 
 struct CustomWordImage: Codable, Hashable, Identifiable {
     var id = UUID()
     let word: String  // The word this image is for
-    let imagePath: String  // Path to the custom image
+    var imagePaths: [String]  // Paths to custom images
+
+    init(word: String, imagePaths: [String]) {
+        self.word = word
+        self.imagePaths = imagePaths
+    }
+
+    init(word: String, imagePath: String) {
+        self.word = word
+        self.imagePaths = [imagePath]
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case word
+        case imagePaths
+        case imagePath
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decodeIfPresent(UUID.self, forKey: .id) ?? UUID()
+        word = try container.decode(String.self, forKey: .word)
+        if let paths = try container.decodeIfPresent([String].self, forKey: .imagePaths) {
+            imagePaths = paths
+        } else if let path = try container.decodeIfPresent(String.self, forKey: .imagePath) {
+            imagePaths = [path]
+        } else {
+            imagePaths = []
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(word, forKey: .word)
+        try container.encode(imagePaths, forKey: .imagePaths)
+    }
 }
 
 struct RandomWordSet: Codable, Hashable, Identifiable {
     var id = UUID()
     let name: String
     let words: [RandomWord]
+}
+
+struct LearningWord: Hashable, Identifiable {
+    var id: String
+    var word: String
+    var clarification: String
+    var translation: String
+    var tags: [String]
+    var known: Bool
+    var favorite: Bool
+    var seenCount: Int
+    var lastSeen: Date?
 }
 
 class RandomWordList: ObservableObject {
@@ -31,6 +111,11 @@ class RandomWordList: ObservableObject {
     private let babyImageBookmarkKey = "babyImageBookmark"
     private let customWordImagesKey = "customWordImages"
     private let customWordImageBookmarksKey = "customWordImageBookmarks"
+    private let learningRotationEnabledKey = "learningRotationEnabled"
+    private let learningKnownRatioKey = "learningKnownRatio"
+    private let learningFavoriteRatioKey = "learningFavoriteRatio"
+    private let learningTagRatiosKey = "learningTagRatios"
+    private let learningLastSyncKey = "learningLastSync"
 
     @Published var wordSets: [RandomWordSet] = []
     @Published var enabledSetIndices: Set<Int> = []
@@ -40,7 +125,34 @@ class RandomWordList: ObservableObject {
     @Published var babyImagePath: String = ""
     private var babyImageBookmark: Data?
     @Published var customWordImages: [CustomWordImage] = []
-    private var customWordImageBookmarks: [String: Data] = [:] // word -> bookmark data
+    private var customWordImageBookmarks: [String: [Data]] = [:] // word -> bookmark data
+    private var customImageQueues: [String: [Int]] = [:]
+    private var babyNameRngAccumulator: Double = 0.0
+    private var recentWordHistory: [String] = []
+    private var learningWords: [String: LearningWord] = [:]
+    private var lastSelectedRandomWord: RandomWord?
+    private var lastSelectedWordKey: String?
+    private let isoFormatter: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter
+    }()
+    private let colorWords: Set<String> = [
+        "red", "blue", "green", "yellow", "orange", "purple", "pink",
+        "brown", "black", "white", "gray", "grey"
+    ]
+    private let favoriteWords: Set<String> = [
+        "mama", "papa", "mom", "dad",
+        "grandma", "grandpa", "granddad",
+        "grandgrandma", "grandgrandpa", "uncle", "aunt"
+    ]
+    private let learningTags: [String] = ["basic", "cool", "action", "family"]
+
+    @Published var learningRotationEnabled: Bool = false
+    @Published var learningKnownRatio: Double = 0.5
+    @Published var learningFavoriteRatio: Double = 0.2
+    @Published var learningTagRatios: [String: Double] = [:]
+    @Published private(set) var learningLastSync: Date? = nil
 
     var words: [RandomWord] {
         var allWords: [RandomWord] = []
@@ -70,6 +182,7 @@ class RandomWordList: ObservableObject {
             enabledSetIndices.insert(index)
         }
         saveEnabledSets()
+        syncLearningWordsIfNeeded(force: true)
         objectWillChange.send()
         NotificationCenter.default.post(name: .init("RandomWordSetChanged"), object: nil)
     }
@@ -84,6 +197,9 @@ class RandomWordList: ObservableObject {
         loadBabyImagePath()
         loadCustomWordImages()
         loadEnabledSets()
+        loadLearningSettings()
+        loadLearningLastSync()
+        loadLearningWords()
         if wordSets.isEmpty {
             // Create default word sets
             wordSets = createDefaultWordSets()
@@ -103,6 +219,7 @@ class RandomWordList: ObservableObject {
             RandomWord(english: "papa", translation: "папа"),
             RandomWord(english: "grandma", translation: "бабушка"),
             RandomWord(english: "grandpa", translation: "дедушка"),
+            RandomWord(english: "granddad", translation: "дедушка"),
             RandomWord(english: "arm", translation: "рука"),
             RandomWord(english: "leg", translation: "нога"),
             RandomWord(english: "nose", translation: "нос"),
@@ -290,9 +407,12 @@ class RandomWordList: ObservableObject {
             RandomWord(english: "bicycle", translation: "велосипед"),
         ])
 
-        let familySet = RandomWordSet(name: "Family (10 words)", words: [
+        let familySet = RandomWordSet(name: "Family (12 words)", words: [
             RandomWord(english: "grandma", translation: "бабушка"),
             RandomWord(english: "grandpa", translation: "дедушка"),
+            RandomWord(english: "granddad", translation: "дедушка"),
+            RandomWord(english: "grandgrandma", translation: "прабабушка"),
+            RandomWord(english: "grandgrandpa", translation: "прадедушка"),
             RandomWord(english: "brother", translation: "брат"),
             RandomWord(english: "sister", translation: "сестра"),
             RandomWord(english: "aunt", translation: "тётя"),
@@ -312,21 +432,39 @@ class RandomWordList: ObservableObject {
         ]
     }
     
-    func getRandomWord() -> RandomWord? {
+    func getRandomWord(useLearningRotation: Bool = true) -> RandomWord? {
+        if useLearningRotation && learningRotationEnabled {
+            return getLearningRandomWord()
+        }
         // If baby name is set, include it in the random selection based on configured probability
-        if !babyName.isEmpty && Double.random(in: 0.0...1.0) < babyNameProbability {
+        if shouldPickBabyName() {
             let translation = babyNameTranslation.isEmpty ? babyName : babyNameTranslation
-            return RandomWord(english: babyName, translation: translation)
+            let word = RandomWord(english: babyName, translation: translation)
+            lastSelectedRandomWord = word
+            lastSelectedWordKey = wordKey(word: babyName, clarification: nil)
+            return word
         }
 
         guard !words.isEmpty else { return nil }
-        return words.randomElement()
+        refreshRecentHistoryIfNeeded()
+        if let chosen = selectWeightedWord(from: words) {
+            lastSelectedRandomWord = chosen
+            lastSelectedWordKey = wordKey(word: chosen.english, clarification: chosen.clarification)
+            return chosen
+        }
+        return nil
     }
     
-    func findWord(english: String) -> RandomWord? {
+    func findWord(english: String, clarification: String? = nil) -> RandomWord? {
         if english.lowercased() == babyName.lowercased() {
             let translation = babyNameTranslation.isEmpty ? babyName : babyNameTranslation
             return RandomWord(english: babyName, translation: translation)
+        }
+        if let clarification = clarification, !clarification.isEmpty {
+            return words.first {
+                $0.english.lowercased() == english.lowercased() &&
+                ($0.clarification ?? "").lowercased() == clarification.lowercased()
+            }
         }
         return words.first { $0.english.lowercased() == english.lowercased() }
     }
@@ -390,6 +528,7 @@ class RandomWordList: ObservableObject {
 
     func setBabyNameProbability(_ probability: Double) {
         babyNameProbability = max(0.0, min(1.0, probability)) // Clamp between 0 and 1
+        babyNameRngAccumulator = 0.0
         saveBabyNameProbability()
     }
 
@@ -405,7 +544,7 @@ class RandomWordList: ObservableObject {
         // Create security-scoped bookmark for sandboxed access
         do {
             let bookmarkData = try url.bookmarkData(
-                options: .withSecurityScope,
+                options: [.withSecurityScope, .securityScopeAllowOnlyReadAccess],
                 includingResourceValuesForKeys: nil,
                 relativeTo: nil
             )
@@ -436,7 +575,7 @@ class RandomWordList: ObservableObject {
                     debugPrint("Baby image bookmark is stale, recreating...")
                     // Try to recreate the bookmark
                     if let newBookmarkData = try? url.bookmarkData(
-                        options: .withSecurityScope,
+                        options: [.withSecurityScope, .securityScopeAllowOnlyReadAccess],
                         includingResourceValuesForKeys: nil,
                         relativeTo: nil
                     ) {
@@ -557,24 +696,420 @@ class RandomWordList: ObservableObject {
         babyImageBookmark = UserDefaults.standard.data(forKey: babyImageBookmarkKey)
     }
 
+    private func loadLearningSettings() {
+        learningRotationEnabled = UserDefaults.standard.bool(forKey: learningRotationEnabledKey)
+        if let stored = UserDefaults.standard.object(forKey: learningKnownRatioKey) as? Double {
+            learningKnownRatio = stored
+        }
+        if let stored = UserDefaults.standard.object(forKey: learningFavoriteRatioKey) as? Double {
+            learningFavoriteRatio = stored
+        }
+        if let data = UserDefaults.standard.data(forKey: learningTagRatiosKey),
+           let decoded = try? JSONDecoder().decode([String: Double].self, from: data) {
+            learningTagRatios = decoded
+        }
+        if learningTagRatios.isEmpty {
+            let defaultValue = 1.0 / Double(max(1, learningTags.count))
+            learningTagRatios = Dictionary(uniqueKeysWithValues: learningTags.map { ($0, defaultValue) })
+        }
+    }
+
+    private func loadLearningLastSync() {
+        if let stored = UserDefaults.standard.object(forKey: learningLastSyncKey) as? Double {
+            learningLastSync = Date(timeIntervalSince1970: stored)
+        }
+    }
+
+    private func saveLearningLastSync(_ date: Date) {
+        learningLastSync = date
+        UserDefaults.standard.set(date.timeIntervalSince1970, forKey: learningLastSyncKey)
+    }
+
+    func setLearningRotationEnabled(_ enabled: Bool) {
+        learningRotationEnabled = enabled
+        UserDefaults.standard.set(enabled, forKey: learningRotationEnabledKey)
+    }
+
+    func setLearningKnownRatio(_ value: Double) {
+        learningKnownRatio = min(1.0, max(0.0, value))
+        UserDefaults.standard.set(learningKnownRatio, forKey: learningKnownRatioKey)
+    }
+
+    func setLearningFavoriteRatio(_ value: Double) {
+        learningFavoriteRatio = min(1.0, max(0.0, value))
+        UserDefaults.standard.set(learningFavoriteRatio, forKey: learningFavoriteRatioKey)
+    }
+
+    func setLearningTagRatio(tag: String, value: Double) {
+        learningTagRatios[tag] = min(1.0, max(0.0, value))
+        if let encoded = try? JSONEncoder().encode(learningTagRatios) {
+            UserDefaults.standard.set(encoded, forKey: learningTagRatiosKey)
+        }
+    }
+
+    func getLearningTags() -> [String] {
+        learningTags
+    }
+
+    func openLearningCSV() {
+        if learningWords.isEmpty {
+            syncLearningWordsIfNeeded(force: true)
+        }
+        let url = learningCSVURL()
+        NSWorkspace.shared.open(url)
+    }
+
+    func getLearningWordList() -> [LearningWord] {
+        syncLearningWordsIfNeeded()
+        return learningWords.values.sorted { $0.word < $1.word }
+    }
+
+    func updateLearningWord(_ word: LearningWord) {
+        let newId = wordKey(word: word.word, clarification: word.clarification)
+        var updated = word
+        updated.id = newId
+        if newId != word.id {
+            learningWords.removeValue(forKey: word.id)
+        }
+        learningWords[newId] = updated
+        saveLearningWords()
+    }
+
+    func getLearningWordId(for word: LearningWord) -> String {
+        wordKey(word: word.word, clarification: word.clarification)
+    }
+
+    func getLastSelectedRandomWord() -> RandomWord? {
+        lastSelectedRandomWord
+    }
+
+    private func learningCSVURL() -> URL {
+        let baseDir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
+        let appDir = baseDir.appendingPathComponent("BabyKeyboardLock", isDirectory: true)
+        if !FileManager.default.fileExists(atPath: appDir.path) {
+            try? FileManager.default.createDirectory(
+                at: appDir,
+                withIntermediateDirectories: true,
+                attributes: nil
+            )
+        }
+        return appDir.appendingPathComponent("learning.csv")
+    }
+
+    private func wordKey(word: String, clarification: String?) -> String {
+        let base = word.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        let clar = (clarification ?? "").trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        if clar.isEmpty {
+            return base
+        }
+        return "\(base)|\(clar)"
+    }
+
+    private func splitWordKey(_ key: String) -> (String, String) {
+        let parts = key.split(separator: "|", maxSplits: 1, omittingEmptySubsequences: false)
+        if parts.count == 2 {
+            return (String(parts[0]), String(parts[1]))
+        }
+        return (key, "")
+    }
+
+    private func parseCSVLine(_ line: String) -> [String] {
+        var result: [String] = []
+        var current = ""
+        var inQuotes = false
+        let chars = Array(line)
+        var index = 0
+
+        while index < chars.count {
+            let ch = chars[index]
+            if ch == "\"" {
+                if inQuotes, index + 1 < chars.count, chars[index + 1] == "\"" {
+                    current.append("\"")
+                    index += 2
+                    continue
+                }
+                inQuotes.toggle()
+                index += 1
+                continue
+            }
+            if ch == "," && !inQuotes {
+                result.append(current)
+                current = ""
+                index += 1
+                continue
+            }
+            current.append(ch)
+            index += 1
+        }
+
+        result.append(current)
+        return result
+    }
+
+    private func csvEscape(_ value: String) -> String {
+        if value.contains(",") || value.contains("\"") || value.contains("\n") {
+            let escaped = value.replacingOccurrences(of: "\"", with: "\"\"")
+            return "\"\(escaped)\""
+        }
+        return value
+    }
+
+    private func parseDate(_ value: String) -> Date? {
+        if value.isEmpty {
+            return nil
+        }
+        if let date = isoFormatter.date(from: value) {
+            return date
+        }
+        let fallback = ISO8601DateFormatter()
+        return fallback.date(from: value)
+    }
+
+    private func formatDate(_ date: Date?) -> String {
+        guard let date else { return "" }
+        return isoFormatter.string(from: date)
+    }
+
+    private func loadLearningWords() {
+        let url = learningCSVURL()
+        guard let contents = try? String(contentsOf: url, encoding: .utf8) else {
+            seedLearningWordsIfNeeded()
+            return
+        }
+
+        var parsed: [String: LearningWord] = [:]
+        let lines = contents.split(whereSeparator: \.isNewline)
+        for (index, rawLine) in lines.enumerated() {
+            let line = String(rawLine)
+            if index == 0, line.lowercased().starts(with: "word,") {
+                continue
+            }
+            let fields = parseCSVLine(line)
+            guard fields.count >= 3 else { continue }
+
+            let word = fields[0]
+            let clarification = fields.count > 1 ? fields[1] : ""
+            let translation = fields.count > 2 ? fields[2] : ""
+            let tags = fields.count > 3 ? fields[3].split(separator: "|").map(String.init) : []
+            let known = fields.count > 4 ? (fields[4].lowercased() == "true") : false
+            let favorite = fields.count > 5 ? (fields[5].lowercased() == "true") : false
+            let seenCount = fields.count > 6 ? Int(fields[6]) ?? 0 : 0
+            let lastSeen = fields.count > 7 ? parseDate(fields[7]) : nil
+
+            let key = wordKey(word: word, clarification: clarification)
+            parsed[key] = LearningWord(
+                id: key,
+                word: word,
+                clarification: clarification,
+                translation: translation,
+                tags: tags,
+                known: known,
+                favorite: favorite,
+                seenCount: seenCount,
+                lastSeen: lastSeen
+            )
+        }
+
+        learningWords = parsed
+        syncLearningWordsIfNeeded(force: true)
+    }
+
+    private func saveLearningWords() {
+        let url = learningCSVURL()
+        var lines: [String] = []
+        lines.append("word,clarification,translation,tags,known,favorite,seen_count,last_seen")
+
+        let words = Array(learningWords.values).sorted { $0.word < $1.word }
+        for word in words {
+            let tags = word.tags.joined(separator: "|")
+            let row = [
+                csvEscape(word.word),
+                csvEscape(word.clarification),
+                csvEscape(word.translation),
+                csvEscape(tags),
+                word.known ? "true" : "false",
+                word.favorite ? "true" : "false",
+                String(word.seenCount),
+                csvEscape(formatDate(word.lastSeen))
+            ].joined(separator: ",")
+            lines.append(row)
+        }
+
+        let content = lines.joined(separator: "\n")
+        try? content.write(to: url, atomically: true, encoding: .utf8)
+    }
+
+    private func seedLearningWordsIfNeeded() {
+        if !learningWords.isEmpty {
+            return
+        }
+        syncLearningWordsIfNeeded(force: true)
+    }
+
+    private func syncLearningWordsIfNeeded(force: Bool = false) {
+        if force || learningWords.isEmpty || shouldSyncLearningWords() {
+            syncLearningWordsWithCurrentWords()
+            saveLearningWords()
+            saveLearningLastSync(Date())
+        }
+    }
+
+    private func shouldSyncLearningWords() -> Bool {
+        guard let lastSync = learningLastSync else { return true }
+        return Date().timeIntervalSince(lastSync) >= 86_400
+    }
+
+    func refreshLearningPool(force: Bool = true) {
+        syncLearningWordsIfNeeded(force: force)
+    }
+
+    func getLearningPoolInfo() -> (count: Int, lastSync: Date?) {
+        (learningWords.count, learningLastSync)
+    }
+
+    private func syncLearningWordsWithCurrentWords() {
+        var updated = learningWords
+        var translationMap: [String: Set<String>] = [:]
+        let enabledSets = enabledSetIndices.sorted().compactMap { index -> RandomWordSet? in
+            guard index < wordSets.count else { return nil }
+            return wordSets[index]
+        }
+
+        for set in enabledSets {
+            for word in set.words {
+                let key = word.english.lowercased()
+                var translations = translationMap[key] ?? Set<String>()
+                translations.insert(word.translation)
+                translationMap[key] = translations
+            }
+        }
+
+        for set in enabledSets {
+            for word in set.words {
+                let translations = translationMap[word.english.lowercased()] ?? []
+                let clarification = defaultClarification(
+                    for: word.english,
+                    setName: set.name,
+                    translations: translations,
+                    translation: word.translation
+                )
+                let key = wordKey(word: word.english, clarification: clarification)
+                if updated[key] == nil {
+                    updated[key] = LearningWord(
+                        id: key,
+                        word: word.english,
+                        clarification: clarification ?? "",
+                        translation: word.translation,
+                        tags: defaultTags(for: set.name),
+                        known: false,
+                        favorite: defaultFavorite(for: key, word: word.english),
+                        seenCount: 0,
+                        lastSeen: nil
+                    )
+                }
+            }
+        }
+        for customImage in customWordImages {
+            let parts = splitWordKey(customImage.word)
+            let key = wordKey(word: parts.0, clarification: parts.1)
+        if updated[key] == nil {
+            updated[key] = LearningWord(
+                id: key,
+                word: parts.0,
+                clarification: parts.1,
+                translation: "",
+                tags: ["family"],
+                known: true,
+                favorite: true,
+                seenCount: 0,
+                lastSeen: nil
+            )
+        }
+        }
+        if !babyName.isEmpty {
+            let key = wordKey(word: babyName, clarification: nil)
+            if updated[key] == nil {
+                let translation = babyNameTranslation.isEmpty ? babyName : babyNameTranslation
+                updated[key] = LearningWord(
+                    id: key,
+                    word: babyName,
+                    clarification: "",
+                    translation: translation,
+                    tags: ["family"],
+                    known: true,
+                    favorite: true,
+                    seenCount: 0,
+                    lastSeen: nil
+                )
+            }
+        }
+        learningWords = updated
+    }
+
+    private func defaultClarification(
+        for word: String,
+        setName: String,
+        translations: Set<String>,
+        translation: String
+    ) -> String? {
+        let lowerSet = setName.lowercased()
+        if lowerSet.contains("color") || lowerSet.contains("colour") {
+            return "color"
+        }
+        if translations.count > 1 {
+            return translation
+        }
+        return nil
+    }
+
+    private func defaultTags(for setName: String) -> [String] {
+        let lower = setName.lowercased()
+        if lower.contains("family") {
+            return ["family"]
+        }
+        if lower.contains("action") {
+            return ["action"]
+        }
+        return ["basic"]
+    }
+
+    private func defaultFavorite(for key: String, word: String) -> Bool {
+        if favoriteWords.contains(word.lowercased()) {
+            return true
+        }
+        if let _ = getCustomImageURL(for: word, clarification: splitWordKey(key).1) {
+            return true
+        }
+        if word.lowercased() == babyName.lowercased(), !babyName.isEmpty {
+            return true
+        }
+        return false
+    }
+
     // MARK: - Custom Word Images Management
 
     func setCustomWordImage(word: String, url: URL) {
+        setCustomWordImage(word: word, clarification: nil, url: url)
+    }
+
+    func setCustomWordImage(word: String, clarification: String?, url: URL) {
         // Remove existing image for this word if any
-        customWordImages.removeAll { $0.word.lowercased() == word.lowercased() }
+        let lowercasedWord = wordKey(word: word, clarification: clarification)
+        customWordImages.removeAll { $0.word.lowercased() == lowercasedWord }
+        customImageQueues.removeValue(forKey: lowercasedWord)
 
         // Add new image
-        let customImage = CustomWordImage(word: word, imagePath: url.path)
+        let customImage = CustomWordImage(word: lowercasedWord, imagePath: url.path)
         customWordImages.append(customImage)
 
         // Create security-scoped bookmark
         do {
             let bookmarkData = try url.bookmarkData(
-                options: .withSecurityScope,
+                options: [.withSecurityScope, .securityScopeAllowOnlyReadAccess],
                 includingResourceValuesForKeys: nil,
                 relativeTo: nil
             )
-            customWordImageBookmarks[word.lowercased()] = bookmarkData
+            customWordImageBookmarks[lowercasedWord] = [bookmarkData]
             saveCustomWordImageBookmarks()
         } catch {
             debugPrint("Failed to create bookmark for custom image: \(error)")
@@ -582,21 +1117,104 @@ class RandomWordList: ObservableObject {
 
         saveCustomWordImages()
         NotificationCenter.default.post(name: .init("CustomWordImagesUpdated"), object: nil)
+        markLearningFavorite(word: word, clarification: clarification)
+    }
+
+    func addCustomWordImage(word: String, url: URL) {
+        addCustomWordImage(word: word, clarification: nil, url: url)
+    }
+
+    func addCustomWordImage(word: String, clarification: String?, url: URL) {
+        let lowercasedWord = wordKey(word: word, clarification: clarification)
+        var didAppendPath = false
+        if let index = customWordImages.firstIndex(where: { $0.word.lowercased() == lowercasedWord }) {
+            if !customWordImages[index].imagePaths.contains(url.path) {
+                customWordImages[index].imagePaths.append(url.path)
+                didAppendPath = true
+            }
+        } else {
+            let customImage = CustomWordImage(word: lowercasedWord, imagePath: url.path)
+            customWordImages.append(customImage)
+            didAppendPath = true
+        }
+
+        if didAppendPath {
+            do {
+                let bookmarkData = try url.bookmarkData(
+                    options: [.withSecurityScope, .securityScopeAllowOnlyReadAccess],
+                    includingResourceValuesForKeys: nil,
+                    relativeTo: nil
+                )
+                var bookmarks = customWordImageBookmarks[lowercasedWord] ?? []
+                bookmarks.append(bookmarkData)
+                customWordImageBookmarks[lowercasedWord] = bookmarks
+                saveCustomWordImageBookmarks()
+            } catch {
+                debugPrint("Failed to create bookmark for custom image: \(error)")
+            }
+        }
+
+        customImageQueues.removeValue(forKey: lowercasedWord)
+        saveCustomWordImages()
+        NotificationCenter.default.post(name: .init("CustomWordImagesUpdated"), object: nil)
+        markLearningFavorite(word: word, clarification: clarification)
     }
 
     func removeCustomWordImage(word: String) {
-        customWordImages.removeAll { $0.word.lowercased() == word.lowercased() }
-        customWordImageBookmarks.removeValue(forKey: word.lowercased())
+        removeCustomWordImage(word: word, clarification: nil)
+    }
+
+    func removeCustomWordImage(word: String, clarification: String?) {
+        let lowercasedWord = wordKey(word: word, clarification: clarification)
+        customWordImages.removeAll { $0.word.lowercased() == lowercasedWord }
+        customWordImageBookmarks.removeValue(forKey: lowercasedWord)
+        customImageQueues.removeValue(forKey: lowercasedWord)
         saveCustomWordImages()
         saveCustomWordImageBookmarks()
         NotificationCenter.default.post(name: .init("CustomWordImagesUpdated"), object: nil)
     }
 
-    func getCustomImageURL(for word: String) -> URL? {
-        let lowercasedWord = word.lowercased()
+    func removeCustomWordImage(word: String, imagePath: String) {
+        removeCustomWordImage(word: word, clarification: nil, imagePath: imagePath)
+    }
+
+    func removeCustomWordImage(word: String, clarification: String?, imagePath: String) {
+        let lowercasedWord = wordKey(word: word, clarification: clarification)
+        guard let index = customWordImages.firstIndex(where: { $0.word.lowercased() == lowercasedWord }) else {
+            return
+        }
+        if let pathIndex = customWordImages[index].imagePaths.firstIndex(of: imagePath) {
+            customWordImages[index].imagePaths.remove(at: pathIndex)
+            if var bookmarks = customWordImageBookmarks[lowercasedWord], pathIndex < bookmarks.count {
+                bookmarks.remove(at: pathIndex)
+                customWordImageBookmarks[lowercasedWord] = bookmarks.isEmpty ? nil : bookmarks
+            }
+        }
+        if customWordImages[index].imagePaths.isEmpty {
+            customWordImages.remove(at: index)
+            customWordImageBookmarks.removeValue(forKey: lowercasedWord)
+        }
+        customImageQueues.removeValue(forKey: lowercasedWord)
+        saveCustomWordImages()
+        saveCustomWordImageBookmarks()
+        NotificationCenter.default.post(name: .init("CustomWordImagesUpdated"), object: nil)
+    }
+
+    func getCustomImageURL(for word: String, clarification: String? = nil) -> URL? {
+        let key = wordKey(word: word, clarification: clarification)
+        let lowercasedWord = key.lowercased()
+        let fallbackWord = word.lowercased()
+        guard let customImage = customWordImages.first(where: {
+            $0.word.lowercased() == lowercasedWord || $0.word.lowercased() == fallbackWord
+        }) else { return nil }
+
+        let paths = customImage.imagePaths
+        guard !paths.isEmpty else { return nil }
+        let bookmarkKey = customImage.word.lowercased()
+        let imageIndex = nextCustomImageIndex(for: bookmarkKey, count: paths.count)
 
         // Try to resolve from security-scoped bookmark first
-        if let bookmarkData = customWordImageBookmarks[lowercasedWord] {
+        if let bookmarkData = bookmarkDataForWord(bookmarkKey, imageIndex: imageIndex) {
             var isStale = false
             do {
                 let url = try URL(
@@ -610,11 +1228,11 @@ class RandomWordList: ObservableObject {
                     debugPrint("Custom image bookmark is stale for '\(word)', recreating...")
                     // Try to recreate the bookmark
                     if let newBookmarkData = try? url.bookmarkData(
-                        options: .withSecurityScope,
+                        options: [.withSecurityScope, .securityScopeAllowOnlyReadAccess],
                         includingResourceValuesForKeys: nil,
                         relativeTo: nil
                     ) {
-                        customWordImageBookmarks[lowercasedWord] = newBookmarkData
+                        setBookmarkData(newBookmarkData, word: lowercasedWord, imageIndex: imageIndex)
                         saveCustomWordImageBookmarks()
                     }
                 }
@@ -626,13 +1244,20 @@ class RandomWordList: ObservableObject {
         }
 
         // Fallback to path-based access
-        if let customImage = customWordImages.first(where: { $0.word.lowercased() == lowercasedWord }) {
-            if !customImage.imagePath.isEmpty {
-                return URL(fileURLWithPath: customImage.imagePath)
-            }
+        if imageIndex < paths.count {
+            return URL(fileURLWithPath: paths[imageIndex])
         }
 
         return nil
+    }
+
+    private func markLearningFavorite(word: String, clarification: String?) {
+        let key = wordKey(word: word, clarification: clarification)
+        if var entry = learningWords[key] {
+            entry.favorite = true
+            learningWords[key] = entry
+            saveLearningWords()
+        }
     }
 
     private func saveCustomWordImages() {
@@ -647,9 +1272,12 @@ class RandomWordList: ObservableObject {
             customWordImages = decodedImages
         }
 
-        if let savedBookmarks = UserDefaults.standard.data(forKey: customWordImageBookmarksKey),
-           let decodedBookmarks = try? JSONDecoder().decode([String: Data].self, from: savedBookmarks) {
-            customWordImageBookmarks = decodedBookmarks
+        if let savedBookmarks = UserDefaults.standard.data(forKey: customWordImageBookmarksKey) {
+            if let decodedBookmarks = try? JSONDecoder().decode([String: [Data]].self, from: savedBookmarks) {
+                customWordImageBookmarks = decodedBookmarks
+            } else if let decodedBookmarks = try? JSONDecoder().decode([String: Data].self, from: savedBookmarks) {
+                customWordImageBookmarks = decodedBookmarks.mapValues { [$0] }
+            }
         }
     }
 
@@ -658,4 +1286,222 @@ class RandomWordList: ObservableObject {
             UserDefaults.standard.set(encoded, forKey: customWordImageBookmarksKey)
         }
     }
-} 
+
+    private func shouldPickBabyName() -> Bool {
+        guard !babyName.isEmpty else { return false }
+        guard babyNameProbability > 0 else { return false }
+        babyNameRngAccumulator = min(1.0, babyNameRngAccumulator + babyNameProbability)
+        if Double.random(in: 0.0...1.0) < babyNameRngAccumulator {
+            babyNameRngAccumulator = 0.0
+            return true
+        }
+        return false
+    }
+
+    private func refreshRecentHistoryIfNeeded() {
+        guard !recentWordHistory.isEmpty else { return }
+        let currentWords = Set(words.map { wordKey(word: $0.english, clarification: $0.clarification) })
+        recentWordHistory = recentWordHistory.filter { currentWords.contains($0) }
+        let limit = recentHistoryLimit(for: currentWords.count)
+        if recentWordHistory.count > limit {
+            recentWordHistory.removeFirst(recentWordHistory.count - limit)
+        }
+    }
+
+    private func selectWeightedWord(from words: [RandomWord]) -> RandomWord? {
+        guard !words.isEmpty else { return nil }
+        let limit = recentHistoryLimit(for: words.count)
+        let maxDistance = max(1, limit - 1)
+        var weights: [Double] = []
+        weights.reserveCapacity(words.count)
+        var totalWeight: Double = 0.0
+
+        for word in words {
+            let key = wordKey(word: word.english, clarification: word.clarification)
+            let weight: Double
+            if let index = recentWordHistory.lastIndex(of: key) {
+                let distance = recentWordHistory.count - 1 - index
+                let normalized = min(Double(distance) / Double(maxDistance), 1.0)
+                weight = 0.2 + 0.8 * normalized
+            } else {
+                weight = 1.2
+            }
+            weights.append(weight)
+            totalWeight += weight
+        }
+
+        guard totalWeight > 0 else { return words.randomElement() }
+        let target = Double.random(in: 0.0..<totalWeight)
+        var running: Double = 0.0
+        for (index, weight) in weights.enumerated() {
+            running += weight
+            if running >= target {
+                let chosen = words[index]
+                let chosenKey = wordKey(word: chosen.english, clarification: chosen.clarification)
+                recordRecentWord(chosenKey)
+                return chosen
+            }
+        }
+
+        let fallback = words.randomElement()
+        if let fallbackWord = fallback {
+            let key = wordKey(word: fallbackWord.english, clarification: fallbackWord.clarification)
+            recordRecentWord(key)
+        }
+        return fallback
+    }
+
+    private func getLearningRandomWord() -> RandomWord? {
+        syncLearningWordsIfNeeded()
+        let allWords = Array(learningWords.values)
+        guard !allWords.isEmpty else { return nil }
+
+        let favorites = allWords.filter { $0.favorite }
+        let known = allWords.filter { $0.known && !$0.favorite }
+        let unknown = allWords.filter { !$0.known && !$0.favorite }
+
+        let pickFavorite = !favorites.isEmpty && Double.random(in: 0.0...1.0) < learningFavoriteRatio
+        let selectedPool: [LearningWord]
+        if pickFavorite {
+            selectedPool = favorites
+        } else {
+            let pickKnown = !known.isEmpty && (unknown.isEmpty || Double.random(in: 0.0...1.0) < learningKnownRatio)
+            if pickKnown {
+                selectedPool = !known.isEmpty ? known : unknown
+            } else {
+                selectedPool = !unknown.isEmpty ? unknown : known
+            }
+        }
+
+        let tag = pickTag()
+        let taggedPool = selectedPool.filter { tagsForWord($0).contains(tag) }
+        let pool = taggedPool.isEmpty ? selectedPool : taggedPool
+        guard var chosen = selectLearningWord(from: pool) else { return nil }
+        chosen.seenCount += 1
+        chosen.lastSeen = Date()
+        learningWords[chosen.id] = chosen
+        saveLearningWords()
+
+        let clarification = chosen.clarification.isEmpty ? nil : chosen.clarification
+        let result = RandomWord(english: chosen.word, translation: chosen.translation, clarification: clarification)
+        lastSelectedRandomWord = result
+        lastSelectedWordKey = chosen.id
+        return result
+    }
+
+    private func selectLearningWord(from words: [LearningWord]) -> LearningWord? {
+        guard !words.isEmpty else { return nil }
+        var weights: [Double] = []
+        weights.reserveCapacity(words.count)
+        var total: Double = 0.0
+
+        for word in words {
+            let daysSince: Double
+            if let lastSeen = word.lastSeen {
+                daysSince = max(0.0, Date().timeIntervalSince(lastSeen) / 86_400.0)
+            } else {
+                daysSince = 10.0
+            }
+            let weight = 1.0 + min(daysSince, 10.0)
+            weights.append(weight)
+            total += weight
+        }
+
+        guard total > 0 else { return words.randomElement() }
+        let target = Double.random(in: 0.0..<total)
+        var running: Double = 0.0
+        for (index, weight) in weights.enumerated() {
+            running += weight
+            if running >= target {
+                return words[index]
+            }
+        }
+        return words.randomElement()
+    }
+
+    private func pickTag() -> String {
+        let ratios = normalizedTagRatios()
+        let total = ratios.values.reduce(0.0, +)
+        if total <= 0 {
+            return learningTags.first ?? "basic"
+        }
+        let target = Double.random(in: 0.0..<total)
+        var running: Double = 0.0
+        for tag in learningTags {
+            let weight = ratios[tag] ?? 0.0
+            running += weight
+            if running >= target {
+                return tag
+            }
+        }
+        return learningTags.first ?? "basic"
+    }
+
+    private func normalizedTagRatios() -> [String: Double] {
+        let total = learningTagRatios.values.reduce(0.0, +)
+        if total <= 0 {
+            return learningTagRatios
+        }
+        var normalized: [String: Double] = [:]
+        for (tag, value) in learningTagRatios {
+            normalized[tag] = value / total
+        }
+        return normalized
+    }
+
+    private func tagsForWord(_ word: LearningWord) -> Set<String> {
+        let tags = word.tags.map { $0.lowercased() }.filter { !$0.isEmpty }
+        if tags.isEmpty {
+            return ["basic"]
+        }
+        return Set(tags)
+    }
+
+    private func recordRecentWord(_ key: String) {
+        recentWordHistory.append(key)
+        let limit = recentHistoryLimit(for: words.count)
+        if recentWordHistory.count > limit {
+            recentWordHistory.removeFirst(recentWordHistory.count - limit)
+        }
+    }
+
+    private func recentHistoryLimit(for wordCount: Int) -> Int {
+        return min(12, max(3, wordCount / 3))
+    }
+
+    private func nextCustomImageIndex(for word: String, count: Int) -> Int {
+        if count <= 1 {
+            return 0
+        }
+        if var queue = customImageQueues[word], !queue.isEmpty {
+            let nextIndex = queue.removeFirst()
+            customImageQueues[word] = queue
+            return nextIndex
+        }
+        var indices = Array(0..<count)
+        indices.shuffle()
+        let nextIndex = indices.removeFirst()
+        customImageQueues[word] = indices
+        return nextIndex
+    }
+
+    private func bookmarkDataForWord(_ word: String, imageIndex: Int) -> Data? {
+        guard let bookmarks = customWordImageBookmarks[word] else {
+            return nil
+        }
+        if imageIndex < bookmarks.count {
+            return bookmarks[imageIndex]
+        }
+        return bookmarks.first
+    }
+
+    private func setBookmarkData(_ bookmarkData: Data, word: String, imageIndex: Int) {
+        var bookmarks = customWordImageBookmarks[word] ?? []
+        if imageIndex < bookmarks.count {
+            bookmarks[imageIndex] = bookmarkData
+        } else {
+            bookmarks.append(bookmarkData)
+        }
+        customWordImageBookmarks[word] = bookmarks
+    }
+}

@@ -38,14 +38,13 @@ struct TypingGameView: View {
 
                     // Flashcard image if enabled
                     if showFlashcards && flashcardStyle != .none {
-                        if let imagePath = getImagePath() {
-                            if let nsImage = NSImage(contentsOfFile: imagePath) {
-                                Image(nsImage: nsImage)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: CGFloat(flashcardImageSize), height: CGFloat(flashcardImageSize))
-                                    .shadow(radius: 10)
-                            }
+                        if let imageURL = getImageURL(),
+                           let nsImage = loadImage(from: imageURL) {
+                            Image(nsImage: nsImage)
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: CGFloat(flashcardImageSize), height: CGFloat(flashcardImageSize))
+                                .shadow(radius: 10)
                         }
                     }
 
@@ -53,14 +52,36 @@ struct TypingGameView: View {
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
 
-                // Celebration animation overlay
+                // Completion overlay
                 if showCelebration {
                     VStack {
-                        Text("🎉")
-                            .font(.system(size: 200))
-                            .opacity(celebrationOpacity)
-                            .scaleEffect(celebrationOpacity)
-                            .animation(.spring(response: 0.5, dampingFraction: 0.6), value: celebrationOpacity)
+                        VStack(spacing: 16) {
+                            if let imageURL = getImageURL(),
+                               let nsImage = loadImage(from: imageURL) {
+                                Image(nsImage: nsImage)
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: CGFloat(flashcardImageSize), height: CGFloat(flashcardImageSize))
+                                    .shadow(radius: 10)
+                            }
+
+                            Text(typingGameState.currentWord)
+                                .font(.system(size: 48, weight: .bold, design: .rounded))
+
+                            if !typingGameState.currentWordTranslation.isEmpty {
+                                Text(typingGameState.currentWordTranslation)
+                                    .font(.system(size: 32, weight: .semibold, design: .rounded))
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        .padding(30)
+                        .background(
+                            RoundedRectangle(cornerRadius: 20)
+                                .fill(Color.black.opacity(0.6))
+                        )
+                        .opacity(celebrationOpacity)
+                        .scaleEffect(celebrationOpacity)
+                        .animation(.spring(response: 0.5, dampingFraction: 0.6), value: celebrationOpacity)
                     }
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
@@ -87,29 +108,44 @@ struct TypingGameView: View {
         }
     }
 
-    private func getImagePath() -> String? {
-        let word = typingGameState.currentWord.lowercased()
+    private func getImageURL() -> URL? {
+        let word = typingGameState.currentEnglishWord.isEmpty
+            ? typingGameState.currentWord.lowercased()
+            : typingGameState.currentEnglishWord.lowercased()
 
         // Check for custom word image first
-        if let customImage = RandomWordList.shared.customWordImages.first(where: { $0.word.lowercased() == word }) {
-            return customImage.imagePath
+        if let customImageURL = RandomWordList.shared.getCustomImageURL(
+            for: word,
+            clarification: typingGameState.currentWordClarification
+        ) {
+            return customImageURL
         }
 
         // Check for baby image if word matches baby name
-        if !RandomWordList.shared.babyImagePath.isEmpty &&
-           word == RandomWordList.shared.babyName.lowercased() {
-            return RandomWordList.shared.babyImagePath
+        if word == RandomWordList.shared.babyName.lowercased(),
+           let babyImageURL = RandomWordList.shared.getBabyImageURL() {
+            return babyImageURL
         }
 
         // Try to find image in Resources
         if let resourcePath = Bundle.main.resourcePath {
             let imagePath = "\(resourcePath)/Resources/\(word).png"
             if FileManager.default.fileExists(atPath: imagePath) {
-                return imagePath
+                return URL(fileURLWithPath: imagePath)
             }
         }
 
         return nil
+    }
+
+    private func loadImage(from url: URL) -> NSImage? {
+        let didStartAccessing = url.startAccessingSecurityScopedResource()
+        defer {
+            if didStartAccessing {
+                url.stopAccessingSecurityScopedResource()
+            }
+        }
+        return NSImage(contentsOf: url)
     }
 }
 

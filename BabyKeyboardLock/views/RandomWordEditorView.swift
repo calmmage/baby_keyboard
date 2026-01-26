@@ -16,8 +16,14 @@ struct RandomWordEditorView: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Random Word Sets")
-                .font(.headline)
+            HStack {
+                Text("Random Word Sets")
+                    .font(.headline)
+                Spacer()
+                Button("Close") {
+                    presentationMode.wrappedValue.dismiss()
+                }
+            }
 
             HStack {
                 Button(action: { showingNewSetDialog = true }) {
@@ -68,6 +74,8 @@ struct RandomWordEditorView: View {
                             .buttonStyle(.plain)
 
                             Button(action: {
+                                selectedSetIndex = index
+                                words = randomWordList.wordSets[index].words
                                 renameSetIndex = index
                                 renameSetName = randomWordList.wordSets[index].name
                                 showingRenameDialog = true
@@ -115,19 +123,6 @@ struct RandomWordEditorView: View {
             HStack {
                 TextField("English word", text: $newEnglishWord)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
-                
-                TextField("Translation", text: $newTranslation)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-                
-                Button(action: addWord) {
-                    Image(systemName: "plus")
-                }
-                .disabled(newEnglishWord.isEmpty || newTranslation.isEmpty)
-            }
-            
-                HStack {
-                    TextField("English word", text: $newEnglishWord)
-                        .textFieldStyle(RoundedBorderTextFieldStyle())
 
                     TextField("Translation", text: $newTranslation)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -139,6 +134,10 @@ struct RandomWordEditorView: View {
                 }
 
                 HStack {
+                    Button("Close") {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+
                     Spacer()
 
                     Button("Save Changes") {
@@ -149,19 +148,20 @@ struct RandomWordEditorView: View {
                     .disabled(words.isEmpty)
                 }
             }
-
-            Spacer()
-
-            HStack {
-                Spacer()
-
-                Button("Close") {
-                    presentationMode.wrappedValue.dismiss()
-                }
+        }
+        .padding(.horizontal, 28)
+        .padding(.vertical, 24)
+        .frame(width: 700, height: 680)
+        .onAppear {
+            centerMenuWindow()
+            if selectedSetIndex == nil, !randomWordList.wordSets.isEmpty {
+                selectedSetIndex = 0
+                words = randomWordList.wordSets[0].words
             }
         }
-        .padding()
-        .frame(width: 600, height: 550)
+        .onExitCommand {
+            presentationMode.wrappedValue.dismiss()
+        }
         .alert("New Word Set", isPresented: $showingNewSetDialog) {
             TextField("Set name", text: $newSetName)
             Button("Cancel", role: .cancel) {
@@ -238,4 +238,10 @@ struct RandomWordEditorView: View {
             }
         }
     }
-} 
+
+    private func centerMenuWindow() {
+        if let window = NSApp.windows.first(where: { $0.isSheet }) {
+            window.center()
+        }
+    }
+}

@@ -41,6 +41,7 @@ struct ContentView: View {
         }
     }
     @AppStorage("selectedLockEffect") var selectedLockEffect: LockEffect = .none
+    @AppStorage("selectedPrimaryLanguage") var selectedPrimaryLanguage: TranslationLanguage = .english
     @AppStorage("selectedTranslationLanguage") var selectedTranslationLanguage: TranslationLanguage = .none
     @AppStorage("selectedWordSetType") var savedWordSetType: String = WordSetType.randomShortWords.rawValue
     @AppStorage("wordDisplayDuration") var wordDisplayDuration: Double = DEFAULT_WORD_DISPLAY_DURATION
@@ -54,6 +55,7 @@ struct ContentView: View {
     @State private var showWordSetEditor = false
     @State private var showRandomWordEditor = false
     @State private var showCustomWordImageEditor = false
+    @State private var showLearningWordEditor = false
     @StateObject private var customWordSetsManager = CustomWordSetsManager.shared
     @StateObject private var randomWordList = RandomWordList.shared
 
@@ -62,8 +64,15 @@ struct ContentView: View {
     @State private var babyNameTranslation: String = ""
     @State private var babyNameProbability: Double = 0.125
     @State private var babyImagePath: String = ""
+    private let learningPoolDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .short
+        formatter.timeStyle = .short
+        return formatter
+    }()
     
     var body: some View {
+        let primaryLanguages = TranslationLanguage.allCases.filter { $0 != .none }
         VStack(alignment: .leading, spacing: 0) {
             // Top bar with lock toggle and quit button
             HStack {
@@ -88,7 +97,7 @@ struct ContentView: View {
 
                 Spacer()
 
-                Button("Quit") {
+                Button("Exit App") {
                     NSApp.terminate(nil)
                 }
                 .buttonStyle(.plain)
@@ -233,8 +242,18 @@ struct ContentView: View {
                             .frame(width: 35)
                     }
                     
-                    // Translation picker
-                    Picker("Translation", selection: $eventHandler.selectedTranslationLanguage) {
+                    // Language pickers
+                    Picker("Primary", selection: $eventHandler.selectedPrimaryLanguage) {
+                        ForEach(primaryLanguages) { language in
+                            Text(language.localizedString)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .onChange(of: eventHandler.selectedPrimaryLanguage) { oldVal, newVal in
+                        selectedPrimaryLanguage = newVal
+                    }
+
+                    Picker("Secondary", selection: $eventHandler.selectedTranslationLanguage) {
                         ForEach(TranslationLanguage.allCases) { language in
                             Text(language.localizedString)
                         }
@@ -366,6 +385,16 @@ struct ContentView: View {
                         .padding(.top, 5)
                     }
 
+                    if eventHandler.selectedLockEffect == .speakRandomWord {
+                        Toggle(isOn: Binding(
+                            get: { eventHandler.gamifyRandomWordEnabled },
+                            set: { eventHandler.setGamifyRandomWordEnabled($0) }
+                        )) {
+                            Text("Gamify: find the letter before reward")
+                        }
+                        .toggleStyle(CheckboxToggleStyle())
+                    }
+
                     // Word display duration settings
                     VStack(alignment: .leading, spacing: 5) {
                         Text("Word Display Duration: \(String(format: "%.1f", wordDisplayDuration))s")
@@ -413,6 +442,94 @@ struct ContentView: View {
                             }
                             .buttonStyle(PlainButtonStyle())
                         }
+
+                        Toggle(isOn: Binding(
+                            get: { randomWordList.learningRotationEnabled },
+                            set: { randomWordList.setLearningRotationEnabled($0) }
+                        )) {
+                            Text("Learning Rotation")
+                        }
+                        .toggleStyle(CheckboxToggleStyle())
+
+                        let poolInfo = randomWordList.getLearningPoolInfo()
+                        VStack(alignment: .leading, spacing: 4) {
+                            let lastSync = poolInfo.lastSync.map { learningPoolDateFormatter.string(from: $0) } ?? "never"
+                            Text("Pool: \(poolInfo.count) words")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            Text("Refresh: daily (last: \(lastSync))")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        }
+
+                        Button("Refresh pool now") {
+                            randomWordList.refreshLearningPool(force: true)
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundColor(.secondary)
+
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("Known mix: \(Int(randomWordList.learningKnownRatio * 100))%")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            Slider(
+                                value: Binding(
+                                    get: { randomWordList.learningKnownRatio },
+                                    set: { randomWordList.setLearningKnownRatio($0) }
+                                ),
+                                in: 0.0...1.0,
+                                step: 0.05
+                            )
+                        }
+
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("Favorites mix: \(Int(randomWordList.learningFavoriteRatio * 100))%")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            Slider(
+                                value: Binding(
+                                    get: { randomWordList.learningFavoriteRatio },
+                                    set: { randomWordList.setLearningFavoriteRatio($0) }
+                                ),
+                                in: 0.0...1.0,
+                                step: 0.05
+                            )
+                        }
+
+                        VStack(alignment: .leading, spacing: 8) {
+                            Text("Tag mix")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+
+                            ForEach(randomWordList.getLearningTags(), id: \.self) { tag in
+                                VStack(alignment: .leading, spacing: 4) {
+                                    let ratio = randomWordList.learningTagRatios[tag] ?? 0.0
+                                    Text("\(tag): \(Int(ratio * 100))%")
+                                        .font(.caption2)
+                                        .foregroundColor(.secondary)
+                                    Slider(
+                                        value: Binding(
+                                            get: { randomWordList.learningTagRatios[tag] ?? 0.0 },
+                                            set: { randomWordList.setLearningTagRatio(tag: tag, value: $0) }
+                                        ),
+                                        in: 0.0...1.0,
+                                        step: 0.05
+                                    )
+                                }
+                            }
+                        }
+
+                        Button("Open Learning CSV") {
+                            randomWordList.openLearningCSV()
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundColor(.secondary)
+
+                        Button("Edit Learning Words") {
+                            showLearningWordEditor = true
+                        }
+                        .buttonStyle(.plain)
+                        .foregroundColor(.secondary)
                         
                         // Image size slider for random word mode
                         if showFlashcards && flashcardStyle != .none {
@@ -447,6 +564,21 @@ struct ContentView: View {
                         Text("Reset on error")
                     }
                     .toggleStyle(CheckboxToggleStyle())
+
+                    Text("Typing Languages")
+                        .foregroundColor(.secondary)
+                        .font(.subheadline)
+
+                    let typingLanguages = TranslationLanguage.allCases.filter { $0 != .none }
+                    ForEach(typingLanguages) { language in
+                        Toggle(isOn: Binding(
+                            get: { TypingGameState.shared.selectedTypingLanguages.contains(language) },
+                            set: { TypingGameState.shared.setTypingLanguage(language, enabled: $0) }
+                        )) {
+                            Text(language.localizedString)
+                        }
+                        .toggleStyle(CheckboxToggleStyle())
+                    }
 
                     // Word set selection
                     Picker("Word Set", selection: $eventHandler.selectedWordSetType) {
@@ -512,11 +644,19 @@ struct ContentView: View {
                         .fixedSize(horizontal: false, vertical: true)
                         .foregroundColor(.secondary)
 
-                    Button("About") {
-                        AboutView().openInWindow(id: "About", sender: self, focus: true)
+                    HStack(spacing: 16) {
+                        Button("Settings") {
+                            AdvancedSettingsView().openInWindow(id: "Settings", sender: self, focus: true)
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.top, 8)
+
+                        Button("About") {
+                            AboutView().openInWindow(id: "About", sender: self, focus: true)
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.top, 8)
                     }
-                    .buttonStyle(.plain)
-                    .padding(.top, 8)
                 }
                 .padding(.top, 8)
                 }
@@ -586,6 +726,15 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showCustomWordImageEditor) {
             CustomWordImageEditorView()
+        }
+        .sheet(isPresented: $showLearningWordEditor) {
+            LearningWordEditorView()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .closeMenusRequested)) { _ in
+            showWordSetEditor = false
+            showRandomWordEditor = false
+            showCustomWordImageEditor = false
+            showLearningWordEditor = false
         }
     }
     
@@ -679,8 +828,14 @@ struct WordSetEditorView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Main Words")
-                .font(.headline)
+            HStack {
+                Text("Main Words")
+                    .font(.headline)
+                Spacer()
+                Button("Close") {
+                    presentationMode.wrappedValue.dismiss()
+                }
+            }
             
             Text("Edit the words used in 'Main Words' set")
                 .font(.subheadline)
@@ -714,12 +869,12 @@ struct WordSetEditorView: View {
             }
             
             HStack {
-                Spacer()
-                
                 Button("Cancel") {
                     presentationMode.wrappedValue.dismiss()
                 }
-                
+
+                Spacer()
+
                 Button("Save") {
                     customWordSetsManager.updateMainWords(words: words)
                     presentationMode.wrappedValue.dismiss()
@@ -730,9 +885,13 @@ struct WordSetEditorView: View {
         .padding()
         .frame(width: 400, height: 400)
         .onAppear {
+            centerMenuWindow()
             if let currentSet = customWordSetsManager.currentWordSet {
                 words = currentSet.words
             }
+        }
+        .onExitCommand {
+            presentationMode.wrappedValue.dismiss()
         }
     }
     
@@ -750,6 +909,12 @@ struct WordSetEditorView: View {
     private func deleteWord(at offsets: IndexSet) {
         words.remove(atOffsets: offsets)
     }
+
+    private func centerMenuWindow() {
+        if let window = NSApp.windows.first(where: { $0.isSheet }) {
+            window.center()
+        }
+    }
 }
 
 struct CustomWordImageEditorView: View {
@@ -757,11 +922,18 @@ struct CustomWordImageEditorView: View {
     @StateObject private var randomWordList = RandomWordList.shared
     @State private var customImages: [CustomWordImage] = []
     @State private var newWord: String = ""
+    @State private var newClarification: String = ""
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Custom Word Images")
-                .font(.headline)
+            HStack {
+                Text("Custom Word Images")
+                    .font(.headline)
+                Spacer()
+                Button("Close") {
+                    presentationMode.wrappedValue.dismiss()
+                }
+            }
 
             Text("Add custom images for specific words (e.g., 'mama', 'papa', family members)")
                 .font(.subheadline)
@@ -771,24 +943,34 @@ struct CustomWordImageEditorView: View {
             List {
                 ForEach(customImages) { customImage in
                     HStack {
-                        Text(customImage.word)
+                        Text(displayLabel(for: customImage.word))
                             .font(.body)
                         Spacer()
-                        Text(URL(fileURLWithPath: customImage.imagePath).lastPathComponent)
+                        Text("\(customImage.imagePaths.count) image(s)")
                             .font(.caption)
                             .foregroundColor(.secondary)
                             .lineLimit(1)
                             .frame(maxWidth: 150)
 
                         Button(action: {
-                            selectImageForWord(customImage.word)
+                            let parts = splitKey(customImage.word)
+                            selectImageForWord(parts.word, clarification: parts.clarification, replaceExisting: false)
+                        }) {
+                            Image(systemName: "photo.badge.plus")
+                        }
+                        .buttonStyle(PlainButtonStyle())
+
+                        Button(action: {
+                            let parts = splitKey(customImage.word)
+                            selectImageForWord(parts.word, clarification: parts.clarification, replaceExisting: true)
                         }) {
                             Image(systemName: "photo")
                         }
                         .buttonStyle(PlainButtonStyle())
 
                         Button(action: {
-                            randomWordList.removeCustomWordImage(word: customImage.word)
+                            let parts = splitKey(customImage.word)
+                            randomWordList.removeCustomWordImage(word: parts.word, clarification: parts.clarification)
                             loadCustomImages()
                         }) {
                             Image(systemName: "trash")
@@ -806,9 +988,12 @@ struct CustomWordImageEditorView: View {
                 TextField("Word (e.g., mama, papa)", text: $newWord)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
 
+                TextField("Clarification (optional)", text: $newClarification)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+
                 Button(action: {
                     if !newWord.isEmpty {
-                        selectImageForWord(newWord)
+                        selectImageForWord(newWord, clarification: newClarification, replaceExisting: false)
                     }
                 }) {
                     Image(systemName: "plus")
@@ -843,20 +1028,38 @@ struct CustomWordImageEditorView: View {
                     addQuickWord("grandpa")
                 }
                 .buttonStyle(.plain)
+
+                Button("Granddad") {
+                    addQuickWord("granddad")
+                }
+                .buttonStyle(.plain)
+
+                Button("GrandGrandma") {
+                    addQuickWord("grandgrandma")
+                }
+                .buttonStyle(.plain)
+
+                Button("GrandGrandpa") {
+                    addQuickWord("grandgrandpa")
+                }
+                .buttonStyle(.plain)
             }
 
             HStack {
-                Spacer()
-
                 Button("Done") {
                     presentationMode.wrappedValue.dismiss()
                 }
+                Spacer()
             }
         }
         .padding()
         .frame(width: 550, height: 450)
         .onAppear {
+            centerMenuWindow()
             loadCustomImages()
+        }
+        .onExitCommand {
+            presentationMode.wrappedValue.dismiss()
         }
     }
 
@@ -868,14 +1071,15 @@ struct CustomWordImageEditorView: View {
         // Check if word already exists
         if customImages.contains(where: { $0.word.lowercased() == word.lowercased() }) {
             // Just select new image
-            selectImageForWord(word)
+            selectImageForWord(word, clarification: "", replaceExisting: false)
         } else {
             newWord = word
-            selectImageForWord(word)
+            newClarification = ""
+            selectImageForWord(word, clarification: "", replaceExisting: false)
         }
     }
 
-    private func selectImageForWord(_ word: String) {
+    private func selectImageForWord(_ word: String, clarification: String, replaceExisting: Bool) {
         let panel = NSOpenPanel()
         panel.canChooseFiles = true
         panel.canChooseDirectories = false
@@ -885,11 +1089,38 @@ struct CustomWordImageEditorView: View {
 
         panel.begin { response in
             if response == .OK, let url = panel.url {
-                randomWordList.setCustomWordImage(word: word, url: url)
+                if replaceExisting {
+                    randomWordList.setCustomWordImage(word: word, clarification: clarification, url: url)
+                } else {
+                    randomWordList.addCustomWordImage(word: word, clarification: clarification, url: url)
+                }
                 loadCustomImages()
                 newWord = ""
+                newClarification = ""
             }
         }
+    }
+
+    private func centerMenuWindow() {
+        if let window = NSApp.windows.first(where: { $0.isSheet }) {
+            window.center()
+        }
+    }
+
+    private func displayLabel(for key: String) -> String {
+        let parts = splitKey(key)
+        if parts.clarification.isEmpty {
+            return parts.word
+        }
+        return "\(parts.word) (\(parts.clarification))"
+    }
+
+    private func splitKey(_ key: String) -> (word: String, clarification: String) {
+        let parts = key.split(separator: "|", maxSplits: 1, omittingEmptySubsequences: false)
+        if parts.count == 2 {
+            return (String(parts[0]), String(parts[1]))
+        }
+        return (key, "")
     }
 }
 
