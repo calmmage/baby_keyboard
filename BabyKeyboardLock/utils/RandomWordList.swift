@@ -42,15 +42,18 @@ struct CustomWordImage: Codable, Hashable, Identifiable {
     var id = UUID()
     let word: String  // The word this image is for
     var imagePaths: [String]  // Paths to custom images
+    var imageRotations: [Int]  // Degrees for each image path (0/90/180/270)
 
-    init(word: String, imagePaths: [String]) {
+    init(word: String, imagePaths: [String], imageRotations: [Int]? = nil) {
         self.word = word
         self.imagePaths = imagePaths
+        self.imageRotations = imageRotations ?? Array(repeating: 0, count: imagePaths.count)
     }
 
     init(word: String, imagePath: String) {
         self.word = word
         self.imagePaths = [imagePath]
+        self.imageRotations = [0]
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -58,6 +61,7 @@ struct CustomWordImage: Codable, Hashable, Identifiable {
         case word
         case imagePaths
         case imagePath
+        case imageRotations
     }
 
     init(from decoder: Decoder) throws {
@@ -71,6 +75,12 @@ struct CustomWordImage: Codable, Hashable, Identifiable {
         } else {
             imagePaths = []
         }
+        imageRotations = (try? container.decode([Int].self, forKey: .imageRotations)) ?? []
+        if imageRotations.count < imagePaths.count {
+            imageRotations.append(contentsOf: Array(repeating: 0, count: imagePaths.count - imageRotations.count))
+        } else if imageRotations.count > imagePaths.count {
+            imageRotations = Array(imageRotations.prefix(imagePaths.count))
+        }
     }
 
     func encode(to encoder: Encoder) throws {
@@ -78,7 +88,13 @@ struct CustomWordImage: Codable, Hashable, Identifiable {
         try container.encode(id, forKey: .id)
         try container.encode(word, forKey: .word)
         try container.encode(imagePaths, forKey: .imagePaths)
+        try container.encode(imageRotations, forKey: .imageRotations)
     }
+}
+
+struct CustomImageSelection {
+    let url: URL
+    let rotationDegrees: Double
 }
 
 struct RandomWordSet: Codable, Hashable, Identifiable {
@@ -1198,6 +1214,10 @@ class RandomWordList: ObservableObject {
         if let index = customWordImages.firstIndex(where: { $0.word.lowercased() == lowercasedWord }) {
             if !customWordImages[index].imagePaths.contains(url.path) {
                 customWordImages[index].imagePaths.append(url.path)
+                if customWordImages[index].imageRotations.count < customWordImages[index].imagePaths.count - 1 {
+                    normalizeCustomImageRotations(&customWordImages[index])
+                }
+                customWordImages[index].imageRotations.append(0)
                 didAppendPath = true
             }
         } else {
@@ -1253,6 +1273,9 @@ class RandomWordList: ObservableObject {
         }
         if let pathIndex = customWordImages[index].imagePaths.firstIndex(of: imagePath) {
             customWordImages[index].imagePaths.remove(at: pathIndex)
+            if pathIndex < customWordImages[index].imageRotations.count {
+                customWordImages[index].imageRotations.remove(at: pathIndex)
+            }
             if var bookmarks = customWordImageBookmarks[lowercasedWord], pathIndex < bookmarks.count {
                 bookmarks.remove(at: pathIndex)
                 customWordImageBookmarks[lowercasedWord] = bookmarks.isEmpty ? nil : bookmarks
@@ -1268,18 +1291,27 @@ class RandomWordList: ObservableObject {
         NotificationCenter.default.post(name: .init("CustomWordImagesUpdated"), object: nil)
     }
 
-    func getCustomImageURL(for word: String, clarification: String? = nil) -> URL? {
+    func getCustomImageSelection(for word: String, clarification: String? = nil) -> CustomImageSelection? {
         let key = wordKey(word: word, clarification: clarification)
         let lowercasedWord = key.lowercased()
         let fallbackWord = word.lowercased()
-        guard let customImage = customWordImages.first(where: {
+        guard let index = customWordImages.firstIndex(where: {
             $0.word.lowercased() == lowercasedWord || $0.word.lowercased() == fallbackWord
         }) else { return nil }
+
+        var customImage = customWordImages[index]
+        if normalizeCustomImageRotations(&customImage) {
+            customWordImages[index] = customImage
+            saveCustomWordImages()
+        }
 
         let paths = customImage.imagePaths
         guard !paths.isEmpty else { return nil }
         let bookmarkKey = customImage.word.lowercased()
         let imageIndex = nextCustomImageIndex(for: bookmarkKey, count: paths.count)
+        let rotationDegrees = imageIndex < customImage.imageRotations.count
+            ? Double(customImage.imageRotations[imageIndex])
+            : 0.0
 
         // Try to resolve from security-scoped bookmark first
         if let bookmarkData = bookmarkDataForWord(bookmarkKey, imageIndex: imageIndex) {
@@ -1294,7 +1326,6 @@ class RandomWordList: ObservableObject {
 
                 if isStale {
                     debugPrint("Custom image bookmark is stale for '\(word)', recreating...")
-                    // Try to recreate the bookmark
                     if let newBookmarkData = try? url.bookmarkData(
                         options: [.withSecurityScope, .securityScopeAllowOnlyReadAccess],
                         includingResourceValuesForKeys: nil,
@@ -1305,18 +1336,67 @@ class RandomWordList: ObservableObject {
                     }
                 }
 
-                return url
+                return CustomImageSelection(url: url, rotationDegrees: rotationDegrees)
             } catch {
                 debugPrint("Failed to resolve custom image bookmark for '\(word)': \(error)")
             }
         }
 
-        // Fallback to path-based access
         if imageIndex < paths.count {
-            return URL(fileURLWithPath: paths[imageIndex])
+            let url = URL(fileURLWithPath: paths[imageIndex])
+            return CustomImageSelection(url: url, rotationDegrees: rotationDegrees)
         }
 
         return nil
+    }
+
+    func getCustomImageURL(for word: String, clarification: String? = nil) -> URL? {
+        getCustomImageSelection(for: word, clarification: clarification)?.url
+    }
+
+    func getCustomImageRotation(for word: String, clarification: String?, imagePath: String) -> Double {
+        let key = wordKey(word: word, clarification: clarification).lowercased()
+        guard let index = customWordImages.firstIndex(where: { $0.word.lowercased() == key }) else {
+            return 0.0
+        }
+        var customImage = customWordImages[index]
+        if normalizeCustomImageRotations(&customImage) {
+            customWordImages[index] = customImage
+            saveCustomWordImages()
+        }
+        if let pathIndex = customImage.imagePaths.firstIndex(of: imagePath),
+           pathIndex < customImage.imageRotations.count {
+            return Double(customImage.imageRotations[pathIndex])
+        }
+        return 0.0
+    }
+
+    func rotateCustomWordImage(word: String, clarification: String?, imagePath: String, clockwise: Bool) {
+        let key = wordKey(word: word, clarification: clarification).lowercased()
+        guard let index = customWordImages.firstIndex(where: { $0.word.lowercased() == key }) else {
+            return
+        }
+        var customImage = customWordImages[index]
+        if normalizeCustomImageRotations(&customImage) {
+            customWordImages[index] = customImage
+        }
+        guard let pathIndex = customImage.imagePaths.firstIndex(of: imagePath) else { return }
+        let current = pathIndex < customImage.imageRotations.count ? customImage.imageRotations[pathIndex] : 0
+        let delta = clockwise ? 90 : -90
+        var next = (current + delta) % 360
+        if next < 0 { next += 360 }
+        if pathIndex < customImage.imageRotations.count {
+            customImage.imageRotations[pathIndex] = next
+        } else {
+            normalizeCustomImageRotations(&customImage)
+            if pathIndex < customImage.imageRotations.count {
+                customImage.imageRotations[pathIndex] = next
+            }
+        }
+        customWordImages[index] = customImage
+        saveCustomWordImages()
+        objectWillChange.send()
+        NotificationCenter.default.post(name: .init("CustomWordImagesUpdated"), object: nil)
     }
 
     private func markLearningFavorite(word: String, clarification: String?) {
@@ -1348,6 +1428,7 @@ class RandomWordList: ObservableObject {
             }
         }
 
+        normalizeCustomImageRotationsIfNeeded()
         rebuildCustomImageBookmarksIfNeeded()
     }
 
@@ -1355,6 +1436,33 @@ class RandomWordList: ObservableObject {
         if let encoded = try? JSONEncoder().encode(customWordImageBookmarks) {
             UserDefaults.standard.set(encoded, forKey: customWordImageBookmarksKey)
         }
+    }
+
+    private func normalizeCustomImageRotationsIfNeeded() {
+        var didUpdate = false
+        for index in customWordImages.indices {
+            var customImage = customWordImages[index]
+            if normalizeCustomImageRotations(&customImage) {
+                customWordImages[index] = customImage
+                didUpdate = true
+            }
+        }
+        if didUpdate {
+            saveCustomWordImages()
+        }
+    }
+
+    private func normalizeCustomImageRotations(_ customImage: inout CustomWordImage) -> Bool {
+        let count = customImage.imagePaths.count
+        if customImage.imageRotations.count < count {
+            customImage.imageRotations.append(contentsOf: Array(repeating: 0, count: count - customImage.imageRotations.count))
+            return true
+        }
+        if customImage.imageRotations.count > count {
+            customImage.imageRotations = Array(customImage.imageRotations.prefix(count))
+            return true
+        }
+        return false
     }
 
     private func rebuildCustomImageBookmarksIfNeeded() {

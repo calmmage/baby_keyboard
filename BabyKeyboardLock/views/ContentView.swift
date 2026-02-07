@@ -937,6 +937,10 @@ struct CustomWordImageEditorView: View {
     @State private var customImages: [CustomWordImage] = []
     @State private var newWord: String = ""
     @State private var newClarification: String = ""
+    @State private var showImagePreview = false
+    @State private var previewWordKey: String = ""
+    @State private var previewImagePaths: [String] = []
+    @State private var previewImageIndex: Int = 0
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -965,6 +969,13 @@ struct CustomWordImageEditorView: View {
                             .foregroundColor(.secondary)
                             .lineLimit(1)
                             .frame(maxWidth: 150)
+
+                        Button(action: {
+                            openPreview(for: customImage)
+                        }) {
+                            Image(systemName: "eye")
+                        }
+                        .buttonStyle(PlainButtonStyle())
 
                         Button(action: {
                             let parts = splitKey(customImage.word)
@@ -1075,6 +1086,68 @@ struct CustomWordImageEditorView: View {
         .onExitCommand {
             presentationMode.wrappedValue.dismiss()
         }
+        .sheet(isPresented: $showImagePreview) {
+            VStack(alignment: .leading, spacing: 16) {
+                HStack {
+                    Text("Image Preview")
+                        .font(.headline)
+                    Spacer()
+                    Button("Close") {
+                        showImagePreview = false
+                    }
+                }
+
+                if let imagePath = currentPreviewPath(),
+                   let image = loadImageFromPath(imagePath) {
+                    let rotation = currentPreviewRotation()
+                    Image(nsImage: image)
+                        .resizable()
+                        .scaledToFit()
+                        .rotationEffect(.degrees(rotation))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    Text("Image not available")
+                        .foregroundColor(.secondary)
+                }
+
+                HStack {
+                    Button(action: previousPreviewImage) {
+                        Image(systemName: "chevron.left")
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(previewImagePaths.count <= 1)
+
+                    Text(previewImagePaths.isEmpty ? "0/0" : "\(previewImageIndex + 1)/\(previewImagePaths.count)")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                    Button(action: nextPreviewImage) {
+                        Image(systemName: "chevron.right")
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(previewImagePaths.count <= 1)
+
+                    Spacer()
+
+                    Button(action: { rotatePreview(clockwise: false) }) {
+                        Image(systemName: "rotate.left")
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(previewImagePaths.isEmpty)
+
+                    Button(action: { rotatePreview(clockwise: true) }) {
+                        Image(systemName: "rotate.right")
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(previewImagePaths.isEmpty)
+                }
+            }
+            .padding()
+            .frame(width: 640, height: 520)
+            .onAppear {
+                centerMenuWindow()
+            }
+        }
     }
 
     private func loadCustomImages() {
@@ -1135,6 +1208,60 @@ struct CustomWordImageEditorView: View {
             return (String(parts[0]), String(parts[1]))
         }
         return (key, "")
+    }
+
+    private func openPreview(for customImage: CustomWordImage) {
+        previewWordKey = customImage.word
+        previewImagePaths = customImage.imagePaths
+        previewImageIndex = 0
+        showImagePreview = true
+    }
+
+    private func currentPreviewPath() -> String? {
+        guard previewImageIndex >= 0, previewImageIndex < previewImagePaths.count else { return nil }
+        return previewImagePaths[previewImageIndex]
+    }
+
+    private func currentPreviewRotation() -> Double {
+        guard let imagePath = currentPreviewPath() else { return 0.0 }
+        let parts = splitKey(previewWordKey)
+        return randomWordList.getCustomImageRotation(
+            for: parts.word,
+            clarification: parts.clarification,
+            imagePath: imagePath
+        )
+    }
+
+    private func rotatePreview(clockwise: Bool) {
+        guard let imagePath = currentPreviewPath() else { return }
+        let parts = splitKey(previewWordKey)
+        randomWordList.rotateCustomWordImage(
+            word: parts.word,
+            clarification: parts.clarification,
+            imagePath: imagePath,
+            clockwise: clockwise
+        )
+        loadCustomImages()
+    }
+
+    private func previousPreviewImage() {
+        guard !previewImagePaths.isEmpty else { return }
+        previewImageIndex = (previewImageIndex - 1 + previewImagePaths.count) % previewImagePaths.count
+    }
+
+    private func nextPreviewImage() {
+        guard !previewImagePaths.isEmpty else { return }
+        previewImageIndex = (previewImageIndex + 1) % previewImagePaths.count
+    }
+
+    private func loadImageFromPath(_ path: String) -> NSImage? {
+        let url = URL(fileURLWithPath: path)
+        let didStartAccessing = url.startAccessingSecurityScopedResource()
+        let image = NSImage(contentsOf: url)
+        if didStartAccessing {
+            url.stopAccessingSecurityScopedResource()
+        }
+        return image
     }
 }
 

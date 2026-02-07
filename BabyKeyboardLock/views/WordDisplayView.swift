@@ -14,6 +14,7 @@ struct WordDisplayView: View {
     @State private var englishWordForImage: String = ""
     @State private var clarificationForImage: String? = nil
     @State private var customImageURL: URL? = nil
+    @State private var customImageRotation: Double = 0.0
     
     // For more reliable timeout handling
     @State private var hideWorkItem: DispatchWorkItem? = nil
@@ -102,6 +103,7 @@ struct WordDisplayView: View {
                                     .resizable()
                                     .scaledToFit()
                                     .frame(height: min(flashcardImageSize, maxHeight - 150))
+                                    .rotationEffect(.degrees(customImageRotation))
                             }
                             // Fallback to baby image if it's the baby's name (backward compatibility)
                             else if imageLookupWord.lowercased() == RandomWordList.shared.babyName.lowercased(),
@@ -171,10 +173,16 @@ struct WordDisplayView: View {
                 clarificationForImage = (eventHandler.selectedLockEffect == .speakRandomWord && lastMatches)
                     ? lastRandomWord?.clarification
                     : nil
-                customImageURL = RandomWordList.shared.getCustomImageURL(
+                if let selection = RandomWordList.shared.getCustomImageSelection(
                     for: englishWord,
                     clarification: clarificationForImage
-                )
+                ) {
+                    customImageURL = selection.url
+                    customImageRotation = selection.rotationDegrees
+                } else {
+                    customImageURL = nil
+                    customImageRotation = 0.0
+                }
                 var fallbackTranslation: String? = nil
                 if eventHandler.selectedLockEffect == .speakRandomWord,
                    lastMatches,

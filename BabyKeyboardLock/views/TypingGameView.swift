@@ -15,6 +15,7 @@ struct TypingGameView: View {
     @State private var showCelebration: Bool = false
     @State private var celebrationOpacity: Double = 0.0
     @State private var currentImageURL: URL? = nil
+    @State private var currentImageRotation: Double = 0.0
 
     var body: some View {
         GeometryReader { geometry in
@@ -46,6 +47,7 @@ struct TypingGameView: View {
                                 .scaledToFit()
                                 .frame(width: CGFloat(flashcardImageSize), height: CGFloat(flashcardImageSize))
                                 .shadow(radius: 10)
+                                .rotationEffect(.degrees(currentImageRotation))
                         }
                     }
 
@@ -64,6 +66,7 @@ struct TypingGameView: View {
                                     .scaledToFit()
                                     .frame(width: CGFloat(flashcardImageSize), height: CGFloat(flashcardImageSize))
                                     .shadow(radius: 10)
+                                    .rotationEffect(.degrees(currentImageRotation))
                             }
 
                             Text(typingGameState.currentWord)
@@ -122,33 +125,39 @@ struct TypingGameView: View {
     }
 
     private func refreshImageURL() {
-        currentImageURL = getImageURL()
+        if let selection = getImageSelection() {
+            currentImageURL = selection.url
+            currentImageRotation = selection.rotation
+        } else {
+            currentImageURL = nil
+            currentImageRotation = 0.0
+        }
     }
 
-    private func getImageURL() -> URL? {
+    private func getImageSelection() -> (url: URL, rotation: Double)? {
         let word = typingGameState.currentEnglishWord.isEmpty
             ? typingGameState.currentWord.lowercased()
             : typingGameState.currentEnglishWord.lowercased()
 
         // Check for custom word image first
-        if let customImageURL = RandomWordList.shared.getCustomImageURL(
+        if let selection = RandomWordList.shared.getCustomImageSelection(
             for: word,
             clarification: typingGameState.currentWordClarification
         ) {
-            return customImageURL
+            return (selection.url, selection.rotationDegrees)
         }
 
         // Check for baby image if word matches baby name
         if word == RandomWordList.shared.babyName.lowercased(),
            let babyImageURL = RandomWordList.shared.getBabyImageURL() {
-            return babyImageURL
+            return (babyImageURL, 0.0)
         }
 
         // Try to find image in Resources
         if let resourcePath = Bundle.main.resourcePath {
             let imagePath = "\(resourcePath)/Resources/\(word).png"
             if FileManager.default.fileExists(atPath: imagePath) {
-                return URL(fileURLWithPath: imagePath)
+                return (URL(fileURLWithPath: imagePath), 0.0)
             }
         }
 
