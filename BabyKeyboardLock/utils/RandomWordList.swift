@@ -116,6 +116,8 @@ class RandomWordList: ObservableObject {
     private let learningFavoriteRatioKey = "learningFavoriteRatio"
     private let learningTagRatiosKey = "learningTagRatios"
     private let learningLastSyncKey = "learningLastSync"
+    private let learningPoolSizeKey = "learningPoolSize"
+    private let learningPoolKeysKey = "learningPoolKeys"
 
     @Published var wordSets: [RandomWordSet] = []
     @Published var enabledSetIndices: Set<Int> = []
@@ -130,6 +132,7 @@ class RandomWordList: ObservableObject {
     private var babyNameRngAccumulator: Double = 0.0
     private var recentWordHistory: [String] = []
     private var learningWords: [String: LearningWord] = [:]
+    private var learningPoolKeys: [String] = []
     private var lastSelectedRandomWord: RandomWord?
     private var lastSelectedWordKey: String?
     private let isoFormatter: ISO8601DateFormatter = {
@@ -152,6 +155,7 @@ class RandomWordList: ObservableObject {
     @Published var learningKnownRatio: Double = 0.5
     @Published var learningFavoriteRatio: Double = 0.2
     @Published var learningTagRatios: [String: Double] = [:]
+    @Published var learningPoolSize: Int = 25
     @Published private(set) var learningLastSync: Date? = nil
 
     var words: [RandomWord] {
@@ -200,6 +204,7 @@ class RandomWordList: ObservableObject {
         loadLearningSettings()
         loadLearningLastSync()
         loadLearningWords()
+        loadLearningPoolKeys()
         if wordSets.isEmpty {
             // Create default word sets
             wordSets = createDefaultWordSets()
@@ -712,6 +717,10 @@ class RandomWordList: ObservableObject {
             let defaultValue = 1.0 / Double(max(1, learningTags.count))
             learningTagRatios = Dictionary(uniqueKeysWithValues: learningTags.map { ($0, defaultValue) })
         }
+        let storedPoolSize = UserDefaults.standard.integer(forKey: learningPoolSizeKey)
+        if storedPoolSize > 0 {
+            learningPoolSize = storedPoolSize
+        }
     }
 
     private func loadLearningLastSync() {
@@ -745,6 +754,13 @@ class RandomWordList: ObservableObject {
         if let encoded = try? JSONEncoder().encode(learningTagRatios) {
             UserDefaults.standard.set(encoded, forKey: learningTagRatiosKey)
         }
+    }
+
+    func setLearningPoolSize(_ value: Int) {
+        let clamped = min(200, max(5, value))
+        learningPoolSize = clamped
+        UserDefaults.standard.set(clamped, forKey: learningPoolSizeKey)
+        refreshLearningPool(force: true)
     }
 
     func getLearningTags() -> [String] {
@@ -951,6 +967,7 @@ class RandomWordList: ObservableObject {
             syncLearningWordsWithCurrentWords()
             saveLearningWords()
             saveLearningLastSync(Date())
+            rebuildLearningPoolIfNeeded(force: true)
         }
     }
 
@@ -961,10 +978,61 @@ class RandomWordList: ObservableObject {
 
     func refreshLearningPool(force: Bool = true) {
         syncLearningWordsIfNeeded(force: force)
+        rebuildLearningPoolIfNeeded(force: force)
     }
 
     func getLearningPoolInfo() -> (count: Int, lastSync: Date?) {
-        (learningWords.count, learningLastSync)
+        let poolCount = currentLearningPool().count
+        return (poolCount, learningLastSync)
+    }
+
+    func getCurrentLearningPool() -> [LearningWord] {
+        return currentLearningPool()
+    }
+
+    private func loadLearningPoolKeys() {
+        if let data = UserDefaults.standard.data(forKey: learningPoolKeysKey),
+           let decoded = try? JSONDecoder().decode([String].self, from: data) {
+            learningPoolKeys = decoded
+        }
+    }
+
+    private func saveLearningPoolKeys() {
+        if let encoded = try? JSONEncoder().encode(learningPoolKeys) {
+            UserDefaults.standard.set(encoded, forKey: learningPoolKeysKey)
+        }
+    }
+
+    private func rebuildLearningPoolIfNeeded(force: Bool = false) {
+        let desiredCount = min(learningPoolSize, learningWords.count)
+        let poolValid = learningPoolKeys.allSatisfy { learningWords[$0] != nil }
+        if force || learningPoolKeys.count != desiredCount || !poolValid {
+            buildLearningPool()
+        }
+    }
+
+    private func buildLearningPool() {
+        let allWords = Array(learningWords.values)
+        guard !allWords.isEmpty else {
+            learningPoolKeys = []
+            saveLearningPoolKeys()
+            return
+        }
+        let targetSize = min(learningPoolSize, allWords.count)
+        if allWords.count <= targetSize {
+            learningPoolKeys = allWords.map { $0.id }
+            saveLearningPoolKeys()
+            return
+        }
+        var rng = SystemRandomNumberGenerator()
+        let shuffled = allWords.shuffled(using: &rng)
+        learningPoolKeys = shuffled.prefix(targetSize).map { $0.id }
+        saveLearningPoolKeys()
+    }
+
+    private func currentLearningPool() -> [LearningWord] {
+        rebuildLearningPoolIfNeeded()
+        return learningPoolKeys.compactMap { learningWords[$0] }
     }
 
     private func syncLearningWordsWithCurrentWords() {
@@ -1279,11 +1347,43 @@ class RandomWordList: ObservableObject {
                 customWordImageBookmarks = decodedBookmarks.mapValues { [$0] }
             }
         }
+
+        rebuildCustomImageBookmarksIfNeeded()
     }
 
     private func saveCustomWordImageBookmarks() {
         if let encoded = try? JSONEncoder().encode(customWordImageBookmarks) {
             UserDefaults.standard.set(encoded, forKey: customWordImageBookmarksKey)
+        }
+    }
+
+    private func rebuildCustomImageBookmarksIfNeeded() {
+        var didUpdate = false
+        for customImage in customWordImages {
+            let key = customImage.word.lowercased()
+            let paths = customImage.imagePaths
+            guard !paths.isEmpty else { continue }
+            var bookmarks = customWordImageBookmarks[key] ?? []
+            if bookmarks.count >= paths.count { continue }
+            for index in bookmarks.count..<paths.count {
+                let path = paths[index]
+                let url = URL(fileURLWithPath: path)
+                do {
+                    let bookmarkData = try url.bookmarkData(
+                        options: [.withSecurityScope, .securityScopeAllowOnlyReadAccess],
+                        includingResourceValuesForKeys: nil,
+                        relativeTo: nil
+                    )
+                    bookmarks.append(bookmarkData)
+                    didUpdate = true
+                } catch {
+                    debugPrint("Failed to rebuild bookmark for custom image '\(key)': \(error)")
+                }
+            }
+            customWordImageBookmarks[key] = bookmarks
+        }
+        if didUpdate {
+            saveCustomWordImageBookmarks()
         }
     }
 
@@ -1353,7 +1453,7 @@ class RandomWordList: ObservableObject {
 
     private func getLearningRandomWord() -> RandomWord? {
         syncLearningWordsIfNeeded()
-        let allWords = Array(learningWords.values)
+        let allWords = currentLearningPool()
         guard !allWords.isEmpty else { return nil }
 
         let favorites = allWords.filter { $0.favorite }
@@ -1492,7 +1592,7 @@ class RandomWordList: ObservableObject {
         if imageIndex < bookmarks.count {
             return bookmarks[imageIndex]
         }
-        return bookmarks.first
+        return nil
     }
 
     private func setBookmarkData(_ bookmarkData: Data, word: String, imageIndex: Int) {

@@ -16,4 +16,12 @@ random word mode is the main application in the app (most code) and the default 
 - display/flashcards: `BabyKeyboardLock/views/WordDisplayView.swift` (word + translation overlay, flashcard image resolution: custom image -> baby image -> generated, size + duration)
 - effect logic: `BabyKeyboardLock/EventEffectHandler.swift` (speakRandomWord, word selection + translations), `BabyKeyboardLock/EventHandler.swift` (gamifyRandomWord state)
 - custom images UI: `BabyKeyboardLock/views/ContentView.swift` -> `CustomWordImageEditorView`
+- custom images pipeline + rotation: `BabyKeyboardLock/utils/RandomWordList.swift`, `BabyKeyboardLock/views/WordDisplayView.swift`, `BabyKeyboardLock/views/TypingGameView.swift`
 - learning words UI: `BabyKeyboardLock/views/ContentView.swift` -> `LearningWordEditorView`
+
+rules to write down when user gives issues/ideas
+- create one doc per issue in `dev/notes/actions/`
+- first line is the user text as-is (no formatting added)
+- name format `MM-DD-title.md` (example `02-07-image-rotation.md`)
+- after the raw line: prd + repo research + proposal + plan/tests
+- copy these rules to other repos' `LLM_RULES.md` when asked

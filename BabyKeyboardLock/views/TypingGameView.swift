@@ -14,6 +14,7 @@ struct TypingGameView: View {
     @AppStorage("flashcardImageSize") private var flashcardImageSize: Double = 150.0
     @State private var showCelebration: Bool = false
     @State private var celebrationOpacity: Double = 0.0
+    @State private var currentImageURL: URL? = nil
 
     var body: some View {
         GeometryReader { geometry in
@@ -38,7 +39,7 @@ struct TypingGameView: View {
 
                     // Flashcard image if enabled
                     if showFlashcards && flashcardStyle != .none {
-                        if let imageURL = getImageURL(),
+                        if let imageURL = currentImageURL,
                            let nsImage = loadImage(from: imageURL) {
                             Image(nsImage: nsImage)
                                 .resizable()
@@ -56,7 +57,7 @@ struct TypingGameView: View {
                 if showCelebration {
                     VStack {
                         VStack(spacing: 16) {
-                            if let imageURL = getImageURL(),
+                            if let imageURL = currentImageURL,
                                let nsImage = loadImage(from: imageURL) {
                                 Image(nsImage: nsImage)
                                     .resizable()
@@ -105,7 +106,23 @@ struct TypingGameView: View {
                     }
                 }
             }
+            .onAppear {
+                refreshImageURL()
+            }
+            .onChange(of: typingGameState.currentWord) { _, _ in
+                refreshImageURL()
+            }
+            .onChange(of: typingGameState.currentEnglishWord) { _, _ in
+                refreshImageURL()
+            }
+            .onChange(of: typingGameState.currentWordClarification) { _, _ in
+                refreshImageURL()
+            }
         }
+    }
+
+    private func refreshImageURL() {
+        currentImageURL = getImageURL()
     }
 
     private func getImageURL() -> URL? {

@@ -13,6 +13,7 @@ struct WordDisplayView: View {
     @State private var windowSize: CGSize = .zero
     @State private var englishWordForImage: String = ""
     @State private var clarificationForImage: String? = nil
+    @State private var customImageURL: URL? = nil
     
     // For more reliable timeout handling
     @State private var hideWorkItem: DispatchWorkItem? = nil
@@ -96,7 +97,7 @@ struct WordDisplayView: View {
                             let imageLookupWord = englishWordForImage.isEmpty ? word : englishWordForImage
                             let clarification = clarificationForImage
                             // First check for custom image (for any word including baby's name)
-                            if let customImage = loadCustomImage(for: imageLookupWord, clarification: clarification) {
+                            if let customImage = loadImage(from: customImageURL) {
                                 Image(nsImage: customImage)
                                     .resizable()
                                     .scaledToFit()
@@ -170,6 +171,10 @@ struct WordDisplayView: View {
                 clarificationForImage = (eventHandler.selectedLockEffect == .speakRandomWord && lastMatches)
                     ? lastRandomWord?.clarification
                     : nil
+                customImageURL = RandomWordList.shared.getCustomImageURL(
+                    for: englishWord,
+                    clarification: clarificationForImage
+                )
                 var fallbackTranslation: String? = nil
                 if eventHandler.selectedLockEffect == .speakRandomWord,
                    lastMatches,
@@ -272,11 +277,8 @@ struct WordDisplayView: View {
         return image
     }
 
-    private func loadCustomImage(for word: String, clarification: String?) -> NSImage? {
-        guard let imageURL = RandomWordList.shared.getCustomImageURL(for: word, clarification: clarification) else {
-            return nil
-        }
-
+    private func loadImage(from url: URL?) -> NSImage? {
+        guard let imageURL = url else { return nil }
         // Start accessing security-scoped resource
         let didStartAccessing = imageURL.startAccessingSecurityScopedResource()
 
