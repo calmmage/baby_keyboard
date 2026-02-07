@@ -40,7 +40,7 @@ struct ContentView: View {
             LaunchAtStartup.shared.setEnabled(launchOnStartup)
         }
     }
-    @AppStorage("selectedLockEffect") var selectedLockEffect: LockEffect = .none
+    @AppStorage("selectedLockEffect") var selectedLockEffect: LockEffect = .speakRandomWord
     @AppStorage("selectedPrimaryLanguage") var selectedPrimaryLanguage: TranslationLanguage = .english
     @AppStorage("selectedTranslationLanguage") var selectedTranslationLanguage: TranslationLanguage = .none
     @AppStorage("selectedWordSetType") var savedWordSetType: String = WordSetType.randomShortWords.rawValue
@@ -467,6 +467,20 @@ struct ContentView: View {
                         }
                         .buttonStyle(.plain)
                         .foregroundColor(.secondary)
+
+                        VStack(alignment: .leading, spacing: 6) {
+                            Text("Pool size: \(randomWordList.learningPoolSize)")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            Slider(
+                                value: Binding(
+                                    get: { Double(randomWordList.learningPoolSize) },
+                                    set: { randomWordList.setLearningPoolSize(Int($0)) }
+                                ),
+                                in: 5.0...200.0,
+                                step: 5.0
+                            )
+                        }
 
                         VStack(alignment: .leading, spacing: 6) {
                             Text("Known mix: \(Int(randomWordList.learningKnownRatio * 100))%")

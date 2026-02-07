@@ -18,9 +18,9 @@ enum EffectCategory: String, CaseIterable, Identifiable {
 enum LockEffect: String, CaseIterable, Identifiable {
     case none = "LockEffect.none"
     case confettiCannon = "LockEffect.confettiCannon"
+    case speakRandomWord = "LockEffect.speakRandomWord"
     case speakTheKey = "LockEffect.speakTheKey"
     case speakAKeyWord = "LockEffect.speakAKeyWord"
-    case speakRandomWord = "LockEffect.speakRandomWord"
     // Game modes
     case typingGame = "LockEffect.typingGame"
     // New visual effects
