@@ -56,6 +56,7 @@ struct ContentView: View {
     @State private var showRandomWordEditor = false
     @State private var showCustomWordImageEditor = false
     @State private var showLearningWordEditor = false
+    @State private var showLearningPoolPreview = false
     @StateObject private var customWordSetsManager = CustomWordSetsManager.shared
     @StateObject private var randomWordList = RandomWordList.shared
 
@@ -462,11 +463,19 @@ struct ContentView: View {
                                 .foregroundColor(.secondary)
                         }
 
-                        Button("Refresh pool now") {
-                            randomWordList.refreshLearningPool(force: true)
+                        HStack {
+                            Button("Refresh pool now") {
+                                randomWordList.refreshLearningPool(force: true)
+                            }
+                            .buttonStyle(.plain)
+                            .foregroundColor(.secondary)
+
+                            Button("Preview pool") {
+                                showLearningPoolPreview = true
+                            }
+                            .buttonStyle(.plain)
+                            .foregroundColor(.secondary)
                         }
-                        .buttonStyle(.plain)
-                        .foregroundColor(.secondary)
 
                         VStack(alignment: .leading, spacing: 6) {
                             Text("Pool size: \(randomWordList.learningPoolSize)")
@@ -743,6 +752,9 @@ struct ContentView: View {
         }
         .sheet(isPresented: $showLearningWordEditor) {
             LearningWordEditorView()
+        }
+        .sheet(isPresented: $showLearningPoolPreview) {
+            LearningWordEditorView(initialShowOnlyPool: true)
         }
         .onReceive(NotificationCenter.default.publisher(for: .closeMenusRequested)) { _ in
             showWordSetEditor = false
