@@ -193,12 +193,14 @@ struct WordDisplayView: View {
                 let primaryWord = eventHandler.eventEffectHandler.resolveWordForLanguage(
                     english: englishWord,
                     fallbackTranslation: fallbackTranslation,
-                    language: eventHandler.selectedPrimaryLanguage
+                    language: eventHandler.selectedPrimaryLanguage,
+                    meaningKey: clarificationForImage
                 ) ?? englishWord
                 let secondaryWord = eventHandler.eventEffectHandler.resolveWordForLanguage(
                     english: englishWord,
                     fallbackTranslation: fallbackTranslation,
-                    language: eventHandler.selectedTranslationLanguage
+                    language: eventHandler.selectedTranslationLanguage,
+                    meaningKey: clarificationForImage
                 )
                 self.word = primaryWord
                 if let secondaryWord = secondaryWord, secondaryWord != primaryWord {

@@ -516,14 +516,19 @@ class EventEffectHandler {
         return utterance
     }
 
-    func resolveWordForLanguage(english: String, fallbackTranslation: String?, language: TranslationLanguage) -> String? {
+    func resolveWordForLanguage(
+        english: String,
+        fallbackTranslation: String?,
+        language: TranslationLanguage,
+        meaningKey: String? = nil
+    ) -> String? {
         if language == .none {
             return nil
         }
         if language == .english {
             return english
         }
-        if let translation = getTranslation(word: english, language: language) {
+        if let translation = getTranslation(word: english, language: language, meaningKey: meaningKey) {
             return translation
         }
         if language == .russian, let fallbackTranslation = fallbackTranslation, !fallbackTranslation.isEmpty {
@@ -543,7 +548,7 @@ class EventEffectHandler {
     }
     
     // Get translation for a word based on the selected language
-    func getTranslation(word: String, language: TranslationLanguage) -> String? {
+    func getTranslation(word: String, language: TranslationLanguage, meaningKey: String? = nil) -> String? {
         let babyName = RandomWordList.shared.babyName
         
         // If the word is the baby's name, return it as its own translation
@@ -554,6 +559,18 @@ class EventEffectHandler {
         if wordSetType == .mainWords {
             if let translation = customWordSetsManager.getTranslation(for: word) {
                 return translation
+            }
+        }
+
+        // Prefer meaning-aware translation from random word sets when available.
+        // This keeps ambiguous words (same spelling, different meaning) consistent.
+        if wordSetType == .randomShortWords {
+            if let match = RandomWordList.shared.findWord(english: word, clarification: meaningKey),
+               !match.translation.isEmpty {
+                return match.translation
+            }
+            if let match = RandomWordList.shared.findWord(english: word), !match.translation.isEmpty {
+                return match.translation
             }
         }
         
@@ -618,8 +635,18 @@ class EventEffectHandler {
 
         let englishWord = randomWord.english
         let fallbackTranslation = randomWord.translation.isEmpty ? nil : randomWord.translation
-        let primaryWord = resolveWordForLanguage(english: englishWord, fallbackTranslation: fallbackTranslation, language: primaryLanguage) ?? englishWord
-        let secondaryWord = resolveWordForLanguage(english: englishWord, fallbackTranslation: fallbackTranslation, language: translationLanguage)
+        let primaryWord = resolveWordForLanguage(
+            english: englishWord,
+            fallbackTranslation: fallbackTranslation,
+            language: primaryLanguage,
+            meaningKey: randomWord.clarification
+        ) ?? englishWord
+        let secondaryWord = resolveWordForLanguage(
+            english: englishWord,
+            fallbackTranslation: fallbackTranslation,
+            language: translationLanguage,
+            meaningKey: randomWord.clarification
+        )
 
         let primaryUtterance = createUtterance(
             for: primaryWord,
