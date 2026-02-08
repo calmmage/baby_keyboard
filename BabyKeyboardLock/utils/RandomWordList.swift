@@ -101,6 +101,32 @@ struct RandomWordSet: Codable, Hashable, Identifiable {
     var id = UUID()
     let name: String
     let words: [RandomWord]
+
+    init(name: String, words: [RandomWord]) {
+        self.id = UUID()
+        self.name = name
+        self.words = words
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case id
+        case name
+        case words
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decodeIfPresent(UUID.self, forKey: .id) ?? UUID()
+        name = try container.decode(String.self, forKey: .name)
+        words = try container.decode([RandomWord].self, forKey: .words)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(id, forKey: .id)
+        try container.encode(name, forKey: .name)
+        try container.encode(words, forKey: .words)
+    }
 }
 
 struct LearningWord: Hashable, Identifiable {
@@ -234,6 +260,10 @@ class RandomWordList: ObservableObject {
     }
 
     private func createDefaultWordSets() -> [RandomWordSet] {
+        if let bundled = loadBundledWordSets(), !bundled.isEmpty {
+            return bundled
+        }
+
         // Basic Set - legacy, first one
 	      let basicSet = RandomWordSet(name: "Basic Words", words: [
             RandomWord(english: "mama", translation: "мама"),
@@ -451,6 +481,31 @@ class RandomWordList: ObservableObject {
             animalsMediumSet, foodMediumSet, toysSet, natureSet, actionsMediumSet,
             vehiclesSet, familySet
         ]
+    }
+
+    private struct BundledWordSetsFile: Codable {
+        let version: Int?
+        let source: String?
+        let sets: [RandomWordSet]
+    }
+
+    private func loadBundledWordSets() -> [RandomWordSet]? {
+        guard let url = Bundle.main.url(
+            forResource: "word_sets",
+            withExtension: "json",
+            subdirectory: "Resources"
+        ) else {
+            return nil
+        }
+
+        do {
+            let data = try Data(contentsOf: url)
+            let decoded = try JSONDecoder().decode(BundledWordSetsFile.self, from: data)
+            return decoded.sets
+        } catch {
+            debugPrint("Failed to load bundled word sets: \(error)")
+            return nil
+        }
     }
     
     func getRandomWord(useLearningRotation: Bool = true) -> RandomWord? {

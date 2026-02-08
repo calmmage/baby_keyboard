@@ -1,0 +1,736 @@
+{
+  "version": 1,
+  "source": "BabyKeyboardLock/utils/RandomWordList.swift",
+  "sets": [
+    {
+      "name": "Basic Words",
+      "words": [
+        {
+          "english": "mama",
+          "translation": "мама"
+        },
+        {
+          "english": "papa",
+          "translation": "папа"
+        },
+        {
+          "english": "grandma",
+          "translation": "бабушка"
+        },
+        {
+          "english": "grandpa",
+          "translation": "дедушка"
+        },
+        {
+          "english": "granddad",
+          "translation": "дедушка"
+        },
+        {
+          "english": "arm",
+          "translation": "рука"
+        },
+        {
+          "english": "leg",
+          "translation": "нога"
+        },
+        {
+          "english": "nose",
+          "translation": "нос"
+        },
+        {
+          "english": "eye",
+          "translation": "глаз"
+        },
+        {
+          "english": "family",
+          "translation": "семья"
+        },
+        {
+          "english": "dog",
+          "translation": "собака"
+        },
+        {
+          "english": "cat",
+          "translation": "кошка"
+        }
+      ]
+    },
+    {
+      "name": "Starter (10 words)",
+      "words": [
+        {
+          "english": "mama",
+          "translation": "мама"
+        },
+        {
+          "english": "papa",
+          "translation": "папа"
+        },
+        {
+          "english": "baby",
+          "translation": "малыш"
+        },
+        {
+          "english": "milk",
+          "translation": "молоко"
+        },
+        {
+          "english": "water",
+          "translation": "вода"
+        },
+        {
+          "english": "yes",
+          "translation": "да"
+        },
+        {
+          "english": "no",
+          "translation": "нет"
+        },
+        {
+          "english": "bye",
+          "translation": "пока"
+        },
+        {
+          "english": "hi",
+          "translation": "привет"
+        },
+        {
+          "english": "love",
+          "translation": "любовь"
+        }
+      ]
+    },
+    {
+      "name": "Animals - Easy (10 words)",
+      "words": [
+        {
+          "english": "cat",
+          "translation": "кошка"
+        },
+        {
+          "english": "dog",
+          "translation": "собака"
+        },
+        {
+          "english": "bird",
+          "translation": "птица"
+        },
+        {
+          "english": "fish",
+          "translation": "рыба"
+        },
+        {
+          "english": "cow",
+          "translation": "корова"
+        },
+        {
+          "english": "duck",
+          "translation": "утка"
+        },
+        {
+          "english": "pig",
+          "translation": "свинья"
+        },
+        {
+          "english": "rabbit",
+          "translation": "кролик"
+        },
+        {
+          "english": "mouse",
+          "translation": "мышь"
+        },
+        {
+          "english": "bear",
+          "translation": "медведь"
+        }
+      ]
+    },
+    {
+      "name": "Food - Easy (10 words)",
+      "words": [
+        {
+          "english": "apple",
+          "translation": "яблоко"
+        },
+        {
+          "english": "banana",
+          "translation": "банан"
+        },
+        {
+          "english": "bread",
+          "translation": "хлеб"
+        },
+        {
+          "english": "cookie",
+          "translation": "печенье"
+        },
+        {
+          "english": "juice",
+          "translation": "сок"
+        },
+        {
+          "english": "egg",
+          "translation": "яйцо"
+        },
+        {
+          "english": "cheese",
+          "translation": "сыр"
+        },
+        {
+          "english": "cake",
+          "translation": "торт"
+        },
+        {
+          "english": "soup",
+          "translation": "суп"
+        },
+        {
+          "english": "tea",
+          "translation": "чай"
+        }
+      ]
+    },
+    {
+      "name": "Body Parts (12 words)",
+      "words": [
+        {
+          "english": "head",
+          "translation": "голова"
+        },
+        {
+          "english": "eye",
+          "translation": "глаз"
+        },
+        {
+          "english": "nose",
+          "translation": "нос"
+        },
+        {
+          "english": "mouth",
+          "translation": "рот"
+        },
+        {
+          "english": "ear",
+          "translation": "ухо"
+        },
+        {
+          "english": "hand",
+          "translation": "рука"
+        },
+        {
+          "english": "finger",
+          "translation": "палец"
+        },
+        {
+          "english": "leg",
+          "translation": "нога"
+        },
+        {
+          "english": "foot",
+          "translation": "ступня"
+        },
+        {
+          "english": "belly",
+          "translation": "живот"
+        },
+        {
+          "english": "hair",
+          "translation": "волосы"
+        },
+        {
+          "english": "tooth",
+          "translation": "зуб"
+        }
+      ]
+    },
+    {
+      "name": "Colors (11 words)",
+      "words": [
+        {
+          "english": "red",
+          "translation": "красный"
+        },
+        {
+          "english": "blue",
+          "translation": "синий"
+        },
+        {
+          "english": "green",
+          "translation": "зелёный"
+        },
+        {
+          "english": "yellow",
+          "translation": "жёлтый"
+        },
+        {
+          "english": "orange",
+          "translation": "оранжевый"
+        },
+        {
+          "english": "purple",
+          "translation": "фиолетовый"
+        },
+        {
+          "english": "pink",
+          "translation": "розовый"
+        },
+        {
+          "english": "brown",
+          "translation": "коричневый"
+        },
+        {
+          "english": "black",
+          "translation": "чёрный"
+        },
+        {
+          "english": "white",
+          "translation": "белый"
+        },
+        {
+          "english": "gray",
+          "translation": "серый"
+        }
+      ]
+    },
+    {
+      "name": "Actions - Easy (10 words)",
+      "words": [
+        {
+          "english": "eat",
+          "translation": "есть"
+        },
+        {
+          "english": "drink",
+          "translation": "пить"
+        },
+        {
+          "english": "sleep",
+          "translation": "спать"
+        },
+        {
+          "english": "walk",
+          "translation": "ходить"
+        },
+        {
+          "english": "run",
+          "translation": "бегать"
+        },
+        {
+          "english": "jump",
+          "translation": "прыгать"
+        },
+        {
+          "english": "play",
+          "translation": "играть"
+        },
+        {
+          "english": "sit",
+          "translation": "сидеть"
+        },
+        {
+          "english": "stand",
+          "translation": "стоять"
+        },
+        {
+          "english": "look",
+          "translation": "смотреть"
+        }
+      ]
+    },
+    {
+      "name": "Animals - Medium (15 words)",
+      "words": [
+        {
+          "english": "horse",
+          "translation": "лошадь"
+        },
+        {
+          "english": "sheep",
+          "translation": "овца"
+        },
+        {
+          "english": "chicken",
+          "translation": "курица"
+        },
+        {
+          "english": "lion",
+          "translation": "лев"
+        },
+        {
+          "english": "tiger",
+          "translation": "тигр"
+        },
+        {
+          "english": "elephant",
+          "translation": "слон"
+        },
+        {
+          "english": "giraffe",
+          "translation": "жираф"
+        },
+        {
+          "english": "monkey",
+          "translation": "обезьяна"
+        },
+        {
+          "english": "zebra",
+          "translation": "зебра"
+        },
+        {
+          "english": "frog",
+          "translation": "лягушка"
+        },
+        {
+          "english": "butterfly",
+          "translation": "бабочка"
+        },
+        {
+          "english": "snake",
+          "translation": "змея"
+        },
+        {
+          "english": "turtle",
+          "translation": "черепаха"
+        },
+        {
+          "english": "penguin",
+          "translation": "пингвин"
+        },
+        {
+          "english": "owl",
+          "translation": "сова"
+        }
+      ]
+    },
+    {
+      "name": "Food - Medium (15 words)",
+      "words": [
+        {
+          "english": "orange",
+          "translation": "апельсин"
+        },
+        {
+          "english": "grape",
+          "translation": "виноград"
+        },
+        {
+          "english": "strawberry",
+          "translation": "клубника"
+        },
+        {
+          "english": "watermelon",
+          "translation": "арбуз"
+        },
+        {
+          "english": "carrot",
+          "translation": "морковь"
+        },
+        {
+          "english": "potato",
+          "translation": "картошка"
+        },
+        {
+          "english": "tomato",
+          "translation": "помидор"
+        },
+        {
+          "english": "cucumber",
+          "translation": "огурец"
+        },
+        {
+          "english": "ice cream",
+          "translation": "мороженое"
+        },
+        {
+          "english": "pizza",
+          "translation": "пицца"
+        },
+        {
+          "english": "pasta",
+          "translation": "паста"
+        },
+        {
+          "english": "rice",
+          "translation": "рис"
+        },
+        {
+          "english": "meat",
+          "translation": "мясо"
+        },
+        {
+          "english": "chicken",
+          "translation": "курица"
+        },
+        {
+          "english": "sandwich",
+          "translation": "бутерброд"
+        }
+      ]
+    },
+    {
+      "name": "Toys & Play (12 words)",
+      "words": [
+        {
+          "english": "ball",
+          "translation": "мяч"
+        },
+        {
+          "english": "doll",
+          "translation": "кукла"
+        },
+        {
+          "english": "teddy bear",
+          "translation": "плюшевый мишка"
+        },
+        {
+          "english": "car",
+          "translation": "машинка"
+        },
+        {
+          "english": "train",
+          "translation": "поезд"
+        },
+        {
+          "english": "bike",
+          "translation": "велосипед"
+        },
+        {
+          "english": "block",
+          "translation": "кубик"
+        },
+        {
+          "english": "puzzle",
+          "translation": "пазл"
+        },
+        {
+          "english": "book",
+          "translation": "книга"
+        },
+        {
+          "english": "swing",
+          "translation": "качели"
+        },
+        {
+          "english": "slide",
+          "translation": "горка"
+        },
+        {
+          "english": "drum",
+          "translation": "барабан"
+        }
+      ]
+    },
+    {
+      "name": "Nature (12 words)",
+      "words": [
+        {
+          "english": "sun",
+          "translation": "солнце"
+        },
+        {
+          "english": "moon",
+          "translation": "луна"
+        },
+        {
+          "english": "star",
+          "translation": "звезда"
+        },
+        {
+          "english": "cloud",
+          "translation": "облако"
+        },
+        {
+          "english": "rain",
+          "translation": "дождь"
+        },
+        {
+          "english": "snow",
+          "translation": "снег"
+        },
+        {
+          "english": "tree",
+          "translation": "дерево"
+        },
+        {
+          "english": "flower",
+          "translation": "цветок"
+        },
+        {
+          "english": "grass",
+          "translation": "трава"
+        },
+        {
+          "english": "water",
+          "translation": "вода"
+        },
+        {
+          "english": "sky",
+          "translation": "небо"
+        },
+        {
+          "english": "wind",
+          "translation": "ветер"
+        }
+      ]
+    },
+    {
+      "name": "Actions - Medium (12 words)",
+      "words": [
+        {
+          "english": "dance",
+          "translation": "танцевать"
+        },
+        {
+          "english": "sing",
+          "translation": "петь"
+        },
+        {
+          "english": "read",
+          "translation": "читать"
+        },
+        {
+          "english": "draw",
+          "translation": "рисовать"
+        },
+        {
+          "english": "write",
+          "translation": "писать"
+        },
+        {
+          "english": "clap",
+          "translation": "хлопать"
+        },
+        {
+          "english": "wave",
+          "translation": "махать"
+        },
+        {
+          "english": "hug",
+          "translation": "обнимать"
+        },
+        {
+          "english": "kiss",
+          "translation": "целовать"
+        },
+        {
+          "english": "laugh",
+          "translation": "смеяться"
+        },
+        {
+          "english": "cry",
+          "translation": "плакать"
+        },
+        {
+          "english": "smile",
+          "translation": "улыбаться"
+        }
+      ]
+    },
+    {
+      "name": "Vehicles (10 words)",
+      "words": [
+        {
+          "english": "car",
+          "translation": "машина"
+        },
+        {
+          "english": "bus",
+          "translation": "автобус"
+        },
+        {
+          "english": "truck",
+          "translation": "грузовик"
+        },
+        {
+          "english": "train",
+          "translation": "поезд"
+        },
+        {
+          "english": "plane",
+          "translation": "самолёт"
+        },
+        {
+          "english": "helicopter",
+          "translation": "вертолёт"
+        },
+        {
+          "english": "boat",
+          "translation": "лодка"
+        },
+        {
+          "english": "ship",
+          "translation": "корабль"
+        },
+        {
+          "english": "rocket",
+          "translation": "ракета"
+        },
+        {
+          "english": "bicycle",
+          "translation": "велосипед"
+        }
+      ]
+    },
+    {
+      "name": "Family (12 words)",
+      "words": [
+        {
+          "english": "grandma",
+          "translation": "бабушка"
+        },
+        {
+          "english": "grandpa",
+          "translation": "дедушка"
+        },
+        {
+          "english": "granddad",
+          "translation": "дедушка"
+        },
+        {
+          "english": "grandgrandma",
+          "translation": "прабабушка"
+        },
+        {
+          "english": "grandgrandpa",
+          "translation": "прадедушка"
+        },
+        {
+          "english": "brother",
+          "translation": "брат"
+        },
+        {
+          "english": "sister",
+          "translation": "сестра"
+        },
+        {
+          "english": "aunt",
+          "translation": "тётя"
+        },
+        {
+          "english": "uncle",
+          "translation": "дядя"
+        },
+        {
+          "english": "cousin",
+          "translation": "двоюродный брат"
+        },
+        {
+          "english": "friend",
+          "translation": "друг"
+        },
+        {
+          "english": "family",
+          "translation": "семья"
+        },
+        {
+          "english": "home",
+          "translation": "дом"
+        }
+      ]
+    },
+    {
+      "name": "Basic Words (Migrated)",
+      "words": []
+    }
+  ]
+}
