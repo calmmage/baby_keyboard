@@ -4,10 +4,12 @@ calmmage_id: nn0vXJFT
 - a
     - `key: 48f24568`
     - Finish scripts.word_dictionary_showcase to generate a rich progressive dictionary and add definition mode
+    - PRD: `dev/notes/actions/02-07-dictionary-showcase-definition.md`
 - b
     - `key: 09461e23`
     - Make the settings window open in the top right corner instead of middle of the screen
     - Make the window with words closeable and moveable (hotkey? How to drag it?)
+    - PRD: `dev/notes/actions/02-07-window-position-moveable.md`
 - c
     - `key: f0750a6c`
     - `cue: Can't see which words are actually selected`
@@ -15,10 +17,12 @@ calmmage_id: nn0vXJFT
     - Bonus: make it a table that showcases
         - status in learning (num viewings, known or not)
         - category in database - e.g. activity / relative / item / ...
-    - PRD: `dev/notes/actions/02-07-vocab-rotation-preview.md`
+    - PRD: `dev/notes/actions/02-07-word-pool-preview.md`
+    - Related PRD: `dev/notes/actions/02-07-vocab-rotation-preview.md`
 - d
     - `key: 45ed1f4f`
     - Add multi-image support to photos
+    - PRD: `dev/notes/actions/1-image-cache.md`
 - e
     - `key: f260c606`
     - `cue: There's too many buttons now, including 'no images' and 'random' - we could instead allow customizing enabling each style separately`
@@ -34,12 +38,15 @@ calmmage_id: nn0vXJFT
     - Debug and fix photo loading issue
     - Add custom photos config
     - Add a text yaml config of local photos - to avoid re-adding them constantly. Re-load on start
+    - PRD: `dev/notes/actions/02-08-images-folder-auto-sync.md`
 - h
     - `key: eca3009a`
     Find a way to publish and distribute images other than git - upload to storage, download on first launch
+    - PRD: `dev/notes/actions/02-08-app-website-supabase-merge.md`
 - i
     - `key: 8bd1d2ea`
     Fix issues with words meanings and image discrepancies - Orange - color and fruit, drink - verb and noun
+    - PRD: `dev/notes/actions/7-collisions.md`
 - j
     - `key: 441b4ef3`
     - `cue: My PC turns into a heater when I run my app..`
@@ -59,12 +66,14 @@ calmmage_id: nn0vXJFT
     - `key: 4abc703d`
     - `cue: Couldn't get a specific word - mama - to appear at all`
     - Rework random into pseudo-random that balances probabilities into a more even shuffle
+    - PRD: `dev/notes/actions/2-rng.md`
 - o
     - `key: ddd1a65b`
     Publish calmlib, install and download quick draw images
 - p
     - `key: 490a0894`
       Load images from user folder instead of including resources in the package. Bonus: Auto-generate words for images and use that set in text
+    - PRD: `dev/notes/actions/02-08-images-folder-auto-sync.md`
 - q
     - `key: 8e21dce0`
     - Gamify keyboard locker somehow
@@ -74,9 +83,11 @@ calmmage_id: nn0vXJFT
       'A' etc.). Allow any words from selected word sets.
       Some nice animation when the word is completed correctly
     - Add a setting checkbox "reset on error".
+    - PRD: `dev/notes/actions/3-gamify-random-word.md`
 - r
     - `key: 20234a42`
     - Make it a website
+    - PRD: `dev/notes/actions/02-08-app-website-supabase-merge.md`
 - s
     - `key: 8d4d24da`
     - `cue: I tried to deploy on Anna's macbook using make deploy, and it failed saying it can't export archive because it misses the certificate. The main question is do i create a new one or copy this one?`
