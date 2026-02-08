@@ -56,6 +56,7 @@ struct ContentView: View {
     @State private var showRandomWordEditor = false
     @State private var showCustomWordImageEditor = false
     @State private var showLearningWordEditor = false
+    @State private var showActivePoolPreview = false
     @State private var learningPoolWindow: NSWindow?
     @StateObject private var customWordSetsManager = CustomWordSetsManager.shared
     @StateObject private var randomWordList = RandomWordList.shared
@@ -471,6 +472,12 @@ struct ContentView: View {
                             .buttonStyle(.plain)
                             .foregroundColor(.secondary)
 
+                            Button("View active pool") {
+                                showActivePoolPreview = true
+                            }
+                            .buttonStyle(.plain)
+                            .foregroundColor(.secondary)
+
                             Button("Manage words") {
                                 openLearningPoolWindow()
                             }
@@ -754,11 +761,20 @@ struct ContentView: View {
         .sheet(isPresented: $showLearningWordEditor) {
             LearningWordEditorView()
         }
+        .sheet(isPresented: $showActivePoolPreview) {
+            ActivePoolPreviewView(
+                words: sortedLearningPoolWords(),
+                onManageWords: {
+                    openLearningPoolWindow()
+                }
+            )
+        }
         .onReceive(NotificationCenter.default.publisher(for: .closeMenusRequested)) { _ in
             showWordSetEditor = false
             showRandomWordEditor = false
             showCustomWordImageEditor = false
             showLearningWordEditor = false
+            showActivePoolPreview = false
         }
     }
     
@@ -799,6 +815,14 @@ struct ContentView: View {
         window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
         learningPoolWindow = window
+    }
+
+    private func sortedLearningPoolWords() -> [LearningWord] {
+        randomWordList.getCurrentLearningPool().sorted { lhs, rhs in
+            let lhsKey = "\(lhs.word)|\(lhs.clarification)"
+            let rhsKey = "\(rhs.word)|\(rhs.clarification)"
+            return lhsKey.localizedCaseInsensitiveCompare(rhsKey) == .orderedAscending
+        }
     }
 
     private func selectBabyImage() {
@@ -878,6 +902,106 @@ struct ContentView: View {
         }
     }
     
+}
+
+private struct ActivePoolPreviewView: View {
+    let words: [LearningWord]
+    let onManageWords: () -> Void
+
+    @Environment(\.dismiss) private var dismiss
+    @State private var query = ""
+
+    private var filteredWords: [LearningWord] {
+        if query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return words
+        }
+        let normalizedQuery = query.lowercased()
+        return words.filter { word in
+            displayLabel(for: word).lowercased().contains(normalizedQuery) ||
+            word.translation.lowercased().contains(normalizedQuery)
+        }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Active Pool")
+                    .font(.headline)
+                Text("\(filteredWords.count)/\(words.count)")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+
+                Spacer()
+
+                Button("Copy list") {
+                    copyCurrentListToClipboard()
+                }
+                .buttonStyle(.plain)
+
+                Button("Manage words") {
+                    onManageWords()
+                    dismiss()
+                }
+                .buttonStyle(.plain)
+
+                Button("Close") {
+                    dismiss()
+                }
+                .buttonStyle(.plain)
+            }
+
+            TextField("Filter by word or translation", text: $query)
+                .textFieldStyle(.roundedBorder)
+
+            if filteredWords.isEmpty {
+                Text("No words in the current pool.")
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            } else {
+                List(filteredWords) { word in
+                    HStack(alignment: .firstTextBaseline, spacing: 12) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(displayLabel(for: word))
+                            if !word.translation.isEmpty {
+                                Text(word.translation)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        Spacer()
+                        Text("seen \(word.seenCount)")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.vertical, 2)
+                }
+                .listStyle(.plain)
+            }
+        }
+        .padding()
+        .frame(width: 720, height: 520)
+    }
+
+    private func displayLabel(for word: LearningWord) -> String {
+        let clarification = word.clarification.trimmingCharacters(in: .whitespacesAndNewlines)
+        if clarification.isEmpty {
+            return word.word
+        }
+        return "\(word.word) (\(clarification))"
+    }
+
+    private func copyCurrentListToClipboard() {
+        let lines = filteredWords.map { word in
+            let label = displayLabel(for: word)
+            if word.translation.isEmpty {
+                return label
+            }
+            return "\(label) - \(word.translation)"
+        }
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(lines.joined(separator: "\n"), forType: .string)
+    }
 }
 
 struct WordSetEditorView: View {
