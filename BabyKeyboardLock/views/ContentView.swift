@@ -56,7 +56,7 @@ struct ContentView: View {
     @State private var showRandomWordEditor = false
     @State private var showCustomWordImageEditor = false
     @State private var showLearningWordEditor = false
-    @State private var showLearningPoolPreview = false
+    @State private var learningPoolWindow: NSWindow?
     @StateObject private var customWordSetsManager = CustomWordSetsManager.shared
     @StateObject private var randomWordList = RandomWordList.shared
 
@@ -472,7 +472,7 @@ struct ContentView: View {
                             .foregroundColor(.secondary)
 
                             Button("Manage words") {
-                                showLearningPoolPreview = true
+                                openLearningPoolWindow()
                             }
                             .buttonStyle(.plain)
                             .foregroundColor(.secondary)
@@ -754,9 +754,6 @@ struct ContentView: View {
         .sheet(isPresented: $showLearningWordEditor) {
             LearningWordEditorView()
         }
-        .sheet(isPresented: $showLearningPoolPreview) {
-            LearningWordEditorView(initialShowOnlyPool: true)
-        }
         .onReceive(NotificationCenter.default.publisher(for: .closeMenusRequested)) { _ in
             showWordSetEditor = false
             showRandomWordEditor = false
@@ -780,6 +777,28 @@ struct ContentView: View {
             return "Current pool is empty"
         }
         return sorted.joined(separator: "\n")
+    }
+
+    private func openLearningPoolWindow() {
+        if let existingWindow = NSApp.windows.first(where: { $0.identifier?.rawValue == LearningPoolWindowID }) {
+            existingWindow.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            learningPoolWindow = existingWindow
+            return
+        }
+
+        let host = NSHostingController(rootView: LearningWordEditorView(initialShowOnlyPool: true))
+        let window = NSWindow(contentViewController: host)
+        window.title = "Learning Rotation"
+        window.identifier = NSUserInterfaceItemIdentifier(LearningPoolWindowID)
+        window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
+        window.minSize = NSSize(width: 900, height: 520)
+        window.setContentSize(NSSize(width: 1300, height: 850))
+        window.isReleasedWhenClosed = false
+        window.center()
+        window.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+        learningPoolWindow = window
     }
 
     private func selectBabyImage() {

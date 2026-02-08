@@ -12,6 +12,7 @@ let AnimationWindowID = "animationTransparentWindow"
 let WordDisplayWindowID = "wordDisplayTransparentWindow"
 let VisualEffectsWindowID = "visualEffectsTransparentWindow"
 let MainWindowID = "main"
+let LearningPoolWindowID = "learningPoolWindow"
 
 @main
 struct BabyKeyboardLockApp: App {
@@ -152,7 +153,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func showMainWindow() {
         if let window = mainWindow {
-            window.center()
+            positionMainWindowTopRight(window)
             window.makeKeyAndOrderFront(nil)
             NSApp.activate(ignoringOtherApps: true)
             return
@@ -165,7 +166,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         window.identifier = NSUserInterfaceItemIdentifier(MainWindowID)
         window.setFrameAutosaveName("Main Window")
         window.isReleasedWhenClosed = false
-        window.center()
+        positionMainWindowTopRight(window)
         window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
         mainWindow = window
@@ -208,5 +209,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 window.setFrame(frame, display: true)
             }
         }
+    }
+
+    private func positionMainWindowTopRight(_ window: NSWindow) {
+        guard let screen = NSScreen.main else { return }
+        let visibleFrame = screen.visibleFrame
+        let inset: CGFloat = 20
+        let origin = NSPoint(
+            x: visibleFrame.maxX - window.frame.width - inset,
+            y: visibleFrame.maxY - window.frame.height - inset
+        )
+        window.setFrameOrigin(origin)
     }
 }
