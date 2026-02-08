@@ -496,7 +496,9 @@ class RandomWordList: ObservableObject {
     
     func getRandomWord(useLearningRotation: Bool = true) -> RandomWord? {
         if useLearningRotation && learningRotationEnabled {
-            return getLearningRandomWord()
+            if let learningWord = getLearningRandomWord() {
+                return learningWord
+            }
         }
         // If baby name is set, include it in the random selection based on configured probability
         if shouldPickBabyName() {
@@ -1094,7 +1096,6 @@ class RandomWordList: ObservableObject {
 
     private func syncLearningWordsWithCurrentWords() {
         var updated = learningWords
-        var translationMap: [String: Set<String>] = [:]
         let enabledSets = enabledSetIndices.sorted().compactMap { index -> RandomWordSet? in
             guard index < wordSets.count else { return nil }
             return wordSets[index]
@@ -1102,22 +1103,18 @@ class RandomWordList: ObservableObject {
 
         for set in enabledSets {
             for word in set.words {
-                let key = word.english.lowercased()
-                var translations = translationMap[key] ?? Set<String>()
-                translations.insert(word.translation)
-                translationMap[key] = translations
-            }
-        }
-
-        for set in enabledSets {
-            for word in set.words {
-                let translations = translationMap[word.english.lowercased()] ?? []
-                let clarification = defaultClarification(
-                    for: word.english,
-                    setName: set.name,
-                    translations: translations,
-                    translation: word.translation
+                let repositoryEntry = WordRepository.shared.entry(
+                    english: word.english,
+                    meaningKey: word.clarification
                 )
+                let clarification = word.clarification
+                    ?? repositoryEntry?.meaningKey
+                    ?? defaultClarification(
+                        for: word.english,
+                        setName: set.name,
+                        translations: [],
+                        translation: word.translation
+                    )
                 let key = wordKey(word: word.english, clarification: clarification)
                 if updated[key] == nil {
                     updated[key] = LearningWord(
@@ -1125,7 +1122,7 @@ class RandomWordList: ObservableObject {
                         word: word.english,
                         clarification: clarification ?? "",
                         translation: word.translation,
-                        tags: defaultTags(for: set.name),
+                        tags: tagsForLearningWord(setName: set.name, repositoryEntry: repositoryEntry),
                         known: false,
                         favorite: defaultFavorite(for: key, word: word.english),
                         seenCount: 0,
@@ -1169,6 +1166,23 @@ class RandomWordList: ObservableObject {
             }
         }
         learningWords = updated
+    }
+
+    private func tagsForLearningWord(setName: String, repositoryEntry: WordDataEntry?) -> [String] {
+        guard let repositoryEntry = repositoryEntry else {
+            return defaultTags(for: setName)
+        }
+        var tags = repositoryEntry.tags
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() }
+            .filter { !$0.isEmpty }
+        if let category = repositoryEntry.category {
+            tags.append(category.rawValue.lowercased())
+        }
+        let unique = Array(Set(tags))
+        if unique.isEmpty {
+            return defaultTags(for: setName)
+        }
+        return unique.sorted()
     }
 
     private func defaultClarification(

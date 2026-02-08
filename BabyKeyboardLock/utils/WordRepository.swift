@@ -83,6 +83,18 @@ final class WordRepository {
         return nil
     }
 
+    func entry(english: String, meaningKey: String?) -> WordDataEntry? {
+        if let meaningKey = meaningKey?.trimmingCharacters(in: .whitespacesAndNewlines), !meaningKey.isEmpty {
+            let wordID = WordDataCatalog.makeWordID(spelling: english, meaningKey: meaningKey)
+            if let byID = entriesByID[wordID] {
+                return byID
+            }
+        }
+
+        let spellingKey = english.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        return entriesBySpelling[spellingKey]?.first
+    }
+
     private func setCatalog(_ catalog: WordDataCatalog) {
         self.catalog = catalog
         entriesByID = Dictionary(uniqueKeysWithValues: catalog.entries.map { ($0.id, $0) })
