@@ -483,12 +483,6 @@ class RandomWordList: ObservableObject {
         ]
     }
 
-    private struct BundledWordSetsFile: Codable {
-        let version: Int?
-        let source: String?
-        let sets: [RandomWordSet]
-    }
-
     private func loadBundledWordSets() -> [RandomWordSet]? {
         guard let url = Bundle.main.url(
             forResource: "word_sets",
@@ -500,12 +494,38 @@ class RandomWordList: ObservableObject {
 
         do {
             let data = try Data(contentsOf: url)
-            let decoded = try JSONDecoder().decode(BundledWordSetsFile.self, from: data)
-            return decoded.sets
+            let catalog = try WordDataCatalog.decode(from: data)
+            let sets = mapCatalogToRandomWordSets(catalog)
+            return sets.isEmpty ? nil : sets
         } catch {
             debugPrint("Failed to load bundled word sets: \(error)")
             return nil
         }
+    }
+
+    private func mapCatalogToRandomWordSets(_ catalog: WordDataCatalog) -> [RandomWordSet] {
+        let entriesByID = Dictionary(uniqueKeysWithValues: catalog.entries.map { ($0.id, $0) })
+        var mapped: [RandomWordSet] = []
+
+        for set in catalog.sets {
+            let words: [RandomWord] = set.wordIDs.compactMap { wordID in
+                guard let entry = entriesByID[wordID] else { return nil }
+                let translation = entry.translation(language: "ru")
+                    ?? entry.translations.first?.text
+                    ?? entry.spelling
+                let clarification = (entry.meaningKey ?? "").isEmpty ? nil : entry.meaningKey
+                return RandomWord(
+                    english: entry.spelling,
+                    translation: translation,
+                    clarification: clarification
+                )
+            }
+            if !words.isEmpty {
+                mapped.append(RandomWordSet(name: set.name, words: words))
+            }
+        }
+
+        return mapped
     }
     
     func getRandomWord(useLearningRotation: Bool = true) -> RandomWord? {
