@@ -2,7 +2,7 @@
 
 PYTHON := .venv/bin/python3
 .PHONY: test-openimage run-openimage test-gemini run-gemini
-.PHONY: list-words
+.PHONY: list-words dictionary-showcase
 .PHONY: deploy update clean archive export install
 
 # Compose shared flag helpers
@@ -64,6 +64,8 @@ run-gemini: generate-images
 list-words:
 	uv run python -m scripts.list_words
 
+dictionary-showcase:
+	uv run python -m scripts.word_dictionary_showcase --lang en --summary $(ARGS)
 
 # Main target - build and deploy the app
 deploy: archive export install
@@ -94,3 +96,4 @@ help:
 	@printf "make update\n"
 	@printf "make generate-images\n"
 	@printf "make download-openimages\n"
+	@printf "make dictionary-showcase\n"
