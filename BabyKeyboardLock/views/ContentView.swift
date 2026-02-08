@@ -66,6 +66,7 @@ struct ContentView: View {
     @State private var babyNameTranslation: String = ""
     @State private var babyNameProbability: Double = 0.125
     @State private var babyImagePath: String = ""
+    @State private var customImagesFolderStatus: String = ""
     private let learningPoolDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .short
@@ -359,6 +360,50 @@ struct ContentView: View {
                                 Image(systemName: "photo.on.rectangle.angled")
                             }
                             .buttonStyle(PlainButtonStyle())
+                        }
+
+                        VStack(alignment: .leading, spacing: 6) {
+                            HStack {
+                                Text("Images Folder Sync")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                Spacer()
+                                if !randomWordList.customImagesFolderPath.isEmpty {
+                                    Text(URL(fileURLWithPath: randomWordList.customImagesFolderPath).lastPathComponent)
+                                        .font(.caption2)
+                                        .foregroundColor(.secondary)
+                                        .lineLimit(1)
+                                }
+                            }
+
+                            HStack(spacing: 12) {
+                                Button(randomWordList.customImagesFolderPath.isEmpty ? "Select folder" : "Change folder") {
+                                    selectCustomImagesFolder()
+                                }
+                                .buttonStyle(.plain)
+                                .foregroundColor(.secondary)
+
+                                Button("Sync now") {
+                                    syncCustomImagesFolder()
+                                }
+                                .buttonStyle(.plain)
+                                .foregroundColor(.secondary)
+                                .disabled(randomWordList.customImagesFolderPath.isEmpty)
+
+                                if !randomWordList.customImagesFolderPath.isEmpty {
+                                    Button("Clear") {
+                                        clearCustomImagesFolder()
+                                    }
+                                    .buttonStyle(.plain)
+                                    .foregroundColor(.secondary)
+                                }
+                            }
+
+                            if !customImagesFolderStatus.isEmpty {
+                                Text(customImagesFolderStatus)
+                                    .font(.caption2)
+                                    .foregroundColor(.secondary)
+                            }
                         }
                     }
 
@@ -707,6 +752,7 @@ struct ContentView: View {
             babyImagePath = RandomWordList.shared.babyImagePath
             eventHandler.usePersonalVoice = usePersonalVoice
             launchOnStartup = LaunchAtStartup.shared.isEnabled()
+            customImagesFolderStatus = ""
 
             // Set initial category based on current effect
             selectedCategory = eventHandler.selectedLockEffect.category
@@ -839,6 +885,36 @@ struct ContentView: View {
                 RandomWordList.shared.setBabyImageURL(url)
             }
         }
+    }
+
+    private func selectCustomImagesFolder() {
+        let panel = NSOpenPanel()
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.allowsMultipleSelection = false
+        panel.canCreateDirectories = false
+        panel.message = "Select a folder with word images (filename should match word or word|meaning)"
+
+        panel.begin { response in
+            if response == .OK, let url = panel.url {
+                randomWordList.setCustomImagesFolderURL(url)
+                syncCustomImagesFolder()
+            }
+        }
+    }
+
+    private func syncCustomImagesFolder() {
+        let imported = randomWordList.syncCustomImagesFromFolder()
+        if imported == 0 {
+            customImagesFolderStatus = "No new images imported."
+        } else {
+            customImagesFolderStatus = "Imported \(imported) image(s) from folder."
+        }
+    }
+
+    private func clearCustomImagesFolder() {
+        randomWordList.clearCustomImagesFolder()
+        customImagesFolderStatus = "Folder sync disabled."
     }
 
     private func playLockSound(isLocked: Bool) {
@@ -1341,16 +1417,40 @@ struct CustomWordImageEditorView: View {
         let panel = NSOpenPanel()
         panel.canChooseFiles = true
         panel.canChooseDirectories = false
-        panel.allowsMultipleSelection = false
+        panel.allowsMultipleSelection = true
         panel.allowedContentTypes = [.image]
-        panel.message = "Select an image for '\(word)'"
+        panel.message = replaceExisting
+            ? "Select one or more images to replace '\(word)'"
+            : "Select one or more images for '\(word)'"
 
         panel.begin { response in
-            if response == .OK, let url = panel.url {
+            if response == .OK {
+                let selectedURLs = panel.urls
+                guard !selectedURLs.isEmpty else { return }
+
                 if replaceExisting {
-                    randomWordList.setCustomWordImage(word: word, clarification: clarification, url: url)
+                    randomWordList.setCustomWordImage(
+                        word: word,
+                        clarification: clarification,
+                        url: selectedURLs[0]
+                    )
+                    if selectedURLs.count > 1 {
+                        for url in selectedURLs.dropFirst() {
+                            randomWordList.addCustomWordImage(
+                                word: word,
+                                clarification: clarification,
+                                url: url
+                            )
+                        }
+                    }
                 } else {
-                    randomWordList.addCustomWordImage(word: word, clarification: clarification, url: url)
+                    for url in selectedURLs {
+                        randomWordList.addCustomWordImage(
+                            word: word,
+                            clarification: clarification,
+                            url: url
+                        )
+                    }
                 }
                 loadCustomImages()
                 newWord = ""

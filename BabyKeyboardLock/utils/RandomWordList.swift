@@ -153,6 +153,8 @@ class RandomWordList: ObservableObject {
     private let babyImageBookmarkKey = "babyImageBookmark"
     private let customWordImagesKey = "customWordImages"
     private let customWordImageBookmarksKey = "customWordImageBookmarks"
+    private let customImagesFolderPathKey = "customImagesFolderPath"
+    private let customImagesFolderBookmarkKey = "customImagesFolderBookmark"
     private let learningRotationEnabledKey = "learningRotationEnabled"
     private let learningKnownRatioKey = "learningKnownRatio"
     private let learningFavoriteRatioKey = "learningFavoriteRatio"
@@ -170,6 +172,8 @@ class RandomWordList: ObservableObject {
     private var babyImageBookmark: Data?
     @Published var customWordImages: [CustomWordImage] = []
     private var customWordImageBookmarks: [String: [Data]] = [:] // word -> bookmark data
+    @Published private(set) var customImagesFolderPath: String = ""
+    private var customImagesFolderBookmark: Data?
     private var customImageQueues: [String: [Int]] = [:]
     private var babyNameRngAccumulator: Double = 0.0
     private var recentWordHistory: [String] = []
@@ -242,11 +246,13 @@ class RandomWordList: ObservableObject {
         loadBabyNameProbability()
         loadBabyImagePath()
         loadCustomWordImages()
+        loadCustomImagesFolder()
         loadEnabledSets()
         loadLearningSettings()
         loadLearningLastSync()
         loadLearningWords()
         loadLearningPoolKeys()
+        syncCustomImagesFromFolder()
         if wordSets.isEmpty {
             // Create default word sets
             wordSets = createDefaultWordSets()
@@ -1483,6 +1489,66 @@ class RandomWordList: ObservableObject {
         }
     }
 
+    // MARK: - Custom Images Folder Sync
+
+    func setCustomImagesFolderURL(_ url: URL) {
+        customImagesFolderPath = url.path
+        UserDefaults.standard.set(customImagesFolderPath, forKey: customImagesFolderPathKey)
+        do {
+            let bookmarkData = try url.bookmarkData(
+                options: [.withSecurityScope, .securityScopeAllowOnlyReadAccess],
+                includingResourceValuesForKeys: nil,
+                relativeTo: nil
+            )
+            customImagesFolderBookmark = bookmarkData
+            UserDefaults.standard.set(bookmarkData, forKey: customImagesFolderBookmarkKey)
+        } catch {
+            debugPrint("Failed to create bookmark for custom images folder: \(error)")
+        }
+    }
+
+    func clearCustomImagesFolder() {
+        customImagesFolderPath = ""
+        customImagesFolderBookmark = nil
+        UserDefaults.standard.removeObject(forKey: customImagesFolderPathKey)
+        UserDefaults.standard.removeObject(forKey: customImagesFolderBookmarkKey)
+    }
+
+    @discardableResult
+    func syncCustomImagesFromFolder() -> Int {
+        guard let folderURL = getCustomImagesFolderURL() else {
+            return 0
+        }
+
+        let didStartAccessing = folderURL.startAccessingSecurityScopedResource()
+        defer {
+            if didStartAccessing {
+                folderURL.stopAccessingSecurityScopedResource()
+            }
+        }
+
+        let urls = discoverImageFiles(in: folderURL)
+        if urls.isEmpty {
+            return 0
+        }
+
+        var imported = 0
+        for url in urls.sorted(by: { $0.lastPathComponent.localizedCaseInsensitiveCompare($1.lastPathComponent) == .orderedAscending }) {
+            guard let parsed = parseFolderImageName(url.deletingPathExtension().lastPathComponent) else {
+                continue
+            }
+            let key = wordKey(word: parsed.word, clarification: parsed.clarification)
+            let exists = customWordImages.first(where: { $0.word.lowercased() == key })?.imagePaths.contains(url.path) ?? false
+            if exists {
+                continue
+            }
+            addCustomWordImage(word: parsed.word, clarification: parsed.clarification, url: url)
+            imported += 1
+        }
+
+        return imported
+    }
+
     private func saveCustomWordImages() {
         if let encoded = try? JSONEncoder().encode(customWordImages) {
             UserDefaults.standard.set(encoded, forKey: customWordImagesKey)
@@ -1505,6 +1571,96 @@ class RandomWordList: ObservableObject {
 
         normalizeCustomImageRotationsIfNeeded()
         rebuildCustomImageBookmarksIfNeeded()
+    }
+
+    private func loadCustomImagesFolder() {
+        customImagesFolderPath = UserDefaults.standard.string(forKey: customImagesFolderPathKey) ?? ""
+        customImagesFolderBookmark = UserDefaults.standard.data(forKey: customImagesFolderBookmarkKey)
+    }
+
+    private func getCustomImagesFolderURL() -> URL? {
+        if let bookmarkData = customImagesFolderBookmark {
+            var isStale = false
+            do {
+                let url = try URL(
+                    resolvingBookmarkData: bookmarkData,
+                    options: .withSecurityScope,
+                    relativeTo: nil,
+                    bookmarkDataIsStale: &isStale
+                )
+                if isStale {
+                    if let newBookmarkData = try? url.bookmarkData(
+                        options: [.withSecurityScope, .securityScopeAllowOnlyReadAccess],
+                        includingResourceValuesForKeys: nil,
+                        relativeTo: nil
+                    ) {
+                        customImagesFolderBookmark = newBookmarkData
+                        UserDefaults.standard.set(newBookmarkData, forKey: customImagesFolderBookmarkKey)
+                    }
+                }
+                customImagesFolderPath = url.path
+                if customImagesFolderPath != UserDefaults.standard.string(forKey: customImagesFolderPathKey) {
+                    UserDefaults.standard.set(customImagesFolderPath, forKey: customImagesFolderPathKey)
+                }
+                return url
+            } catch {
+                debugPrint("Failed to resolve custom images folder bookmark: \(error)")
+            }
+        }
+
+        if !customImagesFolderPath.isEmpty {
+            return URL(fileURLWithPath: customImagesFolderPath, isDirectory: true)
+        }
+        return nil
+    }
+
+    private func discoverImageFiles(in folderURL: URL) -> [URL] {
+        let allowedExtensions = Set(["jpg", "jpeg", "png", "heic", "heif", "gif", "webp", "bmp", "tiff"])
+        guard let enumerator = FileManager.default.enumerator(
+            at: folderURL,
+            includingPropertiesForKeys: [.isRegularFileKey, .nameKey],
+            options: [.skipsHiddenFiles],
+            errorHandler: nil
+        ) else {
+            return []
+        }
+
+        var files: [URL] = []
+        for case let fileURL as URL in enumerator {
+            let ext = fileURL.pathExtension.lowercased()
+            guard allowedExtensions.contains(ext) else { continue }
+            do {
+                let values = try fileURL.resourceValues(forKeys: [.isRegularFileKey])
+                if values.isRegularFile == true {
+                    files.append(fileURL)
+                }
+            } catch {
+                continue
+            }
+        }
+        return files
+    }
+
+    private func parseFolderImageName(_ fileBaseName: String) -> (word: String, clarification: String?)? {
+        var raw = fileBaseName.trimmingCharacters(in: .whitespacesAndNewlines)
+        if raw.isEmpty {
+            return nil
+        }
+
+        if let range = raw.range(of: "__", options: .backwards) {
+            let suffix = raw[range.upperBound...]
+            if !suffix.isEmpty && suffix.allSatisfy({ $0.isNumber }) {
+                raw = String(raw[..<range.lowerBound])
+            }
+        }
+
+        let parts = splitWordKey(raw)
+        let normalizedWord = parts.0.trimmingCharacters(in: .whitespacesAndNewlines)
+        let normalizedClarification = parts.1.trimmingCharacters(in: .whitespacesAndNewlines)
+        if normalizedWord.isEmpty {
+            return nil
+        }
+        return (normalizedWord, normalizedClarification.isEmpty ? nil : normalizedClarification)
     }
 
     private func saveCustomWordImageBookmarks() {
