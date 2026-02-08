@@ -203,8 +203,6 @@ class RandomWordList: ObservableObject {
     @Published var learningTagRatios: [String: Double] = [:]
     @Published var learningPoolSize: Int = 25
     @Published private(set) var learningLastSync: Date? = nil
-    private var catalogEntriesByID: [String: WordDataEntry] = [:]
-    private var catalogEntriesBySpelling: [String: [WordDataEntry]] = [:]
 
     var words: [RandomWord] {
         var allWords: [RandomWord] = []
@@ -242,7 +240,6 @@ class RandomWordList: ObservableObject {
     // todo: rework the random picker and translation system - unify with other components (word list, flashcards, etc)
     // at least - use common translation system and flashcard images
     init() {
-        loadBundledCatalogIndex()
         loadWordSets()
         loadBabyName()
         loadBabyNameTranslation()
@@ -493,132 +490,8 @@ class RandomWordList: ObservableObject {
     }
 
     private func loadBundledWordSets() -> [RandomWordSet]? {
-        guard let url = Bundle.main.url(
-            forResource: "word_sets",
-            withExtension: "json",
-            subdirectory: "Resources"
-        ) else {
-            return nil
-        }
-
-        do {
-            let data = try Data(contentsOf: url)
-            let catalog = try WordDataCatalog.decode(from: data)
-            setCatalogIndex(catalog)
-            let sets = mapCatalogToRandomWordSets(catalog)
-            return sets.isEmpty ? nil : sets
-        } catch {
-            debugPrint("Failed to load bundled word sets: \(error)")
-            return nil
-        }
-    }
-
-    private func loadBundledCatalogIndex() {
-        guard let url = Bundle.main.url(
-            forResource: "word_sets",
-            withExtension: "json",
-            subdirectory: "Resources"
-        ) else {
-            return
-        }
-
-        do {
-            let data = try Data(contentsOf: url)
-            let catalog = try WordDataCatalog.decode(from: data)
-            setCatalogIndex(catalog)
-        } catch {
-            debugPrint("Failed to load bundled catalog index: \(error)")
-        }
-    }
-
-    private func setCatalogIndex(_ catalog: WordDataCatalog) {
-        catalogEntriesByID = Dictionary(uniqueKeysWithValues: catalog.entries.map { ($0.id, $0) })
-        var grouped: [String: [WordDataEntry]] = [:]
-        for entry in catalog.entries {
-            let key = entry.spelling.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-            grouped[key, default: []].append(entry)
-        }
-        catalogEntriesBySpelling = grouped
-    }
-
-    func getCatalogTranslation(english: String, meaningKey: String?, languageCode: String) -> String? {
-        let normalizedLanguageCandidates = normalizeLanguageCandidates(languageCode)
-        if normalizedLanguageCandidates.isEmpty {
-            return nil
-        }
-
-        if let meaningKey = meaningKey?.trimmingCharacters(in: .whitespacesAndNewlines), !meaningKey.isEmpty {
-            let id = WordDataCatalog.makeWordID(spelling: english, meaningKey: meaningKey)
-            if let entry = catalogEntriesByID[id],
-               let translation = translationFromEntry(entry, languageCandidates: normalizedLanguageCandidates) {
-                return translation
-            }
-        }
-
-        let spellingKey = english.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        guard let candidates = catalogEntriesBySpelling[spellingKey] else {
-            return nil
-        }
-        for entry in candidates {
-            if let translation = translationFromEntry(entry, languageCandidates: normalizedLanguageCandidates) {
-                return translation
-            }
-        }
-        return nil
-    }
-
-    private func translationFromEntry(_ entry: WordDataEntry, languageCandidates: [String]) -> String? {
-        for candidate in languageCandidates {
-            if let exact = entry.translations.first(where: { $0.language.lowercased() == candidate }), !exact.text.isEmpty {
-                return exact.text
-            }
-        }
-        for candidate in languageCandidates {
-            if let prefix = entry.translations.first(where: { translation in
-                let lower = translation.language.lowercased()
-                return lower.hasPrefix(candidate + "-")
-            }), !prefix.text.isEmpty {
-                return prefix.text
-            }
-        }
-        return nil
-    }
-
-    private func normalizeLanguageCandidates(_ languageCode: String) -> [String] {
-        let normalized = languageCode.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        if normalized.isEmpty {
-            return []
-        }
-        let base = normalized.split(separator: "-").first.map(String.init) ?? normalized
-        if base == normalized {
-            return [normalized]
-        }
-        return [normalized, base]
-    }
-
-    private func mapCatalogToRandomWordSets(_ catalog: WordDataCatalog) -> [RandomWordSet] {
-        let entriesByID = Dictionary(uniqueKeysWithValues: catalog.entries.map { ($0.id, $0) })
-        var mapped: [RandomWordSet] = []
-
-        for set in catalog.sets {
-            let words: [RandomWord] = set.wordIDs.compactMap { wordID in
-                guard let entry = entriesByID[wordID] else { return nil }
-                let translation = entry.translation(language: "ru")
-                    ?? entry.translations.first?.text
-                    ?? entry.spelling
-                let clarification = (entry.meaningKey ?? "").isEmpty ? nil : entry.meaningKey
-                return RandomWord(
-                    english: entry.spelling,
-                    translation: translation,
-                    clarification: clarification
-                )
-            }
-            if !words.isEmpty {
-                mapped.append(RandomWordSet(name: set.name, words: words))
-            }
-        }
-
-        return mapped
+        let sets = WordRepository.shared.randomWordSets(defaultTranslationLanguageCode: "ru")
+        return sets.isEmpty ? nil : sets
     }
     
     func getRandomWord(useLearningRotation: Bool = true) -> RandomWord? {

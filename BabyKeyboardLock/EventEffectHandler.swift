@@ -575,7 +575,7 @@ class EventEffectHandler {
         }
 
         if language != .none && language != .english,
-           let catalogTranslation = RandomWordList.shared.getCatalogTranslation(
+           let catalogTranslation = WordRepository.shared.translation(
             english: word,
             meaningKey: meaningKey,
             languageCode: language.languageCode
