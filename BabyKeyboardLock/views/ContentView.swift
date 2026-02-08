@@ -458,6 +458,7 @@ struct ContentView: View {
                             Text("Pool: \(poolInfo.count) words")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
+                                .help(learningPoolTooltipText())
                             Text("Refresh: daily (last: \(lastSync))")
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
@@ -470,7 +471,7 @@ struct ContentView: View {
                             .buttonStyle(.plain)
                             .foregroundColor(.secondary)
 
-                            Button("Preview pool") {
+                            Button("Manage words") {
                                 showLearningPoolPreview = true
                             }
                             .buttonStyle(.plain)
@@ -766,6 +767,21 @@ struct ContentView: View {
     
 
     
+    private func learningPoolTooltipText() -> String {
+        let labels = randomWordList.getCurrentLearningPool().map { word in
+            let clarification = word.clarification.trimmingCharacters(in: .whitespacesAndNewlines)
+            if clarification.isEmpty {
+                return word.word
+            }
+            return "\(word.word) (\(clarification))"
+        }
+        let sorted = labels.sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
+        if sorted.isEmpty {
+            return "Current pool is empty"
+        }
+        return sorted.joined(separator: "\n")
+    }
+
     private func selectBabyImage() {
         let panel = NSOpenPanel()
         panel.canChooseFiles = true
