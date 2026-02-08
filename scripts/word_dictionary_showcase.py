@@ -5,6 +5,7 @@ Usage:
   uv run python -m scripts.word_dictionary_showcase --lang en --pos noun,verb --limit 50
   uv run python -m scripts.word_dictionary_showcase --lang en --complexity common,medium
   uv run python -m scripts.word_dictionary_showcase --lang en --min-zipf 4.0 --limit 100
+  uv run python -m scripts.word_dictionary_showcase --mode definition --lang en --limit 30 --format table
 """
 from __future__ import annotations
 
@@ -75,6 +76,9 @@ AUXILIARY_VERBS = {
     "do", "does", "did",
     "will", "would", "shall", "should", "can", "could", "may", "might", "must",
 }
+
+MODE_DICTIONARY = "dictionary"
+MODE_DEFINITION = "definition"
 
 
 def _normalize_list(value: str | None) -> List[str]:
@@ -273,7 +277,46 @@ def _passes_filters(
     return True
 
 
-def _format_record(record: WordRecord, fmt: str) -> str:
+def _format_record(record: WordRecord, fmt: str, mode: str) -> str:
+    if mode == MODE_DEFINITION:
+        payload = {
+            "language": record.language,
+            "word": record.word,
+            "pos": record.pos,
+            "definition": record.definition,
+            "definition_alt": record.definition_alt,
+            "definition_source": record.definition_source,
+            "zipf": round(record.zipf, 2),
+            "complexity": record.complexity,
+        }
+        if fmt == "jsonl":
+            return json.dumps(payload, ensure_ascii=False)
+        if fmt == "tsv":
+            return "\t".join(
+                [
+                    payload["language"],
+                    payload["word"],
+                    payload["pos"],
+                    payload["definition"],
+                    payload["definition_alt"],
+                    payload["definition_source"],
+                    f"{record.zipf:.2f}",
+                    payload["complexity"],
+                ]
+            )
+        return ",".join(
+            [
+                payload["language"],
+                payload["word"],
+                payload["pos"],
+                payload["definition"].replace(",", " "),
+                payload["definition_alt"].replace(",", " "),
+                payload["definition_source"],
+                f"{record.zipf:.2f}",
+                payload["complexity"],
+            ]
+        )
+
     if fmt == "jsonl":
         return json.dumps(record.__dict__, ensure_ascii=False)
     if fmt == "tsv":
@@ -303,9 +346,19 @@ def _format_record(record: WordRecord, fmt: str) -> str:
     )
 
 
+def _has_any_definition(record: WordRecord) -> bool:
+    return bool(record.definition.strip() or record.definition_alt.strip())
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Word dictionary showcase.")
     parser.add_argument("--lang", default="en", help="comma list: en,ru,de,fr")
+    parser.add_argument(
+        "--mode",
+        choices=[MODE_DICTIONARY, MODE_DEFINITION],
+        default=MODE_DICTIONARY,
+        help="output mode",
+    )
     parser.add_argument("--pos", help="comma list: noun,verb,adj,adv")
     parser.add_argument("--complexity", help="comma list: common,medium,rare")
     parser.add_argument("--min-zipf", type=float)
@@ -313,6 +366,11 @@ def main() -> None:
     parser.add_argument("--pool-size", type=int, default=5000)
     parser.add_argument("--limit", type=int, default=20)
     parser.add_argument("--format", choices=["csv", "tsv", "jsonl", "table"], default="csv")
+    parser.add_argument(
+        "--include-empty-definitions",
+        action="store_true",
+        help="only for --mode definition; include words with no definition",
+    )
     parser.add_argument("--summary", action="store_true")
     parser.add_argument("--include-stopwords", action="store_true")
     parser.add_argument("--allow-numeric", action="store_true")
@@ -342,7 +400,10 @@ def main() -> None:
         return
 
     if args.format == "csv":
-        print("language,word,pos,zipf,complexity,definition,definition_alt,definition_source")
+        if args.mode == MODE_DEFINITION:
+            print("language,word,pos,definition,definition_alt,definition_source,zipf,complexity")
+        else:
+            print("language,word,pos,zipf,complexity,definition,definition_alt,definition_source")
 
     emitted = 0
     table = None
@@ -356,11 +417,18 @@ def main() -> None:
         table.add_column("lang", style="cyan", no_wrap=True)
         table.add_column("word", style="bold")
         table.add_column("pos")
-        table.add_column("zipf", justify="right")
-        table.add_column("complexity")
-        table.add_column("definition")
-        table.add_column("also")
-        table.add_column("source")
+        if args.mode == MODE_DEFINITION:
+            table.add_column("definition")
+            table.add_column("also")
+            table.add_column("source")
+            table.add_column("zipf", justify="right")
+            table.add_column("complexity")
+        else:
+            table.add_column("zipf", justify="right")
+            table.add_column("complexity")
+            table.add_column("definition")
+            table.add_column("also")
+            table.add_column("source")
         console = Console()
 
     for lang in langs:
@@ -382,19 +450,33 @@ def main() -> None:
                 args.max_zipf,
             ):
                 continue
+            if args.mode == MODE_DEFINITION and not args.include_empty_definitions and not _has_any_definition(record):
+                continue
             if table is not None:
-                table.add_row(
-                    record.language,
-                    record.word,
-                    record.pos,
-                    f"{record.zipf:.2f}",
-                    record.complexity,
-                    record.definition,
-                    record.definition_alt,
-                    record.definition_source,
-                )
+                if args.mode == MODE_DEFINITION:
+                    table.add_row(
+                        record.language,
+                        record.word,
+                        record.pos,
+                        record.definition,
+                        record.definition_alt,
+                        record.definition_source,
+                        f"{record.zipf:.2f}",
+                        record.complexity,
+                    )
+                else:
+                    table.add_row(
+                        record.language,
+                        record.word,
+                        record.pos,
+                        f"{record.zipf:.2f}",
+                        record.complexity,
+                        record.definition,
+                        record.definition_alt,
+                        record.definition_source,
+                    )
             else:
-                print(_format_record(record, args.format))
+                print(_format_record(record, args.format, args.mode))
             emitted += 1
             if emitted >= args.limit:
                 if table is not None:
