@@ -1,3 +1,7 @@
+## 2025-11-01
+- [x] y
+    - `key: b394d43b`
+    - Use simple color images if the word selected is a color
 ## 2025-10-26
 - [x] o
     - `key: d803f29f`
@@ -12,6 +16,11 @@
         - use that
         - else
             - raise notimpelented
+- [x] z
+    - `key: 8884e924`
+    - `cue: The settings don't fit the screen on Anna's monitor, and can't be scrolled. Also, I'm adding new settings`
+    - How do I rework settings menu to contain less items
+    - Move additional settings to a separate window
 ## 2025-10-20
 - [x] q
     - `key: f9b55897`
