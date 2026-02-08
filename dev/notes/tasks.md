@@ -12,6 +12,7 @@ calmmage_id: nn0vXJFT
     - use python scripts to generate unlimited (full nltk) word pool. 
     - Decide if we should commit the whole thing or add words dynamically when the current pool is finished learning
     - PRD: `dev/notes/actions/02-07-dictionary-showcase-definition.md`
+    - Related PRD: `dev/notes/actions/02-08-wordset-generation-1000.md`
 - b
     - `key: 09461e23`
     - Make the settings window open in the top right corner instead of middle of the screen
@@ -104,6 +105,7 @@ calmmage_id: nn0vXJFT
     - Unify word dataset + meaning ids + annotations + translations + assets + definitions
     - Decide local initialization/reset workflow + future sync path
     - PRD: `dev/notes/actions/02-07-word-data-model-storage.md`
+    - Related PRD: `dev/notes/actions/02-08-data-model-integration-migration.md`
 - u
     - `key: 9f1a2c63`
     - `cue: Manage images in Finder and auto-sync into app`

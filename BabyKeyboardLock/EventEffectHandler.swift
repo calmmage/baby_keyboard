@@ -573,6 +573,15 @@ class EventEffectHandler {
                 return match.translation
             }
         }
+
+        if language != .none && language != .english,
+           let catalogTranslation = RandomWordList.shared.getCatalogTranslation(
+            english: word,
+            meaningKey: meaningKey,
+            languageCode: language.languageCode
+           ) {
+            return catalogTranslation
+        }
         
         switch language {
         case .english:
