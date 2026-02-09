@@ -181,6 +181,7 @@ class RandomWordList: ObservableObject {
     private var learningPoolKeys: [String] = []
     private var lastSelectedRandomWord: RandomWord?
     private var lastSelectedWordKey: String?
+    private let learningStateStore = LearningStateStore()
     private let isoFormatter: ISO8601DateFormatter = {
         let formatter = ISO8601DateFormatter()
         formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
@@ -830,6 +831,7 @@ class RandomWordList: ObservableObject {
         if learningWords.isEmpty {
             syncLearningWordsIfNeeded(force: true)
         }
+        saveLearningWords()
         let url = learningCSVURL()
         NSWorkspace.shared.open(url)
     }
@@ -946,6 +948,16 @@ class RandomWordList: ObservableObject {
     }
 
     private func loadLearningWords() {
+        if let dbWords = learningStateStore.loadLearningWords(), !dbWords.isEmpty {
+            var loaded: [String: LearningWord] = [:]
+            for word in dbWords {
+                loaded[word.id] = word
+            }
+            learningWords = loaded
+            syncLearningWordsIfNeeded(force: true)
+            return
+        }
+
         let url = learningCSVURL()
         guard let contents = try? String(contentsOf: url, encoding: .utf8) else {
             seedLearningWordsIfNeeded()
@@ -986,6 +998,7 @@ class RandomWordList: ObservableObject {
         }
 
         learningWords = parsed
+        learningStateStore.saveLearningWords(Array(parsed.values))
         syncLearningWordsIfNeeded(force: true)
     }
 
@@ -995,6 +1008,7 @@ class RandomWordList: ObservableObject {
         lines.append("word,clarification,translation,tags,known,favorite,seen_count,last_seen")
 
         let words = Array(learningWords.values).sorted { $0.word < $1.word }
+        learningStateStore.saveLearningWords(words)
         for word in words {
             let tags = word.tags.joined(separator: "|")
             let row = [
