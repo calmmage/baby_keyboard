@@ -2,23 +2,22 @@
 calmmage_id: nn0vXJFT
 ---
 
-- o
+- a
+    - `key: 75d1b16e`
+    
+    - Make the window with words flashcard closeable and moveable (hotkey? How to drag it? Still not working. Is there a hotkey? Can we do an 'x' button?)
+- b
     - `key: ddd1a65b`
     [Service utility]
     Publish calmlib, install and download quick draw images
-- a
+- c
     - `key: 48f24568`
     - Finish scripts.word_dictionary_showcase to generate a rich progressive dictionary and add definition mode
-    - use python scripts to generate unlimited (full nltk) word pool. 
+    - use python scripts to generate unlimited (full nltk) word pool.
     - Decide if we should commit the whole thing or add words dynamically when the current pool is finished learning
     - PRD: `dev/notes/actions/02-07-dictionary-showcase-definition.md`
     - Related PRD: `dev/notes/actions/02-08-wordset-generation-1000.md`
-- b
-    - `key: 09461e23`
-    - Make the settings window open in the top right corner instead of middle of the screen
-    - Make the window with words closeable and moveable (hotkey? How to drag it?)
-    - PRD: `dev/notes/actions/02-07-window-position-moveable.md`
-- c
+- d
     - `key: f0750a6c`
     - `cue: Can't see which words are actually selected`
     - Make sure we can (pre)view the current pool of words in the selection
@@ -27,57 +26,57 @@ calmmage_id: nn0vXJFT
         - category in database - e.g. activity / relative / item / ...
     - PRD: `dev/notes/actions/02-07-word-pool-preview.md`
     - Related PRD: `dev/notes/actions/02-07-vocab-rotation-preview.md`
-- d
+- e
     - `key: 45ed1f4f`
     - Add multi-image support to photos
     - PRD: `dev/notes/actions/1-image-cache.md`
-- e
+- f
     - `key: f260c606`
     - `cue: There's too many buttons now, including 'no images' and 'random' - we could instead allow customizing enabling each style separately`
     - Rework 'images' to bool flags enable / disable
-- f
+- g
     - `key: 4acf1c5b`
     - `cue: I'm tired of manually deleting and re-adding the app in privacy settings`
     - Add permissions reset command
     - Add a command to quickly re-set permissions (with sudo) of the app after deploy (delete and re-add)
-- g
+- h
     - `key: e271e2ab`
     - `cue: I have to re-load photos every time I relaunch the app, and it is annoying`
     - Debug and fix photo loading issue
     - Add custom photos config
     - Add a text yaml config of local photos - to avoid re-adding them constantly. Re-load on start
     - PRD: `dev/notes/actions/02-08-images-folder-auto-sync.md`
-- h
+- i
     - `key: eca3009a`
     [Publishing]
     Find a way to publish and distribute images other than git - upload to storage, download on first launch
     - PRD: `dev/notes/actions/02-08-app-website-supabase-merge.md`
-- i
+- j
     - `key: 8bd1d2ea`
     [Dictionary]
     Fix issues with words meanings and image discrepancies - Orange - color and fruit, drink - verb and noun
     - PRD: `dev/notes/actions/7-collisions.md`
-- j
+- k
     - `key: 441b4ef3`
     - `cue: My PC turns into a heater when I run my app..`
     [Audio]
     - Generate audio samples with TTS and cache on disk to prevent running heavy AI model every time instead of just playing the sound
     - Add 'refresh cache' button in Settings
-- k
+- l
     - `key: 78983d50`
     [Gamification]
     Test the flashcard display for game mode
-- n
+- m
     - `key: 4abc703d`
     - `cue: Couldn't get a specific word - mama - to appear at all`
     [Probably solved]
     - Rework random into pseudo-random that balances probabilities into a more even shuffle
     - PRD: `dev/notes/actions/2-rng.md`
-- p
+- n
     - `key: 490a0894`
       Load images from user folder instead of including resources in the package. Bonus: Auto-generate words for images and use that set in text
     - PRD: `dev/notes/actions/02-08-images-folder-auto-sync.md`
-- q
+- o
     - `key: 8e21dce0`
     [Future idea, when Daria grows]
     - Gamify keyboard locker somehow
@@ -89,7 +88,7 @@ calmmage_id: nn0vXJFT
     - Add a setting checkbox "reset on error".
     Improve game mode - remove per-letter sound, Allow all words simultaneousl
     - PRD: `dev/notes/actions/3-gamify-random-word.md`
-- s
+- p
     - `key: 8d4d24da`
     - `cue: I tried to deploy on Anna's macbook using make deploy, and it failed saying it can't export archive because it misses the certificate. The main question is do i create a new one or copy this one?`
     [Publishing and sharing]
@@ -98,37 +97,44 @@ calmmage_id: nn0vXJFT
     Build description path: /Users/annalav/Library/Developer/Xcode/DerivedData/BabyKeyboardLock-bgubpirqszsziihdvtozqvgxmqja/Build/Intermediates.noindex/ArchiveIntermediates/BabyKeyboardLock/IntermediateBuildFilesPath/XCBuildData/c6f264918b4db5acd581c2181fb6fac3.xcbuilddata
     /Users/annalav/Documents/GitHub/baby_keyboard/BabyKeyboardLock.xcodeproj: error: No signing certificate "Mac Development" found: No "Mac Development" signing certificate matching team ID "5XCYR4LUMD" with a private key was found. (in target 'BabyKeyboardLock' from project 'BabyKeyboardLock')
     a
-- t
+- q
     - `key: 6d7aeb24`
     - `cue: We need one clear place for data model and migration`
-    - Migrate New data model 
+    - Migrate New data model
     - Unify word dataset + meaning ids + annotations + translations + assets + definitions
     - Decide local initialization/reset workflow + future sync path
     - PRD: `dev/notes/actions/02-07-word-data-model-storage.md`
     - Related PRD: `dev/notes/actions/02-08-data-model-integration-migration.md`
-- u
+- r
     - `key: 9f1a2c63`
     - `cue: Manage images in Finder and auto-sync into app`
     - Add images-folder bookmark + scan/sync on launch
     - Map file names to `word|meaningKey` keys and support multi-image naming
     - PRD: `dev/notes/actions/02-08-images-folder-auto-sync.md`
-- v
+- s
     - `key: a4c9d031`
     - `cue: Merge app + website data/auth`
     - Design Supabase schema/auth/RLS + local mirror cache strategy
     - Prototype client fetch + asset download path
     - PRD: `dev/notes/actions/02-08-app-website-supabase-merge.md`
-- w
+- t
     - `key: b2e8f5a1`
     - `cue: Reuse Apple Photos for word images`
     - Build a prototype for Photos permission + keyword/person search + caching
     - Evaluate performance and feasibility for app integration
     - PRD: `dev/notes/actions/02-14-photos-integration.md`
+- u
+    - `key: 53b9c0f2`
+    - `cue: first launch should guide setup clearly`
+    - Design first-launch onboarding flow with guided setup and skip option
+    - PRD: `dev/notes/actions/02-09-onboarding-first-launch.md`
+- v
+    - `key: 0f7e6a4d`
+    - `cue: learning pool controls are confusing`
+    - Rework learning-pool mix controls to normalized/understandable behavior while preserving mixed selection
+    - PRD: `dev/notes/actions/02-09-learning-pool-mix-ux.md`
 ## Done
 - [x] x
-    - `key: c0e2f3af`
-    generate images with nano-banana using script
-- [x] aa
     - `key: bd515a4e`
     - Simplify our window resize logic as much as possible because it's causing issues
     - Allow macOS to handle window sizes, scrolling and positions automatically
@@ -142,14 +148,18 @@ calmmage_id: nn0vXJFT
         "Updating window to height: 693.0"
         "Updating window to height: 281.0"
         "Content height changed to: 533.0"
-- [x] ab
+- [x] y
     - `key: 8edc4e86`
     - Rework style selector to be multi-line to fit on screen better
-- [x] ac
+- [x] z
     - `key: c1f0a9be`
     - Capture reusable LLM rules in-repo (`LLM_RULES.md`)
     - PRD: `dev/notes/actions/02-07-llm-rules.md`
-- [x] ad
+- [x] aa
     - `key: e3b45d72`
     - Add custom image preview + 90-degree rotation support
     - PRD: `dev/notes/actions/02-07-image-rotation.md`
+- [x] ab
+    - `key: 09461e23`
+    - Make the settings window open in the top right corner instead of middle of the screen
+    - PRD: `dev/notes/actions/02-07-window-position-moveable.md`
