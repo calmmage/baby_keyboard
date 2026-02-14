@@ -9,6 +9,11 @@ enum FlashcardStyle: String, CaseIterable {
     case watercolor
     case mosaic
     case elvish
+    case pastel
+    case clay
+    case chalk
+    case sticker
+    case pixel
 
     var title: String {
         rawValue.capitalized

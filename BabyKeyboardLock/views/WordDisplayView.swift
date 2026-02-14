@@ -119,8 +119,10 @@ struct WordDisplayView: View {
                             if showVideoCards,
                                isCurrentCardVideoActivated,
                                let videoURL = availableVideoURL {
-                                LoopingVideoView(url: videoURL)
-                                    .frame(height: cardHeight)
+                                LoopingVideoView(url: videoURL, shouldLoop: false) {
+                                    isCurrentCardVideoActivated = false
+                                }
+                                    .frame(width: cardHeight, height: cardHeight)
                             }
                             // First check for custom image (for any word including baby's name)
                             else if let customImage = loadImage(from: customImageURL) {
@@ -307,7 +309,9 @@ struct WordDisplayView: View {
         withAnimation(.easeIn(duration: 0.2)) {
             isCurrentCardVideoActivated = true
         }
-        scheduleHide(after: max(wordDisplayDuration, 2.0))
+        let fallbackDelay = max(wordDisplayDuration, 2.0)
+        let videoDelay = videoDurationSeconds(for: availableVideoURL) + 0.8
+        scheduleHide(after: max(fallbackDelay, videoDelay))
     }
 
     private func resolvedEnglishWordForDisplay(incomingWord: String) -> String {
@@ -373,6 +377,20 @@ struct WordDisplayView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: workItem)
     }
 
+    private func videoDurationSeconds(for url: URL?) -> Double {
+        guard let url else { return 0.0 }
+        let didStartAccessing = url.startAccessingSecurityScopedResource()
+        defer {
+            if didStartAccessing {
+                url.stopAccessingSecurityScopedResource()
+            }
+        }
+
+        let seconds = CMTimeGetSeconds(AVURLAsset(url: url).duration)
+        guard seconds.isFinite, seconds > 0 else { return 0.0 }
+        return seconds
+    }
+
     private func loadBabyImage() -> NSImage? {
         guard let babyImageURL = RandomWordList.shared.getBabyImageURL() else {
             return nil
@@ -411,6 +429,8 @@ struct WordDisplayView: View {
 
 struct LoopingVideoView: NSViewRepresentable {
     let url: URL
+    var shouldLoop: Bool = true
+    var onPlaybackEnded: (() -> Void)? = nil
 
     func makeCoordinator() -> Coordinator {
         Coordinator()
@@ -420,12 +440,22 @@ struct LoopingVideoView: NSViewRepresentable {
         let playerView = AVPlayerView()
         playerView.controlsStyle = .none
         playerView.videoGravity = .resizeAspect
-        context.coordinator.configure(playerView: playerView, url: url)
+        context.coordinator.configure(
+            playerView: playerView,
+            url: url,
+            shouldLoop: shouldLoop,
+            onPlaybackEnded: onPlaybackEnded
+        )
         return playerView
     }
 
     func updateNSView(_ playerView: AVPlayerView, context: Context) {
-        context.coordinator.configure(playerView: playerView, url: url)
+        context.coordinator.configure(
+            playerView: playerView,
+            url: url,
+            shouldLoop: shouldLoop,
+            onPlaybackEnded: onPlaybackEnded
+        )
     }
 
     static func dismantleNSView(_ playerView: AVPlayerView, coordinator: Coordinator) {
@@ -439,9 +469,19 @@ struct LoopingVideoView: NSViewRepresentable {
         private var currentURL: URL?
         private var scopedURL: URL?
         private var isAccessingSecurityScope: Bool = false
+        private var isLooping: Bool = true
+        private var endObserver: NSObjectProtocol?
+        private var onPlaybackEnded: (() -> Void)?
 
-        func configure(playerView: AVPlayerView, url: URL) {
-            if currentURL == url {
+        func configure(
+            playerView: AVPlayerView,
+            url: URL,
+            shouldLoop: Bool,
+            onPlaybackEnded: (() -> Void)?
+        ) {
+            self.onPlaybackEnded = onPlaybackEnded
+
+            if currentURL == url, isLooping == shouldLoop {
                 player?.play()
                 return
             }
@@ -449,6 +489,7 @@ struct LoopingVideoView: NSViewRepresentable {
             stop()
 
             currentURL = url
+            isLooping = shouldLoop
             scopedURL = url
             isAccessingSecurityScope = url.startAccessingSecurityScopedResource()
 
@@ -456,17 +497,34 @@ struct LoopingVideoView: NSViewRepresentable {
             queuePlayer.isMuted = true
 
             let item = AVPlayerItem(url: url)
-            looper = AVPlayerLooper(player: queuePlayer, templateItem: item)
+            if shouldLoop {
+                looper = AVPlayerLooper(player: queuePlayer, templateItem: item)
+            } else {
+                queuePlayer.replaceCurrentItem(with: item)
+                endObserver = NotificationCenter.default.addObserver(
+                    forName: .AVPlayerItemDidPlayToEndTime,
+                    object: item,
+                    queue: .main
+                ) { [weak self] _ in
+                    self?.onPlaybackEnded?()
+                }
+            }
             player = queuePlayer
             playerView.player = queuePlayer
             queuePlayer.play()
         }
 
         func stop() {
+            if let endObserver {
+                NotificationCenter.default.removeObserver(endObserver)
+                self.endObserver = nil
+            }
             player?.pause()
             player = nil
             looper = nil
             currentURL = nil
+            isLooping = true
+            onPlaybackEnded = nil
             if isAccessingSecurityScope {
                 scopedURL?.stopAccessingSecurityScopedResource()
             }

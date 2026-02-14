@@ -1132,7 +1132,11 @@ class RandomWordList: ObservableObject {
         NotificationCenter.default.post(name: .init("CustomWordImagesUpdated"), object: nil)
     }
 
-    func getCustomImageSelection(for word: String, clarification: String? = nil) -> CustomImageSelection? {
+    func getCustomImageSelection(
+        for word: String,
+        clarification: String? = nil,
+        preferVideo: Bool? = nil
+    ) -> CustomImageSelection? {
         let key = wordKey(word: word, clarification: clarification)
         let lowercasedWord = key.lowercased()
         let fallbackWord = word.lowercased()
@@ -1149,7 +1153,21 @@ class RandomWordList: ObservableObject {
         let paths = customImage.imagePaths
         guard !paths.isEmpty else { return nil }
         let bookmarkKey = customImage.word.lowercased()
-        let imageIndex = nextCustomImageIndex(for: bookmarkKey, count: paths.count)
+        let imageIndex: Int = {
+            guard let preferVideo else {
+                return nextCustomImageIndex(for: bookmarkKey, count: paths.count)
+            }
+
+            if let preferredIndex = paths.firstIndex(where: { path in
+                let ext = URL(fileURLWithPath: path).pathExtension.lowercased()
+                let isVideo = ["mp4", "mov", "m4v", "webm"].contains(ext)
+                return isVideo == preferVideo
+            }) {
+                return preferredIndex
+            }
+
+            return nextCustomImageIndex(for: bookmarkKey, count: paths.count)
+        }()
         let rotationDegrees = imageIndex < customImage.imageRotations.count
             ? Double(customImage.imageRotations[imageIndex])
             : 0.0
@@ -1375,7 +1393,7 @@ class RandomWordList: ObservableObject {
     }
 
     private func discoverImageFiles(in folderURL: URL) -> [URL] {
-        let allowedExtensions = Set(["jpg", "jpeg", "png", "heic", "heif", "gif", "webp", "bmp", "tiff"])
+        let allowedExtensions = Set(["jpg", "jpeg", "png", "heic", "heif", "gif", "webp", "bmp", "tiff", "mp4", "mov", "m4v", "webm"])
         guard let enumerator = FileManager.default.enumerator(
             at: folderURL,
             includingPropertiesForKeys: [.isRegularFileKey, .nameKey],

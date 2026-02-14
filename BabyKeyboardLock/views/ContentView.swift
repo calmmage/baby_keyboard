@@ -38,12 +38,6 @@ struct ContentView: View {
     @AppStorage("videoCardDemoWord") private var videoCardDemoWord: String = "cat"
     @AppStorage("flashcardStyle") private var flashcardStyleStorage: String = FlashcardStyle.noImageToken
 
-    @AppStorage("lockKeyboardOnLaunch") private var lockKeyboardOnLaunch: Bool = false
-    @AppStorage("launchOnStartup") private var launchOnStartup: Bool = false {
-        didSet {
-            LaunchAtStartup.shared.setEnabled(launchOnStartup)
-        }
-    }
     @AppStorage("selectedLockEffect") var selectedLockEffect: LockEffect = .speakRandomWord
     @AppStorage("selectedPrimaryLanguage") var selectedPrimaryLanguage: TranslationLanguage = .english
     @AppStorage("selectedTranslationLanguage") var selectedTranslationLanguage: TranslationLanguage = .none
@@ -58,19 +52,9 @@ struct ContentView: View {
 
     @State private var showWordSetEditor = false
     @State private var showRandomWordEditor = false
-    @State private var showCustomWordImageEditor = false
-    @State private var showLearningWordEditor = false
-    @State private var showActivePoolPreview = false
-    @State private var learningPoolWindow: NSWindow?
-    @StateObject private var customWordSetsManager = CustomWordSetsManager.shared
     @StateObject private var randomWordList = RandomWordList.shared
 
     @State var hoveringMoreButton: Bool = false
-    @State private var babyName: String = ""
-    @State private var babyNameTranslation: String = ""
-    @State private var babyNameProbability: Double = 0.125
-    @State private var babyImagePath: String = ""
-    @State private var customImagesFolderStatus: String = ""
     private var enabledFlashcardStyles: Set<FlashcardStyle> {
         FlashcardStyle.pool(from: flashcardStyleStorage)
     }
@@ -83,13 +67,6 @@ struct ContentView: View {
             set: { flashcardStyleStorage = FlashcardStyle.serializedPool($0) }
         )
     }
-    private let learningPoolDateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        formatter.timeStyle = .short
-        return formatter
-    }()
-    
     var body: some View {
         let primaryLanguages = TranslationLanguage.allCases.filter { $0 != .none }
         VStack(alignment: .leading, spacing: 0) {
@@ -307,170 +284,19 @@ struct ContentView: View {
                         selectedTranslationLanguage = newVal
                     }
                     
-                    // Baby's name input fields
-                    VStack(alignment: .leading, spacing: 8) {
-                        HStack {
-                            Text("Baby's Name")
-                                .foregroundColor(.secondary)
-                                .font(.subheadline)
-
-                            Spacer()
-
-                            TextField("Enter name", text: $babyName, onCommit: {
-                                // Do nothing, prevents form submission behavior
-                            })
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                                .frame(width: 150)
-                                .onChange(of: babyName) { oldValue, newValue in
-                                    RandomWordList.shared.setBabyName(newValue)
-                                }
-                        }
-
-                        HStack {
-                            Text("Second Language Name")
-                                .foregroundColor(.secondary)
-                                .font(.subheadline)
-
-                            Spacer()
-
-                            TextField("Enter translation", text: $babyNameTranslation, onCommit: {
-                                // Do nothing, prevents form submission behavior
-                            })
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                                .frame(width: 150)
-                                .onChange(of: babyNameTranslation) { oldValue, newValue in
-                                    RandomWordList.shared.setBabyNameTranslation(newValue)
-                                }
-                        }
-
-                        HStack {
-                            Text("Baby's Image")
-                                .foregroundColor(.secondary)
-                                .font(.subheadline)
-
-                            Spacer()
-
-                            if !babyImagePath.isEmpty {
-                                Text(URL(fileURLWithPath: babyImagePath).lastPathComponent)
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                    .lineLimit(1)
-                                    .frame(maxWidth: 100)
-                            }
-
-                            Button(action: selectBabyImage) {
-                                Text(babyImagePath.isEmpty ? "Select Image" : "Change")
-                            }
-                            .buttonStyle(.plain)
-
-                            if !babyImagePath.isEmpty {
-                                Button(action: {
-                                    babyImagePath = ""
-                                    RandomWordList.shared.setBabyImagePath("")
-                                }) {
-                                    Image(systemName: "xmark.circle")
-                                        .foregroundColor(.secondary)
-                                }
-                                .buttonStyle(.plain)
-                            }
-                        }
-
-                        Divider()
-                            .padding(.vertical, 8)
-
-                        HStack {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Other Custom Images")
-                                    .foregroundColor(.secondary)
-                                    .font(.subheadline)
-                                Text("Add images for mama, papa, family, etc.")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                if !randomWordList.customWordImages.isEmpty {
-                                    Text("\(randomWordList.customWordImages.count) custom image(s)")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                            }
-
-                            Spacer()
-
-                            Button(action: {
-                                showCustomWordImageEditor = true
-                            }) {
-                                Image(systemName: "photo.on.rectangle.angled")
-                            }
-                            .buttonStyle(PlainButtonStyle())
-                        }
-
-                        VStack(alignment: .leading, spacing: 6) {
-                            HStack {
-                                Text("Images Folder Sync")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                Spacer()
-                                if !randomWordList.customImagesFolderPath.isEmpty {
-                                    Text(URL(fileURLWithPath: randomWordList.customImagesFolderPath).lastPathComponent)
-                                        .font(.caption2)
-                                        .foregroundColor(.secondary)
-                                        .lineLimit(1)
-                                }
-                            }
-
-                            HStack(spacing: 12) {
-                                Button(randomWordList.customImagesFolderPath.isEmpty ? "Select folder" : "Change folder") {
-                                    selectCustomImagesFolder()
-                                }
-                                .buttonStyle(.plain)
-                                .foregroundColor(.secondary)
-
-                                Button("Sync now") {
-                                    syncCustomImagesFolder()
-                                }
-                                .buttonStyle(.plain)
-                                .foregroundColor(.secondary)
-                                .disabled(randomWordList.customImagesFolderPath.isEmpty)
-
-                                if !randomWordList.customImagesFolderPath.isEmpty {
-                                    Button("Clear") {
-                                        clearCustomImagesFolder()
-                                    }
-                                    .buttonStyle(.plain)
-                                    .foregroundColor(.secondary)
-                                }
-                            }
-
-                            if !customImagesFolderStatus.isEmpty {
-                                Text(customImagesFolderStatus)
-                                    .font(.caption2)
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                    }
-
-                    // Baby name probability slider (only for random word mode)
-                    if eventHandler.selectedLockEffect == .speakRandomWord {
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text("Baby Name Frequency: \(String(format: "%.0f%%", babyNameProbability * 100))")
+                    HStack(alignment: .top, spacing: 8) {
+                        Image(systemName: "person.crop.square")
+                            .foregroundColor(.secondary)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("Baby profile and image sync controls moved to Settings.")
                                 .font(.caption)
                                 .foregroundColor(.secondary)
-
-                            HStack {
-                                Text("0%")
-                                    .font(.caption2)
-                                    .foregroundColor(.secondary)
-
-                                Slider(value: $babyNameProbability, in: 0...1, step: 0.01)
-                                    .onChange(of: babyNameProbability) { _, newValue in
-                                        RandomWordList.shared.setBabyNameProbability(newValue)
-                                    }
-
-                                Text("100%")
-                                    .font(.caption2)
-                                    .foregroundColor(.secondary)
+                            SettingsLink {
+                                Text("Open Profile Settings")
                             }
+                            .buttonStyle(.plain)
+                            .foregroundColor(.secondary)
                         }
-                        .padding(.top, 5)
                     }
 
                     if eventHandler.selectedLockEffect == .speakRandomWord {
@@ -531,122 +357,20 @@ struct ContentView: View {
                             .buttonStyle(PlainButtonStyle())
                         }
 
-                        Toggle(isOn: Binding(
-                            get: { randomWordList.learningRotationEnabled },
-                            set: { randomWordList.setLearningRotationEnabled($0) }
-                        )) {
-                            Text("Learning Rotation")
-                        }
-                        .toggleStyle(CheckboxToggleStyle())
-
-                        let poolInfo = randomWordList.getLearningPoolInfo()
-                        VStack(alignment: .leading, spacing: 4) {
-                            let lastSync = poolInfo.lastSync.map { learningPoolDateFormatter.string(from: $0) } ?? "never"
-                            Text("Pool: \(poolInfo.count) words")
-                                .font(.caption)
+                        HStack(alignment: .top, spacing: 8) {
+                            Image(systemName: "slider.horizontal.3")
                                 .foregroundColor(.secondary)
-                                .help(learningPoolTooltipText())
-                            Text("Refresh: daily (last: \(lastSync))")
-                                .font(.caption2)
-                                .foregroundColor(.secondary)
-                        }
-
-                        HStack {
-                            Button("Refresh pool now") {
-                                randomWordList.refreshLearningPool(force: true)
-                            }
-                            .buttonStyle(.plain)
-                            .foregroundColor(.secondary)
-
-                            Button("View active pool") {
-                                showActivePoolPreview = true
-                            }
-                            .buttonStyle(.plain)
-                            .foregroundColor(.secondary)
-
-                            Button("Manage words") {
-                                openLearningPoolWindow()
-                            }
-                            .buttonStyle(.plain)
-                            .foregroundColor(.secondary)
-                        }
-
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text("Pool size: \(randomWordList.learningPoolSize)")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            Slider(
-                                value: Binding(
-                                    get: { Double(randomWordList.learningPoolSize) },
-                                    set: { randomWordList.setLearningPoolSize(Int($0)) }
-                                ),
-                                in: 5.0...200.0,
-                                step: 5.0
-                            )
-                        }
-
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text("Known mix: \(Int(randomWordList.learningKnownRatio * 100))%")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            Slider(
-                                value: Binding(
-                                    get: { randomWordList.learningKnownRatio },
-                                    set: { randomWordList.setLearningKnownRatio($0) }
-                                ),
-                                in: 0.0...1.0,
-                                step: 0.05
-                            )
-                        }
-
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text("Favorites mix: \(Int(randomWordList.learningFavoriteRatio * 100))%")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            Slider(
-                                value: Binding(
-                                    get: { randomWordList.learningFavoriteRatio },
-                                    set: { randomWordList.setLearningFavoriteRatio($0) }
-                                ),
-                                in: 0.0...1.0,
-                                step: 0.05
-                            )
-                        }
-
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Tag mix")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-
-                            ForEach(randomWordList.getLearningTags(), id: \.self) { tag in
-                                VStack(alignment: .leading, spacing: 4) {
-                                    let ratio = randomWordList.learningTagRatios[tag] ?? 0.0
-                                    Text("\(tag): \(Int(ratio * 100))%")
-                                        .font(.caption2)
-                                        .foregroundColor(.secondary)
-                                    Slider(
-                                        value: Binding(
-                                            get: { randomWordList.learningTagRatios[tag] ?? 0.0 },
-                                            set: { randomWordList.setLearningTagRatio(tag: tag, value: $0) }
-                                        ),
-                                        in: 0.0...1.0,
-                                        step: 0.05
-                                    )
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("Learning pool controls moved to Settings.")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                                SettingsLink {
+                                    Text("Open Learning Pool Settings")
                                 }
+                                .buttonStyle(.plain)
+                                .foregroundColor(.secondary)
                             }
                         }
-
-                        Button("Open Learning Data") {
-                            randomWordList.openLearningDatabase()
-                        }
-                        .buttonStyle(.plain)
-                        .foregroundColor(.secondary)
-
-                        Button("Edit Learning Words") {
-                            showLearningWordEditor = true
-                        }
-                        .buttonStyle(.plain)
-                        .foregroundColor(.secondary)
                         
                         // Image size slider for random word mode
                         if showFlashcards && hasEnabledFlashcardStyles {
@@ -752,16 +476,6 @@ struct ContentView: View {
                     }
                 }
 
-                Toggle(isOn: $lockKeyboardOnLaunch) {
-                    Text("Lock keyboard on launch")
-                }
-                .toggleStyle(CheckboxToggleStyle())
-
-                Toggle(isOn: $launchOnStartup) {
-                    Text("Launch on startup")
-                }
-                .toggleStyle(CheckboxToggleStyle())
-
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Keyboard shortcut: Ctrl + Option + U")
                         .font(.footnote)
@@ -769,8 +483,8 @@ struct ContentView: View {
                         .foregroundColor(.secondary)
 
                     HStack(spacing: 16) {
-                        Button("Settings") {
-                            AdvancedSettingsView().openInWindow(id: "Settings", sender: self, focus: true)
+                        SettingsLink {
+                            Text("Settings")
                         }
                         .buttonStyle(.plain)
                         .padding(.top, 8)
@@ -794,13 +508,7 @@ struct ContentView: View {
             if let type = WordSetType(rawValue: savedWordSetType) {
                 eventHandler.selectedWordSetType = type
             }
-            babyName = RandomWordList.shared.babyName
-            babyNameTranslation = RandomWordList.shared.babyNameTranslation
-            babyNameProbability = RandomWordList.shared.babyNameProbability
-            babyImagePath = RandomWordList.shared.babyImagePath
             eventHandler.usePersonalVoice = usePersonalVoice
-            launchOnStartup = LaunchAtStartup.shared.isEnabled()
-            customImagesFolderStatus = ""
 
             // Set initial category based on current effect
             selectedCategory = eventHandler.selectedLockEffect.category
@@ -849,120 +557,10 @@ struct ContentView: View {
         .sheet(isPresented: $showRandomWordEditor) {
             RandomWordEditorView()
         }
-        .sheet(isPresented: $showCustomWordImageEditor) {
-            CustomWordImageEditorView()
-        }
-        .sheet(isPresented: $showLearningWordEditor) {
-            LearningWordEditorView()
-        }
-        .sheet(isPresented: $showActivePoolPreview) {
-            ActivePoolPreviewView(
-                words: sortedLearningPoolWords(),
-                onManageWords: {
-                    openLearningPoolWindow()
-                }
-            )
-        }
         .onReceive(NotificationCenter.default.publisher(for: .closeMenusRequested)) { _ in
             showWordSetEditor = false
             showRandomWordEditor = false
-            showCustomWordImageEditor = false
-            showLearningWordEditor = false
-            showActivePoolPreview = false
         }
-    }
-    
-
-    
-    private func learningPoolTooltipText() -> String {
-        let labels = randomWordList.getCurrentLearningPool().map { word in
-            let clarification = word.clarification.trimmingCharacters(in: .whitespacesAndNewlines)
-            if clarification.isEmpty {
-                return word.word
-            }
-            return "\(word.word) (\(clarification))"
-        }
-        let sorted = labels.sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
-        if sorted.isEmpty {
-            return "Current pool is empty"
-        }
-        return sorted.joined(separator: "\n")
-    }
-
-    private func openLearningPoolWindow() {
-        if let existingWindow = NSApp.windows.first(where: { $0.identifier?.rawValue == LearningPoolWindowID }) {
-            existingWindow.makeKeyAndOrderFront(nil)
-            NSApp.activate(ignoringOtherApps: true)
-            learningPoolWindow = existingWindow
-            return
-        }
-
-        let host = NSHostingController(rootView: LearningWordEditorView(initialShowOnlyPool: true))
-        let window = NSWindow(contentViewController: host)
-        window.title = "Learning Rotation"
-        window.identifier = NSUserInterfaceItemIdentifier(LearningPoolWindowID)
-        window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
-        window.minSize = NSSize(width: 900, height: 520)
-        window.setContentSize(NSSize(width: 1300, height: 850))
-        window.isReleasedWhenClosed = false
-        window.center()
-        window.makeKeyAndOrderFront(nil)
-        NSApp.activate(ignoringOtherApps: true)
-        learningPoolWindow = window
-    }
-
-    private func sortedLearningPoolWords() -> [LearningWord] {
-        randomWordList.getCurrentLearningPool().sorted { lhs, rhs in
-            let lhsKey = "\(lhs.word)|\(lhs.clarification)"
-            let rhsKey = "\(rhs.word)|\(rhs.clarification)"
-            return lhsKey.localizedCaseInsensitiveCompare(rhsKey) == .orderedAscending
-        }
-    }
-
-    private func selectBabyImage() {
-        let panel = NSOpenPanel()
-        panel.canChooseFiles = true
-        panel.canChooseDirectories = false
-        panel.allowsMultipleSelection = false
-        panel.allowedContentTypes = [.image]
-        panel.message = "Select an image for your baby"
-
-        panel.begin { response in
-            if response == .OK, let url = panel.url {
-                babyImagePath = url.path
-                RandomWordList.shared.setBabyImageURL(url)
-            }
-        }
-    }
-
-    private func selectCustomImagesFolder() {
-        let panel = NSOpenPanel()
-        panel.canChooseFiles = false
-        panel.canChooseDirectories = true
-        panel.allowsMultipleSelection = false
-        panel.canCreateDirectories = false
-        panel.message = "Select a folder with word images/videos (filename should match word or word|meaning)"
-
-        panel.begin { response in
-            if response == .OK, let url = panel.url {
-                randomWordList.setCustomImagesFolderURL(url)
-                syncCustomImagesFolder()
-            }
-        }
-    }
-
-    private func syncCustomImagesFolder() {
-        let imported = randomWordList.syncCustomImagesFromFolder()
-        if imported == 0 {
-            customImagesFolderStatus = "No new media files imported."
-        } else {
-            customImagesFolderStatus = "Imported \(imported) media file(s) from folder."
-        }
-    }
-
-    private func clearCustomImagesFolder() {
-        randomWordList.clearCustomImagesFolder()
-        customImagesFolderStatus = "Folder sync disabled."
     }
 
     private func playLockSound(isLocked: Bool) {
@@ -1028,7 +626,7 @@ struct ContentView: View {
     
 }
 
-private struct ActivePoolPreviewView: View {
+struct ActivePoolPreviewView: View {
     let words: [LearningWord]
     let onManageWords: () -> Void
 
