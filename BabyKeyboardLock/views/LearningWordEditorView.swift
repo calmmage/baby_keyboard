@@ -135,8 +135,8 @@ struct LearningWordEditorView: View {
             .listStyle(PlainListStyle())
 
             HStack {
-                Button("Open CSV") {
-                    randomWordList.openLearningCSV()
+                Button("Open Learning Data") {
+                    randomWordList.openLearningDatabase()
                 }
                 .buttonStyle(.plain)
 

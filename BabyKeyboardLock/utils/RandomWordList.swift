@@ -3,15 +3,23 @@ import Combine
 import AppKit
 
 struct RandomWord: Codable, Hashable, Identifiable {
-    var id = UUID()
+    let id: String
     let english: String
     let translation: String
     let clarification: String?
 
     init(english: String, translation: String, clarification: String? = nil) {
+        let normalizedClarification: String?
+        if let clarification,
+           !clarification.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            normalizedClarification = clarification
+        } else {
+            normalizedClarification = nil
+        }
+        self.id = WordDataCatalog.makeWordID(spelling: english, meaningKey: normalizedClarification)
         self.english = english
         self.translation = translation
-        self.clarification = clarification
+        self.clarification = normalizedClarification
     }
 
     private enum CodingKeys: String, CodingKey {
@@ -23,10 +31,11 @@ struct RandomWord: Codable, Hashable, Identifiable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        id = try container.decodeIfPresent(UUID.self, forKey: .id) ?? UUID()
         english = try container.decode(String.self, forKey: .english)
         translation = try container.decode(String.self, forKey: .translation)
         clarification = try container.decodeIfPresent(String.self, forKey: .clarification)
+        id = try container.decodeIfPresent(String.self, forKey: .id)
+            ?? WordDataCatalog.makeWordID(spelling: english, meaningKey: clarification)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -144,7 +153,6 @@ struct LearningWord: Hashable, Identifiable {
 class RandomWordList: ObservableObject {
     static let shared = RandomWordList()
 
-    private let userDefaultsKey = "randomWordSets"
     private let enabledSetsKey = "enabledRandomWordSets"
     private let babyNameKey = "babyName"
     private let babyNameTranslationKey = "babyNameTranslation"
@@ -180,17 +188,8 @@ class RandomWordList: ObservableObject {
     private var learningWords: [String: LearningWord] = [:]
     private var learningPoolKeys: [String] = []
     private var lastSelectedRandomWord: RandomWord?
-    private var lastSelectedWordKey: String?
+    private let wordCatalogStore = WordCatalogStore()
     private let learningStateStore = LearningStateStore()
-    private let isoFormatter: ISO8601DateFormatter = {
-        let formatter = ISO8601DateFormatter()
-        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
-        return formatter
-    }()
-    private let colorWords: Set<String> = [
-        "red", "blue", "green", "yellow", "orange", "purple", "pink",
-        "brown", "black", "white", "gray", "grey"
-    ]
     private let favoriteWords: Set<String> = [
         "mama", "papa", "mom", "dad",
         "grandma", "grandpa", "granddad",
@@ -238,10 +237,9 @@ class RandomWordList: ObservableObject {
         NotificationCenter.default.post(name: .init("RandomWordSetChanged"), object: nil)
     }
 
-    // todo: rework the random picker and translation system - unify with other components (word list, flashcards, etc)
-    // at least - use common translation system and flashcard images
     init() {
-        loadWordSets()
+        purgeLegacyWordStorageKeys()
+        loadCatalogAndWordSets()
         loadBabyName()
         loadBabyNameTranslation()
         loadBabyNameProbability()
@@ -254,245 +252,134 @@ class RandomWordList: ObservableObject {
         loadLearningWords()
         loadLearningPoolKeys()
         syncCustomImagesFromFolder()
-        if wordSets.isEmpty {
-            // Create default word sets
-            wordSets = createDefaultWordSets()
-            saveWordSets()
-            // Enable first set by default
-            if !wordSets.isEmpty {
-                enabledSetIndices = [0]
-                saveEnabledSets()
-            }
-        }
+        ensureEnabledSetDefaultsIfNeeded()
+    }
+
+    private func purgeLegacyWordStorageKeys() {
+        UserDefaults.standard.removeObject(forKey: "randomWordSets")
+        UserDefaults.standard.removeObject(forKey: "randomWords")
+        UserDefaults.standard.removeObject(forKey: "selectedRandomWordSetIndex")
     }
 
     private func createDefaultWordSets() -> [RandomWordSet] {
-        if let bundled = loadBundledWordSets(), !bundled.isEmpty {
-            return bundled
-        }
-
-        // Basic Set - legacy, first one
-	      let basicSet = RandomWordSet(name: "Basic Words", words: [
-            RandomWord(english: "mama", translation: "мама"),
-            RandomWord(english: "papa", translation: "папа"),
-            RandomWord(english: "grandma", translation: "бабушка"),
-            RandomWord(english: "grandpa", translation: "дедушка"),
-            RandomWord(english: "granddad", translation: "дедушка"),
-            RandomWord(english: "arm", translation: "рука"),
-            RandomWord(english: "leg", translation: "нога"),
-            RandomWord(english: "nose", translation: "нос"),
-            RandomWord(english: "eye", translation: "глаз"),
-            RandomWord(english: "family", translation: "семья"),
-            RandomWord(english: "dog", translation: "собака"),
-            RandomWord(english: "cat", translation: "кошка"),
-        ])
-        // STARTER LEVEL (6 months - 1 year)
-        let starterSet = RandomWordSet(name: "Starter (10 words)", words: [
-            RandomWord(english: "mama", translation: "мама"),
-            RandomWord(english: "papa", translation: "папа"),
-            RandomWord(english: "baby", translation: "малыш"),
-            RandomWord(english: "milk", translation: "молоко"),
-            RandomWord(english: "water", translation: "вода"),
-            RandomWord(english: "yes", translation: "да"),
-            RandomWord(english: "no", translation: "нет"),
-            RandomWord(english: "bye", translation: "пока"),
-            RandomWord(english: "hi", translation: "привет"),
-            RandomWord(english: "love", translation: "любовь"),
-        ])
-
-        // EASY LEVEL (1-2 years)
-        let animalsEasySet = RandomWordSet(name: "Animals - Easy (10 words)", words: [
-            RandomWord(english: "cat", translation: "кошка"),
-            RandomWord(english: "dog", translation: "собака"),
-            RandomWord(english: "bird", translation: "птица"),
-            RandomWord(english: "fish", translation: "рыба"),
-            RandomWord(english: "cow", translation: "корова"),
-            RandomWord(english: "duck", translation: "утка"),
-            RandomWord(english: "pig", translation: "свинья"),
-            RandomWord(english: "rabbit", translation: "кролик"),
-            RandomWord(english: "mouse", translation: "мышь"),
-            RandomWord(english: "bear", translation: "медведь"),
-        ])
-
-        let foodEasySet = RandomWordSet(name: "Food - Easy (10 words)", words: [
-            RandomWord(english: "apple", translation: "яблоко"),
-            RandomWord(english: "banana", translation: "банан"),
-            RandomWord(english: "bread", translation: "хлеб"),
-            RandomWord(english: "cookie", translation: "печенье"),
-            RandomWord(english: "juice", translation: "сок"),
-            RandomWord(english: "egg", translation: "яйцо"),
-            RandomWord(english: "cheese", translation: "сыр"),
-            RandomWord(english: "cake", translation: "торт"),
-            RandomWord(english: "soup", translation: "суп"),
-            RandomWord(english: "tea", translation: "чай"),
-        ])
-
-        let bodyPartsSet = RandomWordSet(name: "Body Parts (12 words)", words: [
-            RandomWord(english: "head", translation: "голова"),
-            RandomWord(english: "eye", translation: "глаз"),
-            RandomWord(english: "nose", translation: "нос"),
-            RandomWord(english: "mouth", translation: "рот"),
-            RandomWord(english: "ear", translation: "ухо"),
-            RandomWord(english: "hand", translation: "рука"),
-            RandomWord(english: "finger", translation: "палец"),
-            RandomWord(english: "leg", translation: "нога"),
-            RandomWord(english: "foot", translation: "ступня"),
-            RandomWord(english: "belly", translation: "живот"),
-            RandomWord(english: "hair", translation: "волосы"),
-            RandomWord(english: "tooth", translation: "зуб"),
-        ])
-
-        let colorsSet = RandomWordSet(name: "Colors (11 words)", words: [
-            RandomWord(english: "red", translation: "красный"),
-            RandomWord(english: "blue", translation: "синий"),
-            RandomWord(english: "green", translation: "зелёный"),
-            RandomWord(english: "yellow", translation: "жёлтый"),
-            RandomWord(english: "orange", translation: "оранжевый"),
-            RandomWord(english: "purple", translation: "фиолетовый"),
-            RandomWord(english: "pink", translation: "розовый"),
-            RandomWord(english: "brown", translation: "коричневый"),
-            RandomWord(english: "black", translation: "чёрный"),
-            RandomWord(english: "white", translation: "белый"),
-            RandomWord(english: "gray", translation: "серый"),
-        ])
-
-        let actionsEasySet = RandomWordSet(name: "Actions - Easy (10 words)", words: [
-            RandomWord(english: "eat", translation: "есть"),
-            RandomWord(english: "drink", translation: "пить"),
-            RandomWord(english: "sleep", translation: "спать"),
-            RandomWord(english: "walk", translation: "ходить"),
-            RandomWord(english: "run", translation: "бегать"),
-            RandomWord(english: "jump", translation: "прыгать"),
-            RandomWord(english: "play", translation: "играть"),
-            RandomWord(english: "sit", translation: "сидеть"),
-            RandomWord(english: "stand", translation: "стоять"),
-            RandomWord(english: "look", translation: "смотреть"),
-        ])
-
-        // MEDIUM LEVEL (2-3 years)
-        let animalsMediumSet = RandomWordSet(name: "Animals - Medium (15 words)", words: [
-            RandomWord(english: "horse", translation: "лошадь"),
-            RandomWord(english: "sheep", translation: "овца"),
-            RandomWord(english: "chicken", translation: "курица"),
-            RandomWord(english: "lion", translation: "лев"),
-            RandomWord(english: "tiger", translation: "тигр"),
-            RandomWord(english: "elephant", translation: "слон"),
-            RandomWord(english: "giraffe", translation: "жираф"),
-            RandomWord(english: "monkey", translation: "обезьяна"),
-            RandomWord(english: "zebra", translation: "зебра"),
-            RandomWord(english: "frog", translation: "лягушка"),
-            RandomWord(english: "butterfly", translation: "бабочка"),
-            RandomWord(english: "snake", translation: "змея"),
-            RandomWord(english: "turtle", translation: "черепаха"),
-            RandomWord(english: "penguin", translation: "пингвин"),
-            RandomWord(english: "owl", translation: "сова"),
-        ])
-
-        let foodMediumSet = RandomWordSet(name: "Food - Medium (15 words)", words: [
-            RandomWord(english: "orange", translation: "апельсин"),
-            RandomWord(english: "grape", translation: "виноград"),
-            RandomWord(english: "strawberry", translation: "клубника"),
-            RandomWord(english: "watermelon", translation: "арбуз"),
-            RandomWord(english: "carrot", translation: "морковь"),
-            RandomWord(english: "potato", translation: "картошка"),
-            RandomWord(english: "tomato", translation: "помидор"),
-            RandomWord(english: "cucumber", translation: "огурец"),
-            RandomWord(english: "ice cream", translation: "мороженое"),
-            RandomWord(english: "pizza", translation: "пицца"),
-            RandomWord(english: "pasta", translation: "паста"),
-            RandomWord(english: "rice", translation: "рис"),
-            RandomWord(english: "meat", translation: "мясо"),
-            RandomWord(english: "chicken", translation: "курица"),
-            RandomWord(english: "sandwich", translation: "бутерброд"),
-        ])
-
-        let toysSet = RandomWordSet(name: "Toys & Play (12 words)", words: [
-            RandomWord(english: "ball", translation: "мяч"),
-            RandomWord(english: "doll", translation: "кукла"),
-            RandomWord(english: "teddy bear", translation: "плюшевый мишка"),
-            RandomWord(english: "car", translation: "машинка"),
-            RandomWord(english: "train", translation: "поезд"),
-            RandomWord(english: "bike", translation: "велосипед"),
-            RandomWord(english: "block", translation: "кубик"),
-            RandomWord(english: "puzzle", translation: "пазл"),
-            RandomWord(english: "book", translation: "книга"),
-            RandomWord(english: "swing", translation: "качели"),
-            RandomWord(english: "slide", translation: "горка"),
-            RandomWord(english: "drum", translation: "барабан"),
-        ])
-
-        let natureSet = RandomWordSet(name: "Nature (12 words)", words: [
-            RandomWord(english: "sun", translation: "солнце"),
-            RandomWord(english: "moon", translation: "луна"),
-            RandomWord(english: "star", translation: "звезда"),
-            RandomWord(english: "cloud", translation: "облако"),
-            RandomWord(english: "rain", translation: "дождь"),
-            RandomWord(english: "snow", translation: "снег"),
-            RandomWord(english: "tree", translation: "дерево"),
-            RandomWord(english: "flower", translation: "цветок"),
-            RandomWord(english: "grass", translation: "трава"),
-            RandomWord(english: "water", translation: "вода"),
-            RandomWord(english: "sky", translation: "небо"),
-            RandomWord(english: "wind", translation: "ветер"),
-        ])
-
-        let actionsMediumSet = RandomWordSet(name: "Actions - Medium (12 words)", words: [
-            RandomWord(english: "dance", translation: "танцевать"),
-            RandomWord(english: "sing", translation: "петь"),
-            RandomWord(english: "read", translation: "читать"),
-            RandomWord(english: "draw", translation: "рисовать"),
-            RandomWord(english: "write", translation: "писать"),
-            RandomWord(english: "clap", translation: "хлопать"),
-            RandomWord(english: "wave", translation: "махать"),
-            RandomWord(english: "hug", translation: "обнимать"),
-            RandomWord(english: "kiss", translation: "целовать"),
-            RandomWord(english: "laugh", translation: "смеяться"),
-            RandomWord(english: "cry", translation: "плакать"),
-            RandomWord(english: "smile", translation: "улыбаться"),
-        ])
-
-        // ADVANCED LEVEL (3+ years)
-        let vehiclesSet = RandomWordSet(name: "Vehicles (10 words)", words: [
-            RandomWord(english: "car", translation: "машина"),
-            RandomWord(english: "bus", translation: "автобус"),
-            RandomWord(english: "truck", translation: "грузовик"),
-            RandomWord(english: "train", translation: "поезд"),
-            RandomWord(english: "plane", translation: "самолёт"),
-            RandomWord(english: "helicopter", translation: "вертолёт"),
-            RandomWord(english: "boat", translation: "лодка"),
-            RandomWord(english: "ship", translation: "корабль"),
-            RandomWord(english: "rocket", translation: "ракета"),
-            RandomWord(english: "bicycle", translation: "велосипед"),
-        ])
-
-        let familySet = RandomWordSet(name: "Family (12 words)", words: [
-            RandomWord(english: "grandma", translation: "бабушка"),
-            RandomWord(english: "grandpa", translation: "дедушка"),
-            RandomWord(english: "granddad", translation: "дедушка"),
-            RandomWord(english: "grandgrandma", translation: "прабабушка"),
-            RandomWord(english: "grandgrandpa", translation: "прадедушка"),
-            RandomWord(english: "brother", translation: "брат"),
-            RandomWord(english: "sister", translation: "сестра"),
-            RandomWord(english: "aunt", translation: "тётя"),
-            RandomWord(english: "uncle", translation: "дядя"),
-            RandomWord(english: "cousin", translation: "двоюродный брат"),
-            RandomWord(english: "friend", translation: "друг"),
-            RandomWord(english: "family", translation: "семья"),
-            RandomWord(english: "home", translation: "дом"),
-        ])
-
-        return [
-            basicSet,
-            starterSet,
-            animalsEasySet, foodEasySet, bodyPartsSet, colorsSet, actionsEasySet,
-            animalsMediumSet, foodMediumSet, toysSet, natureSet, actionsMediumSet,
-            vehiclesSet, familySet
-        ]
+        loadBundledWordSets()
     }
 
-    private func loadBundledWordSets() -> [RandomWordSet]? {
+    private func loadCatalogAndWordSets() {
+        if let localCatalog = wordCatalogStore.loadCatalog() {
+            WordRepository.shared.replaceCatalog(localCatalog)
+        } else {
+            WordRepository.shared.reloadBundledCatalog()
+        }
+        wordSets = createDefaultWordSets()
+    }
+
+    private func ensureEnabledSetDefaultsIfNeeded() {
+        if wordSets.isEmpty {
+            wordSets = createDefaultWordSets()
+        }
+        if enabledSetIndices.isEmpty, !wordSets.isEmpty {
+            enabledSetIndices = [0]
+            saveEnabledSets()
+        }
+    }
+
+    private func loadBundledWordSets() -> [RandomWordSet] {
         let sets = WordRepository.shared.randomWordSets(defaultTranslationLanguageCode: "ru")
-        return sets.isEmpty ? nil : sets
+        return sets
+    }
+
+    private func persistCatalogFromWordSets() {
+        var catalog = WordRepository.shared.catalogSnapshot()
+            ?? WordDataCatalog(version: 2, source: "user", entries: [], sets: [])
+        var entriesByID = Dictionary(uniqueKeysWithValues: catalog.entries.map { ($0.id, $0) })
+        var updatedSets: [WordDataSet] = []
+
+        for (index, set) in wordSets.enumerated() {
+            var wordIDs: [String] = []
+            wordIDs.reserveCapacity(set.words.count)
+            for word in set.words {
+                let meaningKey = normalizedMeaningKey(word.clarification)
+                let wordID = WordDataCatalog.makeWordID(spelling: word.english, meaningKey: meaningKey)
+                wordIDs.append(wordID)
+
+                var entry = entriesByID[wordID]
+                    ?? WordDataEntry(
+                        id: wordID,
+                        spelling: word.english,
+                        meaningKey: meaningKey,
+                        partOfSpeech: nil,
+                        category: nil,
+                        tags: defaultTags(for: set.name),
+                        translations: [],
+                        definitions: [],
+                        assets: []
+                    )
+
+                entry.id = wordID
+                entry.spelling = word.english.trimmingCharacters(in: .whitespacesAndNewlines)
+                entry.meaningKey = meaningKey
+                mergeTranslation(text: word.translation, into: &entry)
+                entriesByID[wordID] = entry
+            }
+
+            updatedSets.append(
+                WordDataSet(
+                    id: makeWordSetID(name: set.name, index: index),
+                    name: set.name,
+                    wordIDs: wordIDs
+                )
+            )
+        }
+
+        catalog.version = max(2, catalog.version)
+        catalog.source = "user"
+        catalog.entries = Array(entriesByID.values).sorted { $0.id < $1.id }
+        catalog.sets = updatedSets
+        catalog.normalizeEntries()
+        WordRepository.shared.replaceCatalog(catalog)
+        _ = wordCatalogStore.saveCatalog(catalog)
+    }
+
+    private func normalizedMeaningKey(_ clarification: String?) -> String? {
+        guard let clarification else { return nil }
+        let trimmed = clarification.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? nil : trimmed
+    }
+
+    private func mergeTranslation(text: String, into entry: inout WordDataEntry) {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+
+        if let index = entry.translations.firstIndex(where: { $0.language.lowercased() == "ru" }) {
+            entry.translations[index].text = trimmed
+            return
+        }
+
+        if entry.translations.isEmpty {
+            entry.translations = [WordDataTranslation(language: "ru", text: trimmed)]
+            return
+        }
+
+        if let firstIndex = entry.translations.firstIndex(where: { $0.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }) {
+            entry.translations[firstIndex] = WordDataTranslation(language: "ru", text: trimmed)
+            return
+        }
+
+        entry.translations.append(WordDataTranslation(language: "ru", text: trimmed))
+    }
+
+    private func makeWordSetID(name: String, index: Int) -> String {
+        let normalized = String(name.lowercased().map { character in
+            character.isLetter || character.isNumber ? character : "-"
+        })
+            .replacingOccurrences(of: "-+", with: "-", options: .regularExpression)
+            .trimmingCharacters(in: CharacterSet(charactersIn: "-"))
+
+        if normalized.isEmpty {
+            return "set-\(index)"
+        }
+        return "\(normalized)-\(index)"
     }
     
     func getRandomWord(useLearningRotation: Bool = true) -> RandomWord? {
@@ -506,7 +393,6 @@ class RandomWordList: ObservableObject {
             let translation = babyNameTranslation.isEmpty ? babyName : babyNameTranslation
             let word = RandomWord(english: babyName, translation: translation)
             lastSelectedRandomWord = word
-            lastSelectedWordKey = wordKey(word: babyName, clarification: nil)
             return word
         }
 
@@ -514,7 +400,6 @@ class RandomWordList: ObservableObject {
         refreshRecentHistoryIfNeeded()
         if let chosen = selectWeightedWord(from: words) {
             lastSelectedRandomWord = chosen
-            lastSelectedWordKey = wordKey(word: chosen.english, clarification: chosen.clarification)
             return chosen
         }
         return nil
@@ -538,7 +423,7 @@ class RandomWordList: ObservableObject {
         guard index >= 0 && index < wordSets.count else { return }
         let currentSetName = wordSets[index].name
         wordSets[index] = RandomWordSet(name: currentSetName, words: newWords)
-        saveWordSets()
+        persistCatalogFromWordSets()
         objectWillChange.send()
         NotificationCenter.default.post(name: .init("RandomWordsUpdated"), object: nil)
     }
@@ -546,7 +431,7 @@ class RandomWordList: ObservableObject {
     func addWordSet(name: String, words: [RandomWord]) {
         let newSet = RandomWordSet(name: name, words: words)
         wordSets.append(newSet)
-        saveWordSets()
+        persistCatalogFromWordSets()
         objectWillChange.send()
     }
 
@@ -566,7 +451,7 @@ class RandomWordList: ObservableObject {
             }
         }
         enabledSetIndices = Set(adjustedIndices)
-        saveWordSets()
+        persistCatalogFromWordSets()
         saveEnabledSets()
         objectWillChange.send()
     }
@@ -575,7 +460,7 @@ class RandomWordList: ObservableObject {
         guard index >= 0 && index < wordSets.count else { return }
         let currentWords = wordSets[index].words
         wordSets[index] = RandomWordSet(name: newName, words: currentWords)
-        saveWordSets()
+        persistCatalogFromWordSets()
         objectWillChange.send()
     }
 
@@ -664,39 +549,13 @@ class RandomWordList: ObservableObject {
     }
 
     func resetToDefaults() {
-        // Reset wordsets to defaults
+        wordCatalogStore.clearCatalog()
+        WordRepository.shared.reloadBundledCatalog()
         wordSets = createDefaultWordSets()
-        // Enable only the first set (Basic Words)
-        enabledSetIndices = [0]
-        // Save changes
-        saveWordSets()
+        enabledSetIndices = wordSets.isEmpty ? [] : [0]
         saveEnabledSets()
-        // Note: babyName and babyNameProbability are preserved
         objectWillChange.send()
         NotificationCenter.default.post(name: .init("RandomWordSetChanged"), object: nil)
-    }
-
-    private func saveWordSets() {
-        if let encoded = try? JSONEncoder().encode(wordSets) {
-            UserDefaults.standard.set(encoded, forKey: userDefaultsKey)
-        }
-    }
-
-    private func loadWordSets() {
-        // Try to load new format first
-        if let savedSets = UserDefaults.standard.data(forKey: userDefaultsKey),
-           let decodedSets = try? JSONDecoder().decode([RandomWordSet].self, from: savedSets) {
-            wordSets = decodedSets
-            return
-        }
-
-        // Try to migrate from old format
-        if let savedWords = UserDefaults.standard.data(forKey: "randomWords"),
-           let decodedWords = try? JSONDecoder().decode([RandomWord].self, from: savedWords) {
-            // Migrate old words to new format as "Basic Words" set
-            wordSets = [RandomWordSet(name: "Basic Words (Migrated)", words: decodedWords)]
-            saveWordSets()
-        }
     }
 
     private func saveEnabledSets() {
@@ -707,17 +566,13 @@ class RandomWordList: ObservableObject {
     }
 
     private func loadEnabledSets() {
-        // Try to load enabled sets
         if let savedData = UserDefaults.standard.data(forKey: enabledSetsKey),
            let decodedArray = try? JSONDecoder().decode([Int].self, from: savedData) {
             enabledSetIndices = Set(decodedArray)
             return
         }
-
-        // Migrate from old selectedSetIndexKey
-        let oldIndex = UserDefaults.standard.integer(forKey: "selectedRandomWordSetIndex")
-        if oldIndex >= 0 && oldIndex < wordSets.count {
-            enabledSetIndices = [oldIndex]
+        if !wordSets.isEmpty {
+            enabledSetIndices = [0]
             saveEnabledSets()
         }
     }
@@ -827,12 +682,14 @@ class RandomWordList: ObservableObject {
         learningTags
     }
 
-    func openLearningCSV() {
+    func openLearningDatabase() {
         if learningWords.isEmpty {
             syncLearningWordsIfNeeded(force: true)
         }
         saveLearningWords()
-        let url = learningCSVURL()
+        guard let url = learningStateStore.databaseFileURL() else {
+            return
+        }
         NSWorkspace.shared.open(url)
     }
 
@@ -860,91 +717,13 @@ class RandomWordList: ObservableObject {
         lastSelectedRandomWord
     }
 
-    private func learningCSVURL() -> URL {
-        let baseDir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first!
-        let appDir = baseDir.appendingPathComponent("BabyKeyboardLock", isDirectory: true)
-        if !FileManager.default.fileExists(atPath: appDir.path) {
-            try? FileManager.default.createDirectory(
-                at: appDir,
-                withIntermediateDirectories: true,
-                attributes: nil
-            )
-        }
-        return appDir.appendingPathComponent("learning.csv")
-    }
-
     private func wordKey(word: String, clarification: String?) -> String {
-        let base = word.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        let clar = (clarification ?? "").trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        if clar.isEmpty {
-            return base
-        }
-        return "\(base)|\(clar)"
+        WordDataCatalog.makeWordID(spelling: word, meaningKey: clarification)
     }
 
     private func splitWordKey(_ key: String) -> (String, String) {
-        let parts = key.split(separator: "|", maxSplits: 1, omittingEmptySubsequences: false)
-        if parts.count == 2 {
-            return (String(parts[0]), String(parts[1]))
-        }
-        return (key, "")
-    }
-
-    private func parseCSVLine(_ line: String) -> [String] {
-        var result: [String] = []
-        var current = ""
-        var inQuotes = false
-        let chars = Array(line)
-        var index = 0
-
-        while index < chars.count {
-            let ch = chars[index]
-            if ch == "\"" {
-                if inQuotes, index + 1 < chars.count, chars[index + 1] == "\"" {
-                    current.append("\"")
-                    index += 2
-                    continue
-                }
-                inQuotes.toggle()
-                index += 1
-                continue
-            }
-            if ch == "," && !inQuotes {
-                result.append(current)
-                current = ""
-                index += 1
-                continue
-            }
-            current.append(ch)
-            index += 1
-        }
-
-        result.append(current)
-        return result
-    }
-
-    private func csvEscape(_ value: String) -> String {
-        if value.contains(",") || value.contains("\"") || value.contains("\n") {
-            let escaped = value.replacingOccurrences(of: "\"", with: "\"\"")
-            return "\"\(escaped)\""
-        }
-        return value
-    }
-
-    private func parseDate(_ value: String) -> Date? {
-        if value.isEmpty {
-            return nil
-        }
-        if let date = isoFormatter.date(from: value) {
-            return date
-        }
-        let fallback = ISO8601DateFormatter()
-        return fallback.date(from: value)
-    }
-
-    private func formatDate(_ date: Date?) -> String {
-        guard let date else { return "" }
-        return isoFormatter.string(from: date)
+        let split = WordDataCatalog.splitWordID(key)
+        return (split.spelling, split.meaningKey ?? "")
     }
 
     private func loadLearningWords() {
@@ -957,75 +736,12 @@ class RandomWordList: ObservableObject {
             syncLearningWordsIfNeeded(force: true)
             return
         }
-
-        let url = learningCSVURL()
-        guard let contents = try? String(contentsOf: url, encoding: .utf8) else {
-            seedLearningWordsIfNeeded()
-            return
-        }
-
-        var parsed: [String: LearningWord] = [:]
-        let lines = contents.split(whereSeparator: \.isNewline)
-        for (index, rawLine) in lines.enumerated() {
-            let line = String(rawLine)
-            if index == 0, line.lowercased().starts(with: "word,") {
-                continue
-            }
-            let fields = parseCSVLine(line)
-            guard fields.count >= 3 else { continue }
-
-            let word = fields[0]
-            let clarification = fields.count > 1 ? fields[1] : ""
-            let translation = fields.count > 2 ? fields[2] : ""
-            let tags = fields.count > 3 ? fields[3].split(separator: "|").map(String.init) : []
-            let known = fields.count > 4 ? (fields[4].lowercased() == "true") : false
-            let favorite = fields.count > 5 ? (fields[5].lowercased() == "true") : false
-            let seenCount = fields.count > 6 ? Int(fields[6]) ?? 0 : 0
-            let lastSeen = fields.count > 7 ? parseDate(fields[7]) : nil
-
-            let key = wordKey(word: word, clarification: clarification)
-            parsed[key] = LearningWord(
-                id: key,
-                word: word,
-                clarification: clarification,
-                translation: translation,
-                tags: tags,
-                known: known,
-                favorite: favorite,
-                seenCount: seenCount,
-                lastSeen: lastSeen
-            )
-        }
-
-        learningWords = parsed
-        learningStateStore.saveLearningWords(Array(parsed.values))
-        syncLearningWordsIfNeeded(force: true)
+        seedLearningWordsIfNeeded()
     }
 
     private func saveLearningWords() {
-        let url = learningCSVURL()
-        var lines: [String] = []
-        lines.append("word,clarification,translation,tags,known,favorite,seen_count,last_seen")
-
         let words = Array(learningWords.values).sorted { $0.word < $1.word }
         learningStateStore.saveLearningWords(words)
-        for word in words {
-            let tags = word.tags.joined(separator: "|")
-            let row = [
-                csvEscape(word.word),
-                csvEscape(word.clarification),
-                csvEscape(word.translation),
-                csvEscape(tags),
-                word.known ? "true" : "false",
-                word.favorite ? "true" : "false",
-                String(word.seenCount),
-                csvEscape(formatDate(word.lastSeen))
-            ].joined(separator: ",")
-            lines.append(row)
-        }
-
-        let content = lines.joined(separator: "\n")
-        try? content.write(to: url, atomically: true, encoding: .utf8)
     }
 
     private func seedLearningWordsIfNeeded() {
@@ -1812,7 +1528,6 @@ class RandomWordList: ObservableObject {
         let clarification = chosen.clarification.isEmpty ? nil : chosen.clarification
         let result = RandomWord(english: chosen.word, translation: chosen.translation, clarification: clarification)
         lastSelectedRandomWord = result
-        lastSelectedWordKey = chosen.id
         return result
     }
 

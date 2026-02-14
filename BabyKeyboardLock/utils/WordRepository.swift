@@ -30,6 +30,16 @@ final class WordRepository {
         }
     }
 
+    func catalogSnapshot() -> WordDataCatalog? {
+        catalog
+    }
+
+    func replaceCatalog(_ updatedCatalog: WordDataCatalog) {
+        var normalized = updatedCatalog
+        normalized.normalizeEntries()
+        setCatalog(normalized)
+    }
+
     func randomWordSets(defaultTranslationLanguageCode: String = "ru") -> [RandomWordSet] {
         guard let catalog = catalog else {
             return []

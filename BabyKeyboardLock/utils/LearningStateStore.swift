@@ -106,8 +106,12 @@ final class LearningStateStore {
         _ = execute(db: db, sql: "COMMIT")
     }
 
+    func databaseFileURL() -> URL? {
+        resolveDatabaseURL()
+    }
+
     private func openDatabase() -> OpaquePointer? {
-        guard let url = databaseURL() else {
+        guard let url = resolveDatabaseURL() else {
             return nil
         }
 
@@ -145,7 +149,7 @@ final class LearningStateStore {
         return execute(db: db, sql: createSQL)
     }
 
-    private func databaseURL() -> URL? {
+    private func resolveDatabaseURL() -> URL? {
         guard let baseDir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
             return nil
         }

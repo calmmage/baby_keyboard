@@ -595,8 +595,8 @@ struct ContentView: View {
                             }
                         }
 
-                        Button("Open Learning CSV") {
-                            randomWordList.openLearningCSV()
+                        Button("Open Learning Data") {
+                            randomWordList.openLearningDatabase()
                         }
                         .buttonStyle(.plain)
                         .foregroundColor(.secondary)
