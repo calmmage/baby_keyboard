@@ -1301,8 +1301,8 @@ struct CustomWordImageEditorView: View {
                 }
                 .buttonStyle(.plain)
 
-                Button("Granddad") {
-                    addQuickWord("granddad")
+                Button("Brother") {
+                    addQuickWord("brother")
                 }
                 .buttonStyle(.plain)
 

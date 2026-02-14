@@ -67,22 +67,6 @@
       "assets": []
     },
     {
-      "id": "granddad",
-      "spelling": "granddad",
-      "meaningKey": null,
-      "partOfSpeech": null,
-      "category": null,
-      "tags": [],
-      "translations": [
-        {
-          "language": "ru",
-          "text": "дедушка"
-        }
-      ],
-      "definitions": [],
-      "assets": []
-    },
-    {
       "id": "arm",
       "spelling": "arm",
       "meaningKey": null,
@@ -2412,7 +2396,6 @@
         "papa",
         "grandma",
         "grandpa",
-        "granddad",
         "arm",
         "leg",
         "nose",
@@ -2635,11 +2618,10 @@
     },
     {
       "id": "family-12-words-13",
-      "name": "Family (12 words)",
+      "name": "Family (11 words)",
       "wordIDs": [
         "grandma",
         "grandpa",
-        "granddad",
         "grandgrandma",
         "grandgrandpa",
         "brother",

@@ -192,7 +192,7 @@ class RandomWordList: ObservableObject {
     private let learningStateStore = LearningStateStore()
     private let favoriteWords: Set<String> = [
         "mama", "papa", "mom", "dad",
-        "grandma", "grandpa", "granddad",
+        "grandma", "grandpa",
         "grandgrandma", "grandgrandpa", "uncle", "aunt"
     ]
     private let learningTags: [String] = ["basic", "cool", "action", "family"]
@@ -266,12 +266,59 @@ class RandomWordList: ObservableObject {
     }
 
     private func loadCatalogAndWordSets() {
+        var didNormalizeCatalog = false
         if let localCatalog = wordCatalogStore.loadCatalog() {
-            WordRepository.shared.replaceCatalog(localCatalog)
+            var normalized = localCatalog
+            didNormalizeCatalog = normalizeFamilyWordAliases(in: &normalized)
+            WordRepository.shared.replaceCatalog(normalized)
+            if didNormalizeCatalog {
+                _ = wordCatalogStore.saveCatalog(normalized)
+            }
         } else {
             WordRepository.shared.reloadBundledCatalog()
+            if var bundledCatalog = WordRepository.shared.catalogSnapshot() {
+                didNormalizeCatalog = normalizeFamilyWordAliases(in: &bundledCatalog)
+                WordRepository.shared.replaceCatalog(bundledCatalog)
+            }
         }
         wordSets = createDefaultWordSets()
+    }
+
+    private func normalizeFamilyWordAliases(in catalog: inout WordDataCatalog) -> Bool {
+        let granddadID = WordDataCatalog.makeWordID(spelling: "granddad", meaningKey: nil)
+        let grandpaID = WordDataCatalog.makeWordID(spelling: "grandpa", meaningKey: nil)
+        var changed = false
+
+        let originalEntryCount = catalog.entries.count
+        catalog.entries.removeAll { entry in
+            let normalizedSpelling = entry.spelling.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            return entry.id == granddadID || normalizedSpelling == "granddad"
+        }
+        if catalog.entries.count != originalEntryCount {
+            changed = true
+        }
+
+        for index in catalog.sets.indices {
+            let original = catalog.sets[index].wordIDs
+            var mapped: [String] = []
+            mapped.reserveCapacity(original.count)
+            for wordID in original {
+                let nextID = wordID == granddadID ? grandpaID : wordID
+                if !mapped.contains(nextID) {
+                    mapped.append(nextID)
+                }
+            }
+            if mapped != original {
+                catalog.sets[index].wordIDs = mapped
+                changed = true
+            }
+            if catalog.sets[index].name == "Family (12 words)" {
+                catalog.sets[index].name = "Family (11 words)"
+                changed = true
+            }
+        }
+
+        return changed
     }
 
     private func ensureEnabledSetDefaultsIfNeeded() {
@@ -383,6 +430,8 @@ class RandomWordList: ObservableObject {
     }
     
     func getRandomWord(useLearningRotation: Bool = true) -> RandomWord? {
+        refreshLearningPoolIfStale()
+
         if useLearningRotation && learningRotationEnabled {
             if let learningWord = getLearningRandomWord() {
                 return learningWord
@@ -760,6 +809,12 @@ class RandomWordList: ObservableObject {
         }
     }
 
+    private func refreshLearningPoolIfStale() {
+        if shouldSyncLearningWords() {
+            syncLearningWordsIfNeeded(force: true)
+        }
+    }
+
     private func shouldSyncLearningWords() -> Bool {
         guard let lastSync = learningLastSync else { return true }
         return Date().timeIntervalSince(lastSync) >= 86_400
@@ -820,6 +875,7 @@ class RandomWordList: ObservableObject {
     }
 
     private func currentLearningPool() -> [LearningWord] {
+        refreshLearningPoolIfStale()
         rebuildLearningPoolIfNeeded()
         return learningPoolKeys.compactMap { learningWords[$0] }
     }
