@@ -1,5 +1,7 @@
 import SwiftUI
 import Combine
+import AVKit
+import AVFoundation
 
 struct WordDisplayView: View {
     @ObservedObject var eventHandler: EventHandler = EventHandler.shared
@@ -8,20 +10,30 @@ struct WordDisplayView: View {
     @State private var showWord: Bool = false
     @AppStorage("wordDisplayDuration") private var wordDisplayDuration: Double = DEFAULT_WORD_DISPLAY_DURATION
     @AppStorage("showFlashcards") private var showFlashcards: Bool = false
-    @AppStorage("flashcardStyle") private var flashcardStyle: FlashcardStyle = .none
+    @AppStorage("showVideoCards") private var showVideoCards: Bool = false
+    @AppStorage("videoCardDemoMode") private var videoCardDemoMode: Bool = false
+    @AppStorage("videoCardDemoWord") private var videoCardDemoWord: String = "cat"
+    @AppStorage("flashcardStyle") private var flashcardStyleStorage: String = FlashcardStyle.noImageToken
     @AppStorage("flashcardImageSize") private var flashcardImageSize: Double = 150.0
     @State private var windowSize: CGSize = .zero
     @State private var englishWordForImage: String = ""
     @State private var clarificationForImage: String? = nil
     @State private var customImageURL: URL? = nil
     @State private var customImageRotation: Double = 0.0
+    @State private var availableVideoURL: URL? = nil
+    @State private var activeFlashcardStyle: FlashcardStyle? = nil
+    @State private var isCurrentCardVideoActivated: Bool = false
     
     // For more reliable timeout handling
     @State private var hideWorkItem: DispatchWorkItem? = nil
+
+    private var enabledFlashcardStyles: Set<FlashcardStyle> {
+        FlashcardStyle.pool(from: flashcardStyleStorage)
+    }
     
     // Calculate dynamic background size based on content
     private var backgroundSize: CGSize {
-        let hasImage = flashcardStyle != .none
+        let hasImage = activeFlashcardStyle != nil
         let hasTranslation = !translation.isEmpty
 
         // Padding/buffer values
@@ -94,15 +106,28 @@ struct WordDisplayView: View {
                     
                     VStack(spacing: 20) {
                         // Flashcard image if available
-                        if flashcardStyle != .none {
+                        if let activeFlashcardStyle {
                             let imageLookupWord = englishWordForImage.isEmpty ? word : englishWordForImage
                             let clarification = clarificationForImage
+                            let wordForMedia = RandomWord(
+                                english: imageLookupWord,
+                                translation: translation,
+                                clarification: clarification
+                            )
+                            let cardHeight = min(flashcardImageSize, maxHeight - 150)
+
+                            if showVideoCards,
+                               isCurrentCardVideoActivated,
+                               let videoURL = availableVideoURL {
+                                LoopingVideoView(url: videoURL)
+                                    .frame(height: cardHeight)
+                            }
                             // First check for custom image (for any word including baby's name)
-                            if let customImage = loadImage(from: customImageURL) {
+                            else if let customImage = loadImage(from: customImageURL) {
                                 Image(nsImage: customImage)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(height: min(flashcardImageSize, maxHeight - 150))
+                                    .frame(height: cardHeight)
                                     .rotationEffect(.degrees(customImageRotation))
                             }
                             // Fallback to baby image if it's the baby's name (backward compatibility)
@@ -111,15 +136,14 @@ struct WordDisplayView: View {
                                 Image(nsImage: babyImage)
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(height: min(flashcardImageSize, maxHeight - 150))
+                                    .frame(height: cardHeight)
                             }
                             // Finally try generated flashcard images
-                            else if let image = RandomWord(english: imageLookupWord, translation: translation, clarification: clarification)
-                                .flashcardImage(style: flashcardStyle) {
+                            else if let image = wordForMedia.flashcardImage(style: activeFlashcardStyle) {
                                 image
                                     .resizable()
                                     .scaledToFit()
-                                    .frame(height: min(flashcardImageSize, maxHeight - 150))
+                                    .frame(height: cardHeight)
                             }
                         }
 
@@ -163,30 +187,27 @@ struct WordDisplayView: View {
         }
         .onReceive(eventHandler.$lastKeyString) { newValue in
             if eventHandler.isLocked && (eventHandler.selectedLockEffect == .speakAKeyWord || eventHandler.selectedLockEffect == .speakRandomWord) && !newValue.isEmpty {
-                // Cancel any existing hide timers
+                if shouldActivateVideoOnSecondKeyPress() {
+                    activateVideoForCurrentCard()
+                    return
+                }
+
                 hideWorkItem?.cancel()
 
-                let englishWord = newValue
+                let incomingEnglishWord = newValue
                 let lastRandomWord = RandomWordList.shared.getLastSelectedRandomWord()
-                let lastMatches = lastRandomWord?.english.lowercased() == englishWord.lowercased()
+                let lastMatches = lastRandomWord?.english.lowercased() == incomingEnglishWord.lowercased()
+                let englishWord = resolvedEnglishWordForDisplay(incomingWord: incomingEnglishWord)
                 englishWordForImage = englishWord
-                clarificationForImage = (eventHandler.selectedLockEffect == .speakRandomWord && lastMatches)
+                clarificationForImage = (eventHandler.selectedLockEffect == .speakRandomWord && lastMatches && !videoCardDemoMode)
                     ? lastRandomWord?.clarification
                     : nil
-                if let selection = RandomWordList.shared.getCustomImageSelection(
-                    for: englishWord,
-                    clarification: clarificationForImage
-                ) {
-                    customImageURL = selection.url
-                    customImageRotation = selection.rotationDegrees
-                } else {
-                    customImageURL = nil
-                    customImageRotation = 0.0
-                }
+
                 var fallbackTranslation: String? = nil
                 if eventHandler.selectedLockEffect == .speakRandomWord,
                    lastMatches,
-                   let randomWordObj = lastRandomWord {
+                   let randomWordObj = lastRandomWord,
+                   !videoCardDemoMode {
                     fallbackTranslation = randomWordObj.translation
                 }
 
@@ -208,38 +229,37 @@ struct WordDisplayView: View {
                 } else {
                     self.translation = ""
                 }
-                
-                // Show the word with animation
+
+                activeFlashcardStyle = FlashcardStyle.randomStyle(from: enabledFlashcardStyles)
+                updateMediaAvailability(
+                    englishWord: englishWord,
+                    clarification: clarificationForImage,
+                    style: activeFlashcardStyle
+                )
+                isCurrentCardVideoActivated = false
+
                 withAnimation(.easeIn(duration: 0.3)) {
                     showWord = true
                 }
-                
-                // Hide the word after the display duration
-                let workItem = DispatchWorkItem {
-                    withAnimation(.easeOut(duration: 0.3)) {
-                        showWord = false
-                    }
-                }
-                hideWorkItem = workItem
-                DispatchQueue.main.asyncAfter(deadline: .now() + wordDisplayDuration, execute: workItem)
+
+                scheduleHide(after: wordDisplayDuration)
             }
         }
         .onReceive(Just(wordDisplayDuration)) { newDuration in
             // If a word is currently shown, update the timer with the new duration
             if showWord && hideWorkItem != nil {
-                hideWorkItem?.cancel()
-                
-                let newHideWorkItem = DispatchWorkItem {
-                    withAnimation {
-                        self.showWord = false
-                    }
-                }
-                
-                self.hideWorkItem = newHideWorkItem
-                
-                DispatchQueue.main.asyncAfter(
-                    deadline: .now() + newDuration,
-                    execute: newHideWorkItem
+                scheduleHide(after: newDuration)
+            }
+        }
+        .onChange(of: flashcardStyleStorage) { _, _ in
+            activeFlashcardStyle = FlashcardStyle.randomStyle(from: enabledFlashcardStyles)
+
+            if showWord {
+                let imageWord = englishWordForImage.isEmpty ? word : englishWordForImage
+                updateMediaAvailability(
+                    englishWord: imageWord,
+                    clarification: clarificationForImage,
+                    style: activeFlashcardStyle
                 )
             }
         }
@@ -247,6 +267,9 @@ struct WordDisplayView: View {
             // Clean up when view disappears
             hideWorkItem?.cancel()
             hideWorkItem = nil
+            isCurrentCardVideoActivated = false
+            availableVideoURL = nil
+            activeFlashcardStyle = nil
         }
     }
     
@@ -266,6 +289,88 @@ struct WordDisplayView: View {
                 }
             }
         }
+    }
+
+    private func shouldActivateVideoOnSecondKeyPress() -> Bool {
+        showWord &&
+            showFlashcards &&
+            activeFlashcardStyle != nil &&
+            showVideoCards &&
+            !isCurrentCardVideoActivated &&
+            availableVideoURL != nil
+    }
+
+    private func activateVideoForCurrentCard() {
+        guard shouldActivateVideoOnSecondKeyPress() else { return }
+
+        hideWorkItem?.cancel()
+        withAnimation(.easeIn(duration: 0.2)) {
+            isCurrentCardVideoActivated = true
+        }
+        scheduleHide(after: max(wordDisplayDuration, 2.0))
+    }
+
+    private func resolvedEnglishWordForDisplay(incomingWord: String) -> String {
+        guard videoCardDemoMode else { return incomingWord }
+        let demoWord = videoCardDemoWord
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
+        return demoWord.isEmpty ? incomingWord : demoWord
+    }
+
+    private func updateMediaAvailability(
+        englishWord: String,
+        clarification: String?,
+        style: FlashcardStyle?
+    ) {
+        guard let style else {
+            customImageURL = nil
+            customImageRotation = 0.0
+            availableVideoURL = nil
+            return
+        }
+
+        let stillSelection = RandomWordList.shared.getCustomImageSelection(
+            for: englishWord,
+            clarification: clarification,
+            preferVideo: false
+        )
+        if let stillSelection, !stillSelection.url.isFlashcardVideoFile {
+            customImageURL = stillSelection.url
+            customImageRotation = stillSelection.rotationDegrees
+        } else {
+            customImageURL = nil
+            customImageRotation = 0.0
+        }
+
+        let customVideoSelection = RandomWordList.shared.getCustomImageSelection(
+            for: englishWord,
+            clarification: clarification,
+            preferVideo: true
+        )
+        if let customVideoSelection, customVideoSelection.url.isFlashcardVideoFile {
+            availableVideoURL = customVideoSelection.url
+            return
+        }
+
+        availableVideoURL = RandomWord(
+            english: englishWord,
+            translation: translation,
+            clarification: clarification
+        ).flashcardVideoURL(style: style)
+    }
+
+    private func scheduleHide(after delay: Double) {
+        hideWorkItem?.cancel()
+        let workItem = DispatchWorkItem {
+            withAnimation(.easeOut(duration: 0.3)) {
+                showWord = false
+            }
+            isCurrentCardVideoActivated = false
+            activeFlashcardStyle = nil
+        }
+        hideWorkItem = workItem
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: workItem)
     }
 
     private func loadBabyImage() -> NSImage? {
@@ -302,4 +407,71 @@ struct WordDisplayView: View {
 
         return image
     }
-} 
+}
+
+struct LoopingVideoView: NSViewRepresentable {
+    let url: URL
+
+    func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
+
+    func makeNSView(context: Context) -> AVPlayerView {
+        let playerView = AVPlayerView()
+        playerView.controlsStyle = .none
+        playerView.videoGravity = .resizeAspect
+        context.coordinator.configure(playerView: playerView, url: url)
+        return playerView
+    }
+
+    func updateNSView(_ playerView: AVPlayerView, context: Context) {
+        context.coordinator.configure(playerView: playerView, url: url)
+    }
+
+    static func dismantleNSView(_ playerView: AVPlayerView, coordinator: Coordinator) {
+        coordinator.stop()
+        playerView.player = nil
+    }
+
+    final class Coordinator {
+        private var player: AVQueuePlayer?
+        private var looper: AVPlayerLooper?
+        private var currentURL: URL?
+        private var scopedURL: URL?
+        private var isAccessingSecurityScope: Bool = false
+
+        func configure(playerView: AVPlayerView, url: URL) {
+            if currentURL == url {
+                player?.play()
+                return
+            }
+
+            stop()
+
+            currentURL = url
+            scopedURL = url
+            isAccessingSecurityScope = url.startAccessingSecurityScopedResource()
+
+            let queuePlayer = AVQueuePlayer()
+            queuePlayer.isMuted = true
+
+            let item = AVPlayerItem(url: url)
+            looper = AVPlayerLooper(player: queuePlayer, templateItem: item)
+            player = queuePlayer
+            playerView.player = queuePlayer
+            queuePlayer.play()
+        }
+
+        func stop() {
+            player?.pause()
+            player = nil
+            looper = nil
+            currentURL = nil
+            if isAccessingSecurityScope {
+                scopedURL?.stopAccessingSecurityScopedResource()
+            }
+            scopedURL = nil
+            isAccessingSecurityScope = false
+        }
+    }
+}

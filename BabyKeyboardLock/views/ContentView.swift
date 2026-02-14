@@ -8,6 +8,7 @@
 import SwiftUI
 import AppKit
 import AVFoundation
+import UniformTypeIdentifiers
 
 struct HoverableMenuStyle: MenuStyle {
     @State private var isHovered = false
@@ -32,7 +33,10 @@ struct ContentView: View {
     @ObservedObject var eventHandler: EventHandler = EventHandler.shared
     @State private var selectedCategory: EffectCategory = .none
     @AppStorage("showFlashcards") private var showFlashcards: Bool = false
-    @AppStorage("flashcardStyle") private var flashcardStyle: FlashcardStyle = .none
+    @AppStorage("showVideoCards") private var showVideoCards: Bool = false
+    @AppStorage("videoCardDemoMode") private var videoCardDemoMode: Bool = false
+    @AppStorage("videoCardDemoWord") private var videoCardDemoWord: String = "cat"
+    @AppStorage("flashcardStyle") private var flashcardStyleStorage: String = FlashcardStyle.noImageToken
 
     @AppStorage("lockKeyboardOnLaunch") private var lockKeyboardOnLaunch: Bool = false
     @AppStorage("launchOnStartup") private var launchOnStartup: Bool = false {
@@ -67,6 +71,18 @@ struct ContentView: View {
     @State private var babyNameProbability: Double = 0.125
     @State private var babyImagePath: String = ""
     @State private var customImagesFolderStatus: String = ""
+    private var enabledFlashcardStyles: Set<FlashcardStyle> {
+        FlashcardStyle.pool(from: flashcardStyleStorage)
+    }
+    private var hasEnabledFlashcardStyles: Bool {
+        !enabledFlashcardStyles.isEmpty
+    }
+    private var flashcardStylesBinding: Binding<Set<FlashcardStyle>> {
+        Binding(
+            get: { enabledFlashcardStyles },
+            set: { flashcardStyleStorage = FlashcardStyle.serializedPool($0) }
+        )
+    }
     private let learningPoolDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .short
@@ -203,7 +219,32 @@ struct ContentView: View {
                             .foregroundColor(.secondary)
                             .font(.subheadline)
 
-                        FlashcardStylePicker(selectedStyle: $flashcardStyle)
+                        FlashcardStylePicker(enabledStyles: flashcardStylesBinding)
+
+                        if hasEnabledFlashcardStyles {
+                            Toggle(isOn: $showVideoCards) {
+                                Text("Show Video Cards")
+                            }
+                            .toggleStyle(CheckboxToggleStyle())
+
+                            if showVideoCards {
+                                Toggle(isOn: $videoCardDemoMode) {
+                                    Text("Video Demo: Force Single Word")
+                                }
+                                .toggleStyle(CheckboxToggleStyle())
+
+                                if videoCardDemoMode {
+                                    HStack {
+                                        Text("Demo Word")
+                                            .font(.caption)
+                                            .foregroundColor(.secondary)
+                                        TextField("cat", text: $videoCardDemoWord)
+                                            .textFieldStyle(.roundedBorder)
+                                            .frame(maxWidth: 220)
+                                    }
+                                }
+                            }
+                        }
                     }
 
                     Toggle(isOn: $eventHandler.usePersonalVoice) {
@@ -608,9 +649,9 @@ struct ContentView: View {
                         .foregroundColor(.secondary)
                         
                         // Image size slider for random word mode
-                        if showFlashcards && flashcardStyle != .none {
+                        if showFlashcards && hasEnabledFlashcardStyles {
                             VStack(alignment: .leading, spacing: 5) {
-                                Text("Image Size: \(Int(flashcardImageSize))px")
+                                Text("Card Size: \(Int(flashcardImageSize))px")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
                                 
@@ -678,12 +719,19 @@ struct ContentView: View {
                             .foregroundColor(.secondary)
                             .font(.subheadline)
 
-                        FlashcardStylePicker(selectedStyle: $flashcardStyle)
+                        FlashcardStylePicker(enabledStyles: flashcardStylesBinding)
+
+                        if hasEnabledFlashcardStyles {
+                            Toggle(isOn: $showVideoCards) {
+                                Text("Show Video Cards")
+                            }
+                            .toggleStyle(CheckboxToggleStyle())
+                        }
 
                         // Image size slider
-                        if flashcardStyle != .none {
+                        if hasEnabledFlashcardStyles {
                             VStack(alignment: .leading, spacing: 5) {
-                                Text("Image Size: \(Int(flashcardImageSize))px")
+                                Text("Card Size: \(Int(flashcardImageSize))px")
                                     .font(.caption)
                                     .foregroundColor(.secondary)
 
@@ -893,7 +941,7 @@ struct ContentView: View {
         panel.canChooseDirectories = true
         panel.allowsMultipleSelection = false
         panel.canCreateDirectories = false
-        panel.message = "Select a folder with word images (filename should match word or word|meaning)"
+        panel.message = "Select a folder with word images/videos (filename should match word or word|meaning)"
 
         panel.begin { response in
             if response == .OK, let url = panel.url {
@@ -906,9 +954,9 @@ struct ContentView: View {
     private func syncCustomImagesFolder() {
         let imported = randomWordList.syncCustomImagesFromFolder()
         if imported == 0 {
-            customImagesFolderStatus = "No new images imported."
+            customImagesFolderStatus = "No new media files imported."
         } else {
-            customImagesFolderStatus = "Imported \(imported) image(s) from folder."
+            customImagesFolderStatus = "Imported \(imported) media file(s) from folder."
         }
     }
 
@@ -1418,10 +1466,10 @@ struct CustomWordImageEditorView: View {
         panel.canChooseFiles = true
         panel.canChooseDirectories = false
         panel.allowsMultipleSelection = true
-        panel.allowedContentTypes = [.image]
+        panel.allowedContentTypes = [.image, .movie]
         panel.message = replaceExisting
-            ? "Select one or more images to replace '\(word)'"
-            : "Select one or more images for '\(word)'"
+            ? "Select one or more images/videos to replace '\(word)'"
+            : "Select one or more images/videos for '\(word)'"
 
         panel.begin { response in
             if response == .OK {

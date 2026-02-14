@@ -2,7 +2,6 @@ import Foundation
 import SwiftUI
 
 enum FlashcardStyle: String, CaseIterable {
-    case none
     case crayon
     case doodle
     case pencil
@@ -10,45 +9,74 @@ enum FlashcardStyle: String, CaseIterable {
     case watercolor
     case mosaic
     case elvish
-    case random
 
     var title: String {
-        switch self {
-        case .none: return "No Image"
-        case .random: return "Random"
-        default: return rawValue.capitalized
+        rawValue.capitalized
+    }
+
+    static let noImageToken = "none"
+    private static let legacyRandomToken = "random"
+
+    static func pool(from rawValue: String) -> Set<FlashcardStyle> {
+        let normalized = rawValue
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .lowercased()
+
+        if normalized.isEmpty || normalized == noImageToken {
+            return []
         }
+
+        if normalized == legacyRandomToken {
+            return Set(allCases)
+        }
+
+        if normalized.contains(",") {
+            let styles = normalized
+                .split(separator: ",")
+                .compactMap { FlashcardStyle(rawValue: String($0).trimmingCharacters(in: .whitespacesAndNewlines)) }
+            return Set(styles)
+        }
+
+        if let style = FlashcardStyle(rawValue: normalized) {
+            return [style]
+        }
+
+        return []
+    }
+
+    static func serializedPool(_ styles: Set<FlashcardStyle>) -> String {
+        guard !styles.isEmpty else { return noImageToken }
+        return styles.map(\.rawValue).sorted().joined(separator: ",")
+    }
+
+    static func randomStyle(from styles: Set<FlashcardStyle>) -> FlashcardStyle? {
+        styles.randomElement()
+    }
+}
+
+private let flashcardVideoFileExtensions = ["mp4", "mov", "m4v", "webm"]
+
+extension URL {
+    var isFlashcardVideoFile: Bool {
+        flashcardVideoFileExtensions.contains(pathExtension.lowercased())
     }
 }
 
 extension UserDefaults {
-    var flashcardStyle: FlashcardStyle {
+    var flashcardStylePool: Set<FlashcardStyle> {
         get {
-            if let rawValue = string(forKey: "flashcardStyle"),
-               let style = FlashcardStyle(rawValue: rawValue) {
-                return style
-            }
-            return .none
+            let rawValue = string(forKey: "flashcardStyle") ?? FlashcardStyle.noImageToken
+            return FlashcardStyle.pool(from: rawValue)
         }
         set {
-            set(newValue.rawValue, forKey: "flashcardStyle")
+            set(FlashcardStyle.serializedPool(newValue), forKey: "flashcardStyle")
         }
     }
 }
 
 extension RandomWord {
-    func flashcardImage(style: FlashcardStyle) -> Image? {
-        // Return nil for 'none' style or if word is empty
-        guard style != .none, !english.isEmpty else { return nil }
-
-        // Handle random style by picking a random style from available styles
-        let actualStyle: FlashcardStyle = {
-            if style == .random {
-                let availableStyles = FlashcardStyle.allCases.filter { $0 != .none && $0 != .random }
-                return availableStyles.randomElement() ?? .simple
-            }
-            return style
-        }()
+    func flashcardImage(style: FlashcardStyle?) -> Image? {
+        guard let style, !english.isEmpty else { return nil }
 
         // Check if this is a color word and generate color square on-the-fly
         if let colorImage = generateColorImage(for: english.lowercased(), clarification: clarification) {
@@ -57,7 +85,7 @@ extension RandomWord {
 
         // Handle spaces in filenames and add style prefix
         let sanitizedEnglish = english.lowercased().replacingOccurrences(of: " ", with: "_")
-        let filename = "\(actualStyle.rawValue)_\(sanitizedEnglish).png"
+        let filename = "\(style.rawValue)_\(sanitizedEnglish).png"
 
         // For debugging
         print("Looking for image: \(filename)")
@@ -66,6 +94,63 @@ extension RandomWord {
         if let nsImage = NSImage(named: filename) {
             return Image(nsImage: nsImage)
         }
+        return nil
+    }
+
+    func flashcardVideoURL(style: FlashcardStyle?) -> URL? {
+        guard let style, !english.isEmpty else { return nil }
+
+        let sanitizedEnglish = english.lowercased().replacingOccurrences(of: " ", with: "_")
+        let styledBaseName = "\(style.rawValue)_\(sanitizedEnglish)"
+
+        if let styleSpecificURL = locateFlashcardVideo(
+            baseName: styledBaseName,
+            style: style
+        ) {
+            return styleSpecificURL
+        }
+
+        return locateFlashcardVideo(baseName: sanitizedEnglish, style: style)
+    }
+
+    private func locateFlashcardVideo(baseName: String, style: FlashcardStyle) -> URL? {
+        let candidateDirectories = [
+            "Resources/FlashcardVideos/\(style.rawValue)",
+            "FlashcardVideos/\(style.rawValue)",
+            "Resources/FlashcardVideos",
+            "FlashcardVideos",
+            "Resources/FlashcardVideos/demo",
+            "FlashcardVideos/demo",
+            "Resources",
+        ]
+
+        for ext in flashcardVideoFileExtensions {
+            if let url = Bundle.main.url(forResource: baseName, withExtension: ext) {
+                return url
+            }
+
+            for directory in candidateDirectories {
+                if let url = Bundle.main.url(
+                    forResource: baseName,
+                    withExtension: ext,
+                    subdirectory: directory
+                ) {
+                    return url
+                }
+            }
+        }
+
+        guard let resourcePath = Bundle.main.resourcePath else { return nil }
+
+        for directory in candidateDirectories {
+            for ext in flashcardVideoFileExtensions {
+                let fullPath = "\(resourcePath)/\(directory)/\(baseName).\(ext)"
+                if FileManager.default.fileExists(atPath: fullPath) {
+                    return URL(fileURLWithPath: fullPath)
+                }
+            }
+        }
+
         return nil
     }
 
