@@ -1,9 +1,20 @@
 .PHONY: generate-images download-openimages help
 
 PYTHON := .venv/bin/python3
+.DEFAULT_GOAL := help
 .PHONY: test-openimage run-openimage test-gemini run-gemini
 .PHONY: list-words dictionary-showcase
 .PHONY: deploy update clean archive export install
+.PHONY: s3-bucket-setup s3-media-sync
+.PHONY: web-install web-dev web-build web-start
+
+AWS_REGION ?= us-east-1
+S3_BUCKET ?=
+S3_PREFIX ?= baby-keyboard
+WEB_DIR ?= web
+WEB_PM ?= npm
+WEB_PORT ?= 3000
+WEB_INSTALL_ARGS ?=
 
 # Compose shared flag helpers
 WORDS_FLAG := $(if $(strip $(WORDS)),--words $(WORDS),)
@@ -67,6 +78,37 @@ list-words:
 dictionary-showcase:
 	uv run python -m scripts.word_dictionary_showcase --lang en --summary $(ARGS)
 
+web-install:
+	@cd $(WEB_DIR) && $(WEB_PM) install $(WEB_INSTALL_ARGS)
+
+web-dev:
+	@cd $(WEB_DIR) && PORT=$(WEB_PORT) $(WEB_PM) run dev
+
+web-build:
+	@cd $(WEB_DIR) && $(WEB_PM) run build
+
+web-start:
+	@cd $(WEB_DIR) && PORT=$(WEB_PORT) $(WEB_PM) run start
+
+s3-bucket-setup:
+	@test -n "$(S3_BUCKET)" || (echo "Set S3_BUCKET=<bucket-name>" && exit 1)
+	@command -v aws >/dev/null 2>&1 || (echo "AWS CLI is required" && exit 1)
+	@if [ "$(AWS_REGION)" = "us-east-1" ]; then \
+		aws s3api create-bucket --bucket "$(S3_BUCKET)" --region "$(AWS_REGION)" >/dev/null 2>&1 || true; \
+	else \
+		aws s3api create-bucket --bucket "$(S3_BUCKET)" --region "$(AWS_REGION)" --create-bucket-configuration LocationConstraint="$(AWS_REGION)" >/dev/null 2>&1 || true; \
+	fi
+	@aws s3api put-public-access-block --bucket "$(S3_BUCKET)" --public-access-block-configuration BlockPublicAcls=false,IgnorePublicAcls=false,BlockPublicPolicy=false,RestrictPublicBuckets=false
+	@aws s3api put-bucket-policy --bucket "$(S3_BUCKET)" --policy "$$(printf '{"Version":"2012-10-17","Statement":[{"Sid":"PublicReadGetObject","Effect":"Allow","Principal":"*","Action":["s3:GetObject"],"Resource":["arn:aws:s3:::%s/*"]}]}' "$(S3_BUCKET)")"
+	@echo "Set MEDIA_STORAGE_PROVIDER=s3 AWS_S3_BUCKET=$(S3_BUCKET) AWS_REGION=$(AWS_REGION) AWS_S3_PREFIX=$(S3_PREFIX)"
+
+s3-media-sync:
+	@test -n "$(S3_BUCKET)" || (echo "Set S3_BUCKET=<bucket-name>" && exit 1)
+	@command -v aws >/dev/null 2>&1 || (echo "AWS CLI is required" && exit 1)
+	@aws s3 sync web/public/generated-media "s3://$(S3_BUCKET)/$(S3_PREFIX)/generated-media" --delete
+	@aws s3 sync web/public/generated-audio/presynth "s3://$(S3_BUCKET)/$(S3_PREFIX)/generated-audio/presynth" --delete
+	@echo "Synced generated-media + generated-audio/presynth to s3://$(S3_BUCKET)/$(S3_PREFIX)"
+
 # Main target - build and deploy the app
 deploy: archive export install
 	@echo "✅ BabyKeyboardLock deployed successfully to /Applications/"
@@ -97,3 +139,9 @@ help:
 	@printf "make generate-images\n"
 	@printf "make download-openimages\n"
 	@printf "make dictionary-showcase\n"
+	@printf "make web-install\n"
+	@printf "make web-dev [WEB_PORT=3000]\n"
+	@printf "make web-build\n"
+	@printf "make web-start [WEB_PORT=3000]\n"
+	@printf "make s3-bucket-setup S3_BUCKET=<bucket> [AWS_REGION=us-east-1] [S3_PREFIX=baby-keyboard]\n"
+	@printf "make s3-media-sync S3_BUCKET=<bucket> [S3_PREFIX=baby-keyboard]\n"

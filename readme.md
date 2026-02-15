@@ -32,6 +32,51 @@ make deploy
 
 This will clean, archive, export, and install the app to `/Applications/`.
 
+### Web App Setup (Next.js)
+
+1. Create env file:
+```bash
+cp web/.env.local.example web/.env.local
+```
+
+2. Fill Supabase keys in `web/.env.local`:
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+
+3. Install and run:
+```bash
+make web-install
+make web-dev
+```
+
+4. Build/start:
+```bash
+make web-build
+make web-start
+```
+
+5. Optional S3 media storage (images/audio/video):
+```bash
+make s3-bucket-setup S3_BUCKET=<bucket> AWS_REGION=us-east-1 S3_PREFIX=baby-keyboard
+make s3-media-sync S3_BUCKET=<bucket> S3_PREFIX=baby-keyboard
+```
+and set in `web/.env.local`:
+- `MEDIA_STORAGE_PROVIDER=s3`
+- `AWS_S3_BUCKET=<bucket>`
+- `AWS_REGION=<region>`
+- `AWS_S3_PREFIX=baby-keyboard`
+- optional CDN/custom host: `MEDIA_STORAGE_BASE_URL=...`
+
+6. Optional warning fix:
+```bash
+cd web && npm i baseline-browser-mapping@latest -D
+```
+
+7. Generate pre-synth audio files:
+```bash
+uv run python scripts/generate_presynth_audio.py --base-url "https://<bucket>.s3.<region>.amazonaws.com" --url-prefix "baby-keyboard"
+```
+
 ### Installing Certificates on Another Mac
 
 If you need to build the app on a different Mac (e.g., another family member's computer), you'll need to transfer the code signing certificate:
