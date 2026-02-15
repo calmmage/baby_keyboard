@@ -11,20 +11,6 @@ struct FlashcardStylePicker: View {
             LazyVGrid(columns: [
                 GridItem(.adaptive(minimum: 100, maximum: 120), spacing: 8)
             ], spacing: 8) {
-                Button(action: {
-                    enabledStyles = []
-                }) {
-                    Text("No Image")
-                        .font(.system(size: 12))
-                        .padding(.vertical, 6)
-                        .padding(.horizontal, 8)
-                        .frame(maxWidth: .infinity)
-                        .background(enabledStyles.isEmpty ? Color.accentColor : Color.gray.opacity(0.2))
-                        .foregroundColor(enabledStyles.isEmpty ? .white : .primary)
-                        .cornerRadius(6)
-                }
-                .buttonStyle(.plain)
-
                 ForEach(FlashcardStyle.allCases, id: \.self) { style in
                     Button(action: {
                         if enabledStyles.contains(style) {

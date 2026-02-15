@@ -13,6 +13,7 @@ let WordDisplayWindowID = "wordDisplayTransparentWindow"
 let VisualEffectsWindowID = "visualEffectsTransparentWindow"
 let MainWindowID = "main"
 let LearningPoolWindowID = "learningPoolWindow"
+let FeaturedWordsWindowID = "featuredWordsWindow"
 
 @main
 struct BabyKeyboardLockApp: App {

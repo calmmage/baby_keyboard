@@ -39,13 +39,9 @@ struct ContentView: View {
     @AppStorage("flashcardStyle") private var flashcardStyleStorage: String = FlashcardStyle.noImageToken
 
     @AppStorage("selectedLockEffect") var selectedLockEffect: LockEffect = .speakRandomWord
-    @AppStorage("selectedPrimaryLanguage") var selectedPrimaryLanguage: TranslationLanguage = .english
-    @AppStorage("selectedTranslationLanguage") var selectedTranslationLanguage: TranslationLanguage = .none
     @AppStorage("selectedWordSetType") var savedWordSetType: String = WordSetType.randomShortWords.rawValue
     @AppStorage("wordDisplayDuration") var wordDisplayDuration: Double = DEFAULT_WORD_DISPLAY_DURATION
-    @AppStorage("usePersonalVoice") var usePersonalVoice: Bool = false
     @AppStorage("throttleInterval") private var savedThrottleInterval: Double = 1.0
-    @AppStorage("wordsThrottleInterval") private var savedWordsThrottleInterval: Double = 1.5
     @AppStorage("confettiFadeTime") private var savedConfettiFadeTime: Double = 5.0
     @AppStorage("wordTranslationDelay") private var savedWordTranslationDelay: Double = 0.8
     @AppStorage("flashcardImageSize") private var flashcardImageSize: Double = 150.0
@@ -68,7 +64,6 @@ struct ContentView: View {
         )
     }
     var body: some View {
-        let primaryLanguages = TranslationLanguage.allCases.filter { $0 != .none }
         VStack(alignment: .leading, spacing: 0) {
             // Top bar with lock toggle and quit button
             HStack {
@@ -224,66 +219,6 @@ struct ContentView: View {
                         }
                     }
 
-                    Toggle(isOn: $eventHandler.usePersonalVoice) {
-                        HStack {
-                            Text("Use Personal Voice")
-                            
-                            Button(action: {
-                                let alert = NSAlert()
-                                alert.messageText = "About Personal Voice"
-                                alert.informativeText = "Personal Voice uses your own voice created in System Settings > Accessibility > Personal Voice. You need to create a Personal Voice before using this feature."
-                                alert.alertStyle = .informational
-                                alert.addButton(withTitle: "OK")
-                                alert.runModal()
-                            }) {
-                                Image(systemName: "info.circle")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                            .buttonStyle(PlainButtonStyle())
-                        }
-                    }
-                    .toggleStyle(CheckboxToggleStyle())
-                    .onChange(of: eventHandler.usePersonalVoice) { oldVal, newVal in
-                        usePersonalVoice = newVal
-                    }
-                    
-                    // Words throttle setting
-                    Text("Delay between words (seconds)")
-                        .foregroundColor(.secondary)
-                        .font(.subheadline)
-                        .padding(.top, 8)
-                    
-                    HStack {
-                        Slider(value: $eventHandler.wordsThrottleInterval, in: 0.1...3.0, step: 0.1)
-                            .onChange(of: eventHandler.wordsThrottleInterval) { _, newValue in
-                                savedWordsThrottleInterval = newValue
-                            }
-                        Text(String(format: "%.1f", eventHandler.wordsThrottleInterval))
-                            .frame(width: 35)
-                    }
-                    
-                    // Language pickers
-                    Picker("Primary", selection: $eventHandler.selectedPrimaryLanguage) {
-                        ForEach(primaryLanguages) { language in
-                            Text(language.localizedString)
-                        }
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .onChange(of: eventHandler.selectedPrimaryLanguage) { oldVal, newVal in
-                        selectedPrimaryLanguage = newVal
-                    }
-
-                    Picker("Secondary", selection: $eventHandler.selectedTranslationLanguage) {
-                        ForEach(TranslationLanguage.allCases) { language in
-                            Text(language.localizedString)
-                        }
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .onChange(of: eventHandler.selectedTranslationLanguage) { oldVal, newVal in
-                        selectedTranslationLanguage = newVal
-                    }
-                    
                     HStack(alignment: .top, spacing: 8) {
                         Image(systemName: "person.crop.square")
                             .foregroundColor(.secondary)
@@ -508,8 +443,6 @@ struct ContentView: View {
             if let type = WordSetType(rawValue: savedWordSetType) {
                 eventHandler.selectedWordSetType = type
             }
-            eventHandler.usePersonalVoice = usePersonalVoice
-
             // Set initial category based on current effect
             selectedCategory = eventHandler.selectedLockEffect.category
 
