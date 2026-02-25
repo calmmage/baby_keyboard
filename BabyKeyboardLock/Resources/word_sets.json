@@ -18,19 +18,19 @@
         },
         {
           "language": "de",
-          "text": "Mama"
+          "text": "die Mama"
         },
         {
           "language": "fr",
-          "text": "maman"
+          "text": "la maman"
         },
         {
           "language": "es",
-          "text": "mamá"
+          "text": "la mamá"
         },
         {
           "language": "it",
-          "text": "mamma"
+          "text": "la mamma"
         },
         {
           "language": "ja",
@@ -41,7 +41,40 @@
           "text": "妈妈"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"mama\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «мама»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Mama“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la maman »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la mamá»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la mamma»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ママ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“妈妈”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -60,19 +93,19 @@
         },
         {
           "language": "de",
-          "text": "Papa"
+          "text": "der Papa"
         },
         {
           "language": "fr",
-          "text": "papa"
+          "text": "le papa"
         },
         {
           "language": "es",
-          "text": "papá"
+          "text": "el papá"
         },
         {
           "language": "it",
-          "text": "papà"
+          "text": "il papà"
         },
         {
           "language": "ja",
@@ -83,7 +116,40 @@
           "text": "爸爸"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"papa\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «папа»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Papa“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le papa »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el papá»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il papà»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「パパ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“爸爸”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -102,19 +168,19 @@
         },
         {
           "language": "de",
-          "text": "Oma"
+          "text": "die Oma"
         },
         {
           "language": "fr",
-          "text": "mamie"
+          "text": "la mamie"
         },
         {
           "language": "es",
-          "text": "abuela"
+          "text": "la abuela"
         },
         {
           "language": "it",
-          "text": "nonna"
+          "text": "la nonna"
         },
         {
           "language": "ja",
@@ -125,7 +191,40 @@
           "text": "奶奶"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"grandma\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «бабушка»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Oma“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la mamie »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la abuela»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la nonna»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「おばあちゃん」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“奶奶”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -144,19 +243,19 @@
         },
         {
           "language": "de",
-          "text": "Opa"
+          "text": "der Opa"
         },
         {
           "language": "fr",
-          "text": "papi"
+          "text": "le papi"
         },
         {
           "language": "es",
-          "text": "abuelo"
+          "text": "el abuelo"
         },
         {
           "language": "it",
-          "text": "nonno"
+          "text": "il nonno"
         },
         {
           "language": "ja",
@@ -167,7 +266,40 @@
           "text": "爷爷"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"grandpa\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «дедушка»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Opa“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le papi »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el abuelo»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il nonno»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「おじいちゃん」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“爷爷”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -186,19 +318,19 @@
         },
         {
           "language": "de",
-          "text": "Arm"
+          "text": "der Arm"
         },
         {
           "language": "fr",
-          "text": "bras"
+          "text": "le bras"
         },
         {
           "language": "es",
-          "text": "brazo"
+          "text": "el brazo"
         },
         {
           "language": "it",
-          "text": "braccio"
+          "text": "il braccio"
         },
         {
           "language": "ja",
@@ -209,7 +341,40 @@
           "text": "手臂"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"arm\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «рука»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Arm“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le bras »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el brazo»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il braccio»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「うで」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“手臂”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -228,19 +393,19 @@
         },
         {
           "language": "de",
-          "text": "Bein"
+          "text": "das Bein"
         },
         {
           "language": "fr",
-          "text": "jambe"
+          "text": "la jambe"
         },
         {
           "language": "es",
-          "text": "pierna"
+          "text": "la pierna"
         },
         {
           "language": "it",
-          "text": "gamba"
+          "text": "la gamba"
         },
         {
           "language": "ja",
@@ -251,7 +416,40 @@
           "text": "腿"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"leg\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «нога»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Bein“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la jambe »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la pierna»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la gamba»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「あし」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“腿”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -270,19 +468,19 @@
         },
         {
           "language": "de",
-          "text": "Nase"
+          "text": "die Nase"
         },
         {
           "language": "fr",
-          "text": "nez"
+          "text": "le nez"
         },
         {
           "language": "es",
-          "text": "nariz"
+          "text": "la nariz"
         },
         {
           "language": "it",
-          "text": "naso"
+          "text": "il naso"
         },
         {
           "language": "ja",
@@ -293,7 +491,40 @@
           "text": "鼻子"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"nose\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «нос»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Nase“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le nez »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la nariz»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il naso»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「はな」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“鼻子”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -312,19 +543,19 @@
         },
         {
           "language": "de",
-          "text": "Auge"
+          "text": "das Auge"
         },
         {
           "language": "fr",
-          "text": "œil"
+          "text": "l'œil"
         },
         {
           "language": "es",
-          "text": "ojo"
+          "text": "el ojo"
         },
         {
           "language": "it",
-          "text": "occhio"
+          "text": "l'occhio"
         },
         {
           "language": "ja",
@@ -335,7 +566,40 @@
           "text": "眼睛"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"eye\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «глаз»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Auge“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « l'œil »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el ojo»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «l'occhio»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「め」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“眼睛”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -354,19 +618,19 @@
         },
         {
           "language": "de",
-          "text": "Familie"
+          "text": "die Familie"
         },
         {
           "language": "fr",
-          "text": "famille"
+          "text": "la famille"
         },
         {
           "language": "es",
-          "text": "familia"
+          "text": "la familia"
         },
         {
           "language": "it",
-          "text": "famiglia"
+          "text": "la famiglia"
         },
         {
           "language": "ja",
@@ -377,7 +641,40 @@
           "text": "家人"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"family\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «семья»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Familie“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la famille »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la familia»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la famiglia»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「かぞく」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“家人”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -396,19 +693,19 @@
         },
         {
           "language": "de",
-          "text": "Hund"
+          "text": "der Hund"
         },
         {
           "language": "fr",
-          "text": "chien"
+          "text": "le chien"
         },
         {
           "language": "es",
-          "text": "perro"
+          "text": "el perro"
         },
         {
           "language": "it",
-          "text": "cane"
+          "text": "il cane"
         },
         {
           "language": "ja",
@@ -419,7 +716,40 @@
           "text": "狗"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"dog\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «собака»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Hund“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le chien »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el perro»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il cane»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「いぬ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“狗”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -438,19 +768,19 @@
         },
         {
           "language": "de",
-          "text": "Katze"
+          "text": "die Katze"
         },
         {
           "language": "fr",
-          "text": "chat"
+          "text": "le chat"
         },
         {
           "language": "es",
-          "text": "gato"
+          "text": "el gato"
         },
         {
           "language": "it",
-          "text": "gatto"
+          "text": "il gatto"
         },
         {
           "language": "ja",
@@ -461,7 +791,40 @@
           "text": "猫"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"cat\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «кошка»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Katze“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le chat »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el gato»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il gatto»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ねこ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“猫”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -480,19 +843,19 @@
         },
         {
           "language": "de",
-          "text": "Baby"
+          "text": "das Baby"
         },
         {
           "language": "fr",
-          "text": "bébé"
+          "text": "le bébé"
         },
         {
           "language": "es",
-          "text": "bebé"
+          "text": "el bebé"
         },
         {
           "language": "it",
-          "text": "bebè"
+          "text": "il bebè"
         },
         {
           "language": "ja",
@@ -503,7 +866,40 @@
           "text": "宝宝"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"baby\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «малыш»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Baby“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le bébé »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el bebé»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il bebè»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「あかちゃん」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“宝宝”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -522,19 +918,19 @@
         },
         {
           "language": "de",
-          "text": "Milch"
+          "text": "die Milch"
         },
         {
           "language": "fr",
-          "text": "lait"
+          "text": "le lait"
         },
         {
           "language": "es",
-          "text": "leche"
+          "text": "la leche"
         },
         {
           "language": "it",
-          "text": "latte"
+          "text": "il latte"
         },
         {
           "language": "ja",
@@ -545,7 +941,40 @@
           "text": "牛奶"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"milk\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «молоко»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Milch“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le lait »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la leche»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il latte»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ミルク」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“牛奶”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -564,19 +993,19 @@
         },
         {
           "language": "de",
-          "text": "Wasser"
+          "text": "das Wasser"
         },
         {
           "language": "fr",
-          "text": "eau"
+          "text": "l'eau"
         },
         {
           "language": "es",
-          "text": "agua"
+          "text": "el agua"
         },
         {
           "language": "it",
-          "text": "acqua"
+          "text": "l'acqua"
         },
         {
           "language": "ja",
@@ -587,7 +1016,40 @@
           "text": "水"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"water\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «вода»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Wasser“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « l'eau »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el agua»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «l'acqua»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「みず」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“水”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -629,7 +1091,40 @@
           "text": "是"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A phrase used to say \"yes\"."
+        },
+        {
+          "language": "ru",
+          "text": "Фраза: «да»."
+        },
+        {
+          "language": "de",
+          "text": "Ausdruck: „ja“."
+        },
+        {
+          "language": "fr",
+          "text": "Expression : « oui »."
+        },
+        {
+          "language": "es",
+          "text": "Expresión: «sí»."
+        },
+        {
+          "language": "it",
+          "text": "Espressione: «sì»."
+        },
+        {
+          "language": "ja",
+          "text": "表現：「はい」。"
+        },
+        {
+          "language": "zh",
+          "text": "短语：“是”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -671,7 +1166,40 @@
           "text": "不"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A phrase used to say \"no\"."
+        },
+        {
+          "language": "ru",
+          "text": "Фраза: «нет»."
+        },
+        {
+          "language": "de",
+          "text": "Ausdruck: „nein“."
+        },
+        {
+          "language": "fr",
+          "text": "Expression : « non »."
+        },
+        {
+          "language": "es",
+          "text": "Expresión: «no»."
+        },
+        {
+          "language": "it",
+          "text": "Espressione: «no»."
+        },
+        {
+          "language": "ja",
+          "text": "表現：「いいえ」。"
+        },
+        {
+          "language": "zh",
+          "text": "短语：“不”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -713,7 +1241,40 @@
           "text": "再见"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A phrase used to say \"bye\"."
+        },
+        {
+          "language": "ru",
+          "text": "Фраза: «пока»."
+        },
+        {
+          "language": "de",
+          "text": "Ausdruck: „Tschüss“."
+        },
+        {
+          "language": "fr",
+          "text": "Expression : « au revoir »."
+        },
+        {
+          "language": "es",
+          "text": "Expresión: «adiós»."
+        },
+        {
+          "language": "it",
+          "text": "Espressione: «ciao»."
+        },
+        {
+          "language": "ja",
+          "text": "表現：「バイバイ」。"
+        },
+        {
+          "language": "zh",
+          "text": "短语：“再见”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -755,7 +1316,40 @@
           "text": "你好"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A phrase used to say \"hi\"."
+        },
+        {
+          "language": "ru",
+          "text": "Фраза: «привет»."
+        },
+        {
+          "language": "de",
+          "text": "Ausdruck: „Hallo“."
+        },
+        {
+          "language": "fr",
+          "text": "Expression : « salut »."
+        },
+        {
+          "language": "es",
+          "text": "Expresión: «hola»."
+        },
+        {
+          "language": "it",
+          "text": "Espressione: «ciao»."
+        },
+        {
+          "language": "ja",
+          "text": "表現：「こんにちは」。"
+        },
+        {
+          "language": "zh",
+          "text": "短语：“你好”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -774,19 +1368,19 @@
         },
         {
           "language": "de",
-          "text": "Liebe"
+          "text": "die Liebe"
         },
         {
           "language": "fr",
-          "text": "amour"
+          "text": "l'amour"
         },
         {
           "language": "es",
-          "text": "amor"
+          "text": "el amor"
         },
         {
           "language": "it",
-          "text": "amore"
+          "text": "l'amore"
         },
         {
           "language": "ja",
@@ -797,7 +1391,40 @@
           "text": "爱"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"love\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «любовь»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Liebe“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « l'amour »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el amor»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «l'amore»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「あい」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“爱”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -816,19 +1443,19 @@
         },
         {
           "language": "de",
-          "text": "Vogel"
+          "text": "der Vogel"
         },
         {
           "language": "fr",
-          "text": "oiseau"
+          "text": "l'oiseau"
         },
         {
           "language": "es",
-          "text": "pájaro"
+          "text": "el pájaro"
         },
         {
           "language": "it",
-          "text": "uccello"
+          "text": "l'uccello"
         },
         {
           "language": "ja",
@@ -839,7 +1466,40 @@
           "text": "鸟"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"bird\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «птица»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Vogel“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « l'oiseau »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el pájaro»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «l'uccello»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「とり」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“鸟”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -858,19 +1518,19 @@
         },
         {
           "language": "de",
-          "text": "Fisch"
+          "text": "der Fisch"
         },
         {
           "language": "fr",
-          "text": "poisson"
+          "text": "le poisson"
         },
         {
           "language": "es",
-          "text": "pez"
+          "text": "el pez"
         },
         {
           "language": "it",
-          "text": "pesce"
+          "text": "il pesce"
         },
         {
           "language": "ja",
@@ -881,7 +1541,40 @@
           "text": "鱼"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"fish\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «рыба»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Fisch“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le poisson »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el pez»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il pesce»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「さかな」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“鱼”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -900,19 +1593,19 @@
         },
         {
           "language": "de",
-          "text": "Kuh"
+          "text": "die Kuh"
         },
         {
           "language": "fr",
-          "text": "vache"
+          "text": "la vache"
         },
         {
           "language": "es",
-          "text": "vaca"
+          "text": "la vaca"
         },
         {
           "language": "it",
-          "text": "mucca"
+          "text": "la mucca"
         },
         {
           "language": "ja",
@@ -923,7 +1616,40 @@
           "text": "牛"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"cow\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «корова»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Kuh“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la vache »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la vaca»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la mucca»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「うし」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“牛”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -942,19 +1668,19 @@
         },
         {
           "language": "de",
-          "text": "Ente"
+          "text": "die Ente"
         },
         {
           "language": "fr",
-          "text": "canard"
+          "text": "le canard"
         },
         {
           "language": "es",
-          "text": "pato"
+          "text": "el pato"
         },
         {
           "language": "it",
-          "text": "anatra"
+          "text": "l'anatra"
         },
         {
           "language": "ja",
@@ -965,7 +1691,40 @@
           "text": "鸭子"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"duck\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «утка»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Ente“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le canard »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el pato»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «l'anatra»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「あひる」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“鸭子”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -984,19 +1743,19 @@
         },
         {
           "language": "de",
-          "text": "Schwein"
+          "text": "das Schwein"
         },
         {
           "language": "fr",
-          "text": "cochon"
+          "text": "le cochon"
         },
         {
           "language": "es",
-          "text": "cerdo"
+          "text": "el cerdo"
         },
         {
           "language": "it",
-          "text": "maiale"
+          "text": "il maiale"
         },
         {
           "language": "ja",
@@ -1007,7 +1766,40 @@
           "text": "猪"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"pig\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «свинья»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Schwein“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le cochon »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el cerdo»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il maiale»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ぶた」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“猪”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -1026,19 +1818,19 @@
         },
         {
           "language": "de",
-          "text": "Kaninchen"
+          "text": "das Kaninchen"
         },
         {
           "language": "fr",
-          "text": "lapin"
+          "text": "le lapin"
         },
         {
           "language": "es",
-          "text": "conejo"
+          "text": "el conejo"
         },
         {
           "language": "it",
-          "text": "coniglio"
+          "text": "il coniglio"
         },
         {
           "language": "ja",
@@ -1049,7 +1841,40 @@
           "text": "兔子"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"rabbit\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «кролик»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Kaninchen“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le lapin »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el conejo»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il coniglio»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「うさぎ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“兔子”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -1068,19 +1893,19 @@
         },
         {
           "language": "de",
-          "text": "Maus"
+          "text": "die Maus"
         },
         {
           "language": "fr",
-          "text": "souris"
+          "text": "la souris"
         },
         {
           "language": "es",
-          "text": "ratón"
+          "text": "el ratón"
         },
         {
           "language": "it",
-          "text": "topo"
+          "text": "il topo"
         },
         {
           "language": "ja",
@@ -1091,7 +1916,40 @@
           "text": "老鼠"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"mouse\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «мышь»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Maus“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la souris »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el ratón»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il topo»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ねずみ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“老鼠”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -1110,19 +1968,19 @@
         },
         {
           "language": "de",
-          "text": "Bär"
+          "text": "der Bär"
         },
         {
           "language": "fr",
-          "text": "ours"
+          "text": "l'ours"
         },
         {
           "language": "es",
-          "text": "oso"
+          "text": "el oso"
         },
         {
           "language": "it",
-          "text": "orso"
+          "text": "l'orso"
         },
         {
           "language": "ja",
@@ -1133,7 +1991,40 @@
           "text": "熊"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"bear\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «медведь»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Bär“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « l'ours »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el oso»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «l'orso»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「くま」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“熊”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -1152,19 +2043,19 @@
         },
         {
           "language": "de",
-          "text": "Apfel"
+          "text": "der Apfel"
         },
         {
           "language": "fr",
-          "text": "pomme"
+          "text": "la pomme"
         },
         {
           "language": "es",
-          "text": "manzana"
+          "text": "la manzana"
         },
         {
           "language": "it",
-          "text": "mela"
+          "text": "la mela"
         },
         {
           "language": "ja",
@@ -1175,7 +2066,40 @@
           "text": "苹果"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"apple\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «яблоко»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Apfel“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la pomme »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la manzana»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la mela»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「りんご」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“苹果”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -1194,19 +2118,19 @@
         },
         {
           "language": "de",
-          "text": "Banane"
+          "text": "die Banane"
         },
         {
           "language": "fr",
-          "text": "banane"
+          "text": "la banane"
         },
         {
           "language": "es",
-          "text": "plátano"
+          "text": "el plátano"
         },
         {
           "language": "it",
-          "text": "banana"
+          "text": "la banana"
         },
         {
           "language": "ja",
@@ -1217,7 +2141,40 @@
           "text": "香蕉"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"banana\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «банан»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Banane“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la banane »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el plátano»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la banana»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「バナナ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“香蕉”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -1236,19 +2193,19 @@
         },
         {
           "language": "de",
-          "text": "Brot"
+          "text": "das Brot"
         },
         {
           "language": "fr",
-          "text": "pain"
+          "text": "le pain"
         },
         {
           "language": "es",
-          "text": "pan"
+          "text": "el pan"
         },
         {
           "language": "it",
-          "text": "pane"
+          "text": "il pane"
         },
         {
           "language": "ja",
@@ -1259,7 +2216,40 @@
           "text": "面包"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"bread\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «хлеб»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Brot“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le pain »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el pan»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il pane»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「パン」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“面包”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -1278,19 +2268,19 @@
         },
         {
           "language": "de",
-          "text": "Keks"
+          "text": "der Keks"
         },
         {
           "language": "fr",
-          "text": "biscuit"
+          "text": "le biscuit"
         },
         {
           "language": "es",
-          "text": "galleta"
+          "text": "la galleta"
         },
         {
           "language": "it",
-          "text": "biscotto"
+          "text": "il biscotto"
         },
         {
           "language": "ja",
@@ -1301,7 +2291,40 @@
           "text": "饼干"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"cookie\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «печенье»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Keks“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le biscuit »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la galleta»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il biscotto»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「クッキー」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“饼干”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -1320,19 +2343,19 @@
         },
         {
           "language": "de",
-          "text": "Saft"
+          "text": "der Saft"
         },
         {
           "language": "fr",
-          "text": "jus"
+          "text": "le jus"
         },
         {
           "language": "es",
-          "text": "jugo"
+          "text": "el jugo"
         },
         {
           "language": "it",
-          "text": "succo"
+          "text": "il succo"
         },
         {
           "language": "ja",
@@ -1343,7 +2366,40 @@
           "text": "果汁"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"juice\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «сок»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Saft“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le jus »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el jugo»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il succo»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ジュース」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“果汁”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -1362,19 +2418,19 @@
         },
         {
           "language": "de",
-          "text": "Ei"
+          "text": "das Ei"
         },
         {
           "language": "fr",
-          "text": "œuf"
+          "text": "l'œuf"
         },
         {
           "language": "es",
-          "text": "huevo"
+          "text": "el huevo"
         },
         {
           "language": "it",
-          "text": "uovo"
+          "text": "l'uovo"
         },
         {
           "language": "ja",
@@ -1385,7 +2441,40 @@
           "text": "蛋"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"egg\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «яйцо»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Ei“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « l'œuf »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el huevo»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «l'uovo»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「たまご」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“蛋”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -1404,19 +2493,19 @@
         },
         {
           "language": "de",
-          "text": "Käse"
+          "text": "der Käse"
         },
         {
           "language": "fr",
-          "text": "fromage"
+          "text": "le fromage"
         },
         {
           "language": "es",
-          "text": "queso"
+          "text": "el queso"
         },
         {
           "language": "it",
-          "text": "formaggio"
+          "text": "il formaggio"
         },
         {
           "language": "ja",
@@ -1427,7 +2516,40 @@
           "text": "奶酪"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"cheese\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «сыр»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Käse“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le fromage »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el queso»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il formaggio»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「チーズ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“奶酪”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -1446,19 +2568,19 @@
         },
         {
           "language": "de",
-          "text": "Kuchen"
+          "text": "der Kuchen"
         },
         {
           "language": "fr",
-          "text": "gâteau"
+          "text": "le gâteau"
         },
         {
           "language": "es",
-          "text": "pastel"
+          "text": "el pastel"
         },
         {
           "language": "it",
-          "text": "torta"
+          "text": "la torta"
         },
         {
           "language": "ja",
@@ -1469,7 +2591,40 @@
           "text": "蛋糕"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"cake\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «торт»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Kuchen“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le gâteau »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el pastel»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la torta»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ケーキ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“蛋糕”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -1488,19 +2643,19 @@
         },
         {
           "language": "de",
-          "text": "Suppe"
+          "text": "die Suppe"
         },
         {
           "language": "fr",
-          "text": "soupe"
+          "text": "la soupe"
         },
         {
           "language": "es",
-          "text": "sopa"
+          "text": "la sopa"
         },
         {
           "language": "it",
-          "text": "zuppa"
+          "text": "la zuppa"
         },
         {
           "language": "ja",
@@ -1511,7 +2666,40 @@
           "text": "汤"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"soup\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «суп»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Suppe“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la soupe »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la sopa»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la zuppa»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「スープ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“汤”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -1530,19 +2718,19 @@
         },
         {
           "language": "de",
-          "text": "Tee"
+          "text": "der Tee"
         },
         {
           "language": "fr",
-          "text": "thé"
+          "text": "le thé"
         },
         {
           "language": "es",
-          "text": "té"
+          "text": "el té"
         },
         {
           "language": "it",
-          "text": "tè"
+          "text": "il tè"
         },
         {
           "language": "ja",
@@ -1553,7 +2741,40 @@
           "text": "茶"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"tea\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «чай»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Tee“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le thé »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el té»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il tè»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「おちゃ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“茶”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -1572,19 +2793,19 @@
         },
         {
           "language": "de",
-          "text": "Kopf"
+          "text": "der Kopf"
         },
         {
           "language": "fr",
-          "text": "tête"
+          "text": "la tête"
         },
         {
           "language": "es",
-          "text": "cabeza"
+          "text": "la cabeza"
         },
         {
           "language": "it",
-          "text": "testa"
+          "text": "la testa"
         },
         {
           "language": "ja",
@@ -1595,7 +2816,40 @@
           "text": "头"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"head\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «голова»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Kopf“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la tête »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la cabeza»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la testa»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「あたま」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“头”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -1614,19 +2868,19 @@
         },
         {
           "language": "de",
-          "text": "Mund"
+          "text": "der Mund"
         },
         {
           "language": "fr",
-          "text": "bouche"
+          "text": "la bouche"
         },
         {
           "language": "es",
-          "text": "boca"
+          "text": "la boca"
         },
         {
           "language": "it",
-          "text": "bocca"
+          "text": "la bocca"
         },
         {
           "language": "ja",
@@ -1637,7 +2891,40 @@
           "text": "嘴"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"mouth\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «рот»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Mund“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la bouche »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la boca»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la bocca»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「くち」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“嘴”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -1656,19 +2943,19 @@
         },
         {
           "language": "de",
-          "text": "Ohr"
+          "text": "das Ohr"
         },
         {
           "language": "fr",
-          "text": "oreille"
+          "text": "l'oreille"
         },
         {
           "language": "es",
-          "text": "oreja"
+          "text": "la oreja"
         },
         {
           "language": "it",
-          "text": "orecchio"
+          "text": "l'orecchio"
         },
         {
           "language": "ja",
@@ -1679,7 +2966,40 @@
           "text": "耳朵"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"ear\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «ухо»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Ohr“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « l'oreille »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la oreja»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «l'orecchio»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「みみ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“耳朵”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -1698,19 +3018,19 @@
         },
         {
           "language": "de",
-          "text": "Hand"
+          "text": "die Hand"
         },
         {
           "language": "fr",
-          "text": "main"
+          "text": "la main"
         },
         {
           "language": "es",
-          "text": "mano"
+          "text": "la mano"
         },
         {
           "language": "it",
-          "text": "mano"
+          "text": "la mano"
         },
         {
           "language": "ja",
@@ -1721,7 +3041,40 @@
           "text": "手"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"hand\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «рука»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Hand“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la main »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la mano»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la mano»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「て」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“手”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -1740,19 +3093,19 @@
         },
         {
           "language": "de",
-          "text": "Finger"
+          "text": "der Finger"
         },
         {
           "language": "fr",
-          "text": "doigt"
+          "text": "le doigt"
         },
         {
           "language": "es",
-          "text": "dedo"
+          "text": "el dedo"
         },
         {
           "language": "it",
-          "text": "dito"
+          "text": "il dito"
         },
         {
           "language": "ja",
@@ -1763,7 +3116,40 @@
           "text": "手指"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"finger\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «палец»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Finger“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le doigt »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el dedo»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il dito»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ゆび」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“手指”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -1782,19 +3168,19 @@
         },
         {
           "language": "de",
-          "text": "Fuß"
+          "text": "der Fuß"
         },
         {
           "language": "fr",
-          "text": "pied"
+          "text": "le pied"
         },
         {
           "language": "es",
-          "text": "pie"
+          "text": "el pie"
         },
         {
           "language": "it",
-          "text": "piede"
+          "text": "il piede"
         },
         {
           "language": "ja",
@@ -1805,7 +3191,40 @@
           "text": "脚"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"foot\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «ступня»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Fuß“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le pied »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el pie»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il piede»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「あし」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“脚”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -1824,19 +3243,19 @@
         },
         {
           "language": "de",
-          "text": "Bauch"
+          "text": "der Bauch"
         },
         {
           "language": "fr",
-          "text": "ventre"
+          "text": "le ventre"
         },
         {
           "language": "es",
-          "text": "barriga"
+          "text": "la barriga"
         },
         {
           "language": "it",
-          "text": "pancia"
+          "text": "la pancia"
         },
         {
           "language": "ja",
@@ -1847,7 +3266,40 @@
           "text": "肚子"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"belly\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «живот»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Bauch“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le ventre »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la barriga»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la pancia»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「おなか」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“肚子”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -1866,19 +3318,19 @@
         },
         {
           "language": "de",
-          "text": "Haar"
+          "text": "das Haar"
         },
         {
           "language": "fr",
-          "text": "cheveux"
+          "text": "les cheveux"
         },
         {
           "language": "es",
-          "text": "pelo"
+          "text": "el pelo"
         },
         {
           "language": "it",
-          "text": "capelli"
+          "text": "i capelli"
         },
         {
           "language": "ja",
@@ -1889,7 +3341,40 @@
           "text": "头发"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"hair\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «волосы»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Haar“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « les cheveux »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el pelo»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «i capelli»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「かみ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“头发”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -1908,19 +3393,19 @@
         },
         {
           "language": "de",
-          "text": "Zahn"
+          "text": "der Zahn"
         },
         {
           "language": "fr",
-          "text": "dent"
+          "text": "la dent"
         },
         {
           "language": "es",
-          "text": "diente"
+          "text": "el diente"
         },
         {
           "language": "it",
-          "text": "dente"
+          "text": "il dente"
         },
         {
           "language": "ja",
@@ -1931,7 +3416,40 @@
           "text": "牙齿"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"tooth\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «зуб»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Zahn“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la dent »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el diente»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il dente»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「は」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“牙齿”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -1973,7 +3491,40 @@
           "text": "红色"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "An adjective meaning \"red\"."
+        },
+        {
+          "language": "ru",
+          "text": "Прилагательное: «красный»."
+        },
+        {
+          "language": "de",
+          "text": "Adjektiv: „rot“."
+        },
+        {
+          "language": "fr",
+          "text": "Adjectif : « rouge »."
+        },
+        {
+          "language": "es",
+          "text": "Adjetivo: «rojo»."
+        },
+        {
+          "language": "it",
+          "text": "Aggettivo: «rosso»."
+        },
+        {
+          "language": "ja",
+          "text": "形容詞：「あか」。"
+        },
+        {
+          "language": "zh",
+          "text": "形容词：“红色”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -2015,7 +3566,40 @@
           "text": "蓝色"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "An adjective meaning \"blue\"."
+        },
+        {
+          "language": "ru",
+          "text": "Прилагательное: «синий»."
+        },
+        {
+          "language": "de",
+          "text": "Adjektiv: „Blau“."
+        },
+        {
+          "language": "fr",
+          "text": "Adjectif : « bleu »."
+        },
+        {
+          "language": "es",
+          "text": "Adjetivo: «azul»."
+        },
+        {
+          "language": "it",
+          "text": "Aggettivo: «blu»."
+        },
+        {
+          "language": "ja",
+          "text": "形容詞：「あお」。"
+        },
+        {
+          "language": "zh",
+          "text": "形容词：“蓝色”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -2057,7 +3641,40 @@
           "text": "绿色"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "An adjective meaning \"green\"."
+        },
+        {
+          "language": "ru",
+          "text": "Прилагательное: «зелёный»."
+        },
+        {
+          "language": "de",
+          "text": "Adjektiv: „Grün“."
+        },
+        {
+          "language": "fr",
+          "text": "Adjectif : « vert »."
+        },
+        {
+          "language": "es",
+          "text": "Adjetivo: «verde»."
+        },
+        {
+          "language": "it",
+          "text": "Aggettivo: «verde»."
+        },
+        {
+          "language": "ja",
+          "text": "形容詞：「みどり」。"
+        },
+        {
+          "language": "zh",
+          "text": "形容词：“绿色”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -2099,7 +3716,40 @@
           "text": "黄色"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "An adjective meaning \"yellow\"."
+        },
+        {
+          "language": "ru",
+          "text": "Прилагательное: «жёлтый»."
+        },
+        {
+          "language": "de",
+          "text": "Adjektiv: „Gelb“."
+        },
+        {
+          "language": "fr",
+          "text": "Adjectif : « jaune »."
+        },
+        {
+          "language": "es",
+          "text": "Adjetivo: «amarillo»."
+        },
+        {
+          "language": "it",
+          "text": "Aggettivo: «giallo»."
+        },
+        {
+          "language": "ja",
+          "text": "形容詞：「きいろ」。"
+        },
+        {
+          "language": "zh",
+          "text": "形容词：“黄色”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -2141,7 +3791,40 @@
           "text": "橙色"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "An adjective meaning \"orange\"."
+        },
+        {
+          "language": "ru",
+          "text": "Прилагательное: «оранжевый»."
+        },
+        {
+          "language": "de",
+          "text": "Adjektiv: „Orange“."
+        },
+        {
+          "language": "fr",
+          "text": "Adjectif : « orange »."
+        },
+        {
+          "language": "es",
+          "text": "Adjetivo: «naranja»."
+        },
+        {
+          "language": "it",
+          "text": "Aggettivo: «arancione»."
+        },
+        {
+          "language": "ja",
+          "text": "形容詞：「オレンジ」。"
+        },
+        {
+          "language": "zh",
+          "text": "形容词：“橙色”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -2183,7 +3866,40 @@
           "text": "紫色"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "An adjective meaning \"purple\"."
+        },
+        {
+          "language": "ru",
+          "text": "Прилагательное: «фиолетовый»."
+        },
+        {
+          "language": "de",
+          "text": "Adjektiv: „Lila“."
+        },
+        {
+          "language": "fr",
+          "text": "Adjectif : « violet »."
+        },
+        {
+          "language": "es",
+          "text": "Adjetivo: «morado»."
+        },
+        {
+          "language": "it",
+          "text": "Aggettivo: «viola»."
+        },
+        {
+          "language": "ja",
+          "text": "形容詞：「むらさき」。"
+        },
+        {
+          "language": "zh",
+          "text": "形容词：“紫色”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -2225,7 +3941,40 @@
           "text": "粉色"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "An adjective meaning \"pink\"."
+        },
+        {
+          "language": "ru",
+          "text": "Прилагательное: «розовый»."
+        },
+        {
+          "language": "de",
+          "text": "Adjektiv: „Rosa“."
+        },
+        {
+          "language": "fr",
+          "text": "Adjectif : « rose »."
+        },
+        {
+          "language": "es",
+          "text": "Adjetivo: «rosa»."
+        },
+        {
+          "language": "it",
+          "text": "Aggettivo: «rosa»."
+        },
+        {
+          "language": "ja",
+          "text": "形容詞：「ピンク」。"
+        },
+        {
+          "language": "zh",
+          "text": "形容词：“粉色”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -2267,7 +4016,40 @@
           "text": "棕色"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "An adjective meaning \"brown\"."
+        },
+        {
+          "language": "ru",
+          "text": "Прилагательное: «коричневый»."
+        },
+        {
+          "language": "de",
+          "text": "Adjektiv: „Braun“."
+        },
+        {
+          "language": "fr",
+          "text": "Adjectif : « marron »."
+        },
+        {
+          "language": "es",
+          "text": "Adjetivo: «marrón»."
+        },
+        {
+          "language": "it",
+          "text": "Aggettivo: «marrone»."
+        },
+        {
+          "language": "ja",
+          "text": "形容詞：「ちゃいろ」。"
+        },
+        {
+          "language": "zh",
+          "text": "形容词：“棕色”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -2309,7 +4091,40 @@
           "text": "黑色"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "An adjective meaning \"black\"."
+        },
+        {
+          "language": "ru",
+          "text": "Прилагательное: «чёрный»."
+        },
+        {
+          "language": "de",
+          "text": "Adjektiv: „Schwarz“."
+        },
+        {
+          "language": "fr",
+          "text": "Adjectif : « noir »."
+        },
+        {
+          "language": "es",
+          "text": "Adjetivo: «negro»."
+        },
+        {
+          "language": "it",
+          "text": "Aggettivo: «nero»."
+        },
+        {
+          "language": "ja",
+          "text": "形容詞：「くろ」。"
+        },
+        {
+          "language": "zh",
+          "text": "形容词：“黑色”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -2351,7 +4166,40 @@
           "text": "白色"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "An adjective meaning \"white\"."
+        },
+        {
+          "language": "ru",
+          "text": "Прилагательное: «белый»."
+        },
+        {
+          "language": "de",
+          "text": "Adjektiv: „Weiß“."
+        },
+        {
+          "language": "fr",
+          "text": "Adjectif : « blanc »."
+        },
+        {
+          "language": "es",
+          "text": "Adjetivo: «blanco»."
+        },
+        {
+          "language": "it",
+          "text": "Aggettivo: «bianco»."
+        },
+        {
+          "language": "ja",
+          "text": "形容詞：「しろ」。"
+        },
+        {
+          "language": "zh",
+          "text": "形容词：“白色”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -2393,7 +4241,40 @@
           "text": "灰色"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "An adjective meaning \"gray\"."
+        },
+        {
+          "language": "ru",
+          "text": "Прилагательное: «серый»."
+        },
+        {
+          "language": "de",
+          "text": "Adjektiv: „Grau“."
+        },
+        {
+          "language": "fr",
+          "text": "Adjectif : « gris »."
+        },
+        {
+          "language": "es",
+          "text": "Adjetivo: «gris»."
+        },
+        {
+          "language": "it",
+          "text": "Aggettivo: «grigio»."
+        },
+        {
+          "language": "ja",
+          "text": "形容詞：「はいいろ」。"
+        },
+        {
+          "language": "zh",
+          "text": "形容词：“灰色”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -2435,7 +4316,40 @@
           "text": "吃"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A verb meaning \"to eat\"."
+        },
+        {
+          "language": "ru",
+          "text": "Глагол: «есть»."
+        },
+        {
+          "language": "de",
+          "text": "Verb: „essen“."
+        },
+        {
+          "language": "fr",
+          "text": "Verbe : « manger »."
+        },
+        {
+          "language": "es",
+          "text": "Verbo: «comer»."
+        },
+        {
+          "language": "it",
+          "text": "Verbo: «mangiare»."
+        },
+        {
+          "language": "ja",
+          "text": "動詞：「たべる」。"
+        },
+        {
+          "language": "zh",
+          "text": "动词：“吃”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -2477,7 +4391,40 @@
           "text": "喝"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A verb meaning \"to drink\"."
+        },
+        {
+          "language": "ru",
+          "text": "Глагол: «пить»."
+        },
+        {
+          "language": "de",
+          "text": "Verb: „trinken“."
+        },
+        {
+          "language": "fr",
+          "text": "Verbe : « boire »."
+        },
+        {
+          "language": "es",
+          "text": "Verbo: «beber»."
+        },
+        {
+          "language": "it",
+          "text": "Verbo: «bere»."
+        },
+        {
+          "language": "ja",
+          "text": "動詞：「のむ」。"
+        },
+        {
+          "language": "zh",
+          "text": "动词：“喝”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -2519,7 +4466,40 @@
           "text": "睡觉"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A verb meaning \"to sleep\"."
+        },
+        {
+          "language": "ru",
+          "text": "Глагол: «спать»."
+        },
+        {
+          "language": "de",
+          "text": "Verb: „schlafen“."
+        },
+        {
+          "language": "fr",
+          "text": "Verbe : « dormir »."
+        },
+        {
+          "language": "es",
+          "text": "Verbo: «dormir»."
+        },
+        {
+          "language": "it",
+          "text": "Verbo: «dormire»."
+        },
+        {
+          "language": "ja",
+          "text": "動詞：「ねる」。"
+        },
+        {
+          "language": "zh",
+          "text": "动词：“睡觉”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -2561,7 +4541,40 @@
           "text": "走路"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A verb meaning \"to walk\"."
+        },
+        {
+          "language": "ru",
+          "text": "Глагол: «ходить»."
+        },
+        {
+          "language": "de",
+          "text": "Verb: „gehen“."
+        },
+        {
+          "language": "fr",
+          "text": "Verbe : « marcher »."
+        },
+        {
+          "language": "es",
+          "text": "Verbo: «caminar»."
+        },
+        {
+          "language": "it",
+          "text": "Verbo: «camminare»."
+        },
+        {
+          "language": "ja",
+          "text": "動詞：「あるく」。"
+        },
+        {
+          "language": "zh",
+          "text": "动词：“走路”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -2603,7 +4616,40 @@
           "text": "跑"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A verb meaning \"to run\"."
+        },
+        {
+          "language": "ru",
+          "text": "Глагол: «бегать»."
+        },
+        {
+          "language": "de",
+          "text": "Verb: „laufen“."
+        },
+        {
+          "language": "fr",
+          "text": "Verbe : « courir »."
+        },
+        {
+          "language": "es",
+          "text": "Verbo: «correr»."
+        },
+        {
+          "language": "it",
+          "text": "Verbo: «correre»."
+        },
+        {
+          "language": "ja",
+          "text": "動詞：「はしる」。"
+        },
+        {
+          "language": "zh",
+          "text": "动词：“跑”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -2645,7 +4691,40 @@
           "text": "跳"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A verb meaning \"to jump\"."
+        },
+        {
+          "language": "ru",
+          "text": "Глагол: «прыгать»."
+        },
+        {
+          "language": "de",
+          "text": "Verb: „springen“."
+        },
+        {
+          "language": "fr",
+          "text": "Verbe : « sauter »."
+        },
+        {
+          "language": "es",
+          "text": "Verbo: «saltar»."
+        },
+        {
+          "language": "it",
+          "text": "Verbo: «saltare»."
+        },
+        {
+          "language": "ja",
+          "text": "動詞：「ジャンプ」。"
+        },
+        {
+          "language": "zh",
+          "text": "动词：“跳”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -2687,7 +4766,40 @@
           "text": "玩"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A verb meaning \"to play\"."
+        },
+        {
+          "language": "ru",
+          "text": "Глагол: «играть»."
+        },
+        {
+          "language": "de",
+          "text": "Verb: „spielen“."
+        },
+        {
+          "language": "fr",
+          "text": "Verbe : « jouer »."
+        },
+        {
+          "language": "es",
+          "text": "Verbo: «jugar»."
+        },
+        {
+          "language": "it",
+          "text": "Verbo: «giocare»."
+        },
+        {
+          "language": "ja",
+          "text": "動詞：「あそぶ」。"
+        },
+        {
+          "language": "zh",
+          "text": "动词：“玩”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -2729,7 +4841,40 @@
           "text": "坐"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A verb meaning \"to sit\"."
+        },
+        {
+          "language": "ru",
+          "text": "Глагол: «сидеть»."
+        },
+        {
+          "language": "de",
+          "text": "Verb: „sitzen“."
+        },
+        {
+          "language": "fr",
+          "text": "Verbe : « s'asseoir »."
+        },
+        {
+          "language": "es",
+          "text": "Verbo: «sentarse»."
+        },
+        {
+          "language": "it",
+          "text": "Verbo: «sedersi»."
+        },
+        {
+          "language": "ja",
+          "text": "動詞：「すわる」。"
+        },
+        {
+          "language": "zh",
+          "text": "动词：“坐”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -2771,7 +4916,40 @@
           "text": "站"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A verb meaning \"to stand\"."
+        },
+        {
+          "language": "ru",
+          "text": "Глагол: «стоять»."
+        },
+        {
+          "language": "de",
+          "text": "Verb: „stehen“."
+        },
+        {
+          "language": "fr",
+          "text": "Verbe : « se lever »."
+        },
+        {
+          "language": "es",
+          "text": "Verbo: «estar de pie»."
+        },
+        {
+          "language": "it",
+          "text": "Verbo: «stare in piedi»."
+        },
+        {
+          "language": "ja",
+          "text": "動詞：「たつ」。"
+        },
+        {
+          "language": "zh",
+          "text": "动词：“站”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -2813,7 +4991,40 @@
           "text": "看"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A verb meaning \"to look\"."
+        },
+        {
+          "language": "ru",
+          "text": "Глагол: «смотреть»."
+        },
+        {
+          "language": "de",
+          "text": "Verb: „schauen“."
+        },
+        {
+          "language": "fr",
+          "text": "Verbe : « regarder »."
+        },
+        {
+          "language": "es",
+          "text": "Verbo: «mirar»."
+        },
+        {
+          "language": "it",
+          "text": "Verbo: «guardare»."
+        },
+        {
+          "language": "ja",
+          "text": "動詞：「みる」。"
+        },
+        {
+          "language": "zh",
+          "text": "动词：“看”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -2832,19 +5043,19 @@
         },
         {
           "language": "de",
-          "text": "Pferd"
+          "text": "das Pferd"
         },
         {
           "language": "fr",
-          "text": "cheval"
+          "text": "le cheval"
         },
         {
           "language": "es",
-          "text": "caballo"
+          "text": "el caballo"
         },
         {
           "language": "it",
-          "text": "cavallo"
+          "text": "il cavallo"
         },
         {
           "language": "ja",
@@ -2855,7 +5066,40 @@
           "text": "马"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"horse\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «лошадь»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Pferd“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le cheval »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el caballo»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il cavallo»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「うま」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“马”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -2874,19 +5118,19 @@
         },
         {
           "language": "de",
-          "text": "Schaf"
+          "text": "das Schaf"
         },
         {
           "language": "fr",
-          "text": "mouton"
+          "text": "le mouton"
         },
         {
           "language": "es",
-          "text": "oveja"
+          "text": "la oveja"
         },
         {
           "language": "it",
-          "text": "pecora"
+          "text": "la pecora"
         },
         {
           "language": "ja",
@@ -2897,7 +5141,40 @@
           "text": "羊"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"sheep\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «овца»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Schaf“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le mouton »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la oveja»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la pecora»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ひつじ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“羊”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -2916,19 +5193,19 @@
         },
         {
           "language": "de",
-          "text": "Huhn"
+          "text": "das Huhn"
         },
         {
           "language": "fr",
-          "text": "poulet"
+          "text": "le poulet"
         },
         {
           "language": "es",
-          "text": "pollo"
+          "text": "el pollo"
         },
         {
           "language": "it",
-          "text": "pollo"
+          "text": "il pollo"
         },
         {
           "language": "ja",
@@ -2939,7 +5216,40 @@
           "text": "鸡"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"chicken\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «курица»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Huhn“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le poulet »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el pollo»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il pollo»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「にわとり」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“鸡”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -2958,19 +5268,19 @@
         },
         {
           "language": "de",
-          "text": "Löwe"
+          "text": "der Löwe"
         },
         {
           "language": "fr",
-          "text": "lion"
+          "text": "le lion"
         },
         {
           "language": "es",
-          "text": "león"
+          "text": "el león"
         },
         {
           "language": "it",
-          "text": "leone"
+          "text": "il leone"
         },
         {
           "language": "ja",
@@ -2981,7 +5291,40 @@
           "text": "狮子"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"lion\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «лев»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Löwe“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le lion »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el león»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il leone»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ライオン」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“狮子”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -3000,19 +5343,19 @@
         },
         {
           "language": "de",
-          "text": "Tiger"
+          "text": "der Tiger"
         },
         {
           "language": "fr",
-          "text": "tigre"
+          "text": "le tigre"
         },
         {
           "language": "es",
-          "text": "tigre"
+          "text": "el tigre"
         },
         {
           "language": "it",
-          "text": "tigre"
+          "text": "la tigre"
         },
         {
           "language": "ja",
@@ -3023,7 +5366,40 @@
           "text": "老虎"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"tiger\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «тигр»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Tiger“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le tigre »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el tigre»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la tigre»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「とら」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“老虎”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -3042,19 +5418,19 @@
         },
         {
           "language": "de",
-          "text": "Elefant"
+          "text": "der Elefant"
         },
         {
           "language": "fr",
-          "text": "éléphant"
+          "text": "l'éléphant"
         },
         {
           "language": "es",
-          "text": "elefante"
+          "text": "el elefante"
         },
         {
           "language": "it",
-          "text": "elefante"
+          "text": "l'elefante"
         },
         {
           "language": "ja",
@@ -3065,7 +5441,40 @@
           "text": "大象"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"elephant\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «слон»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Elefant“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « l'éléphant »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el elefante»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «l'elefante»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ぞう」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“大象”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -3084,19 +5493,19 @@
         },
         {
           "language": "de",
-          "text": "Giraffe"
+          "text": "die Giraffe"
         },
         {
           "language": "fr",
-          "text": "girafe"
+          "text": "la girafe"
         },
         {
           "language": "es",
-          "text": "jirafa"
+          "text": "la jirafa"
         },
         {
           "language": "it",
-          "text": "giraffa"
+          "text": "la giraffa"
         },
         {
           "language": "ja",
@@ -3107,7 +5516,40 @@
           "text": "长颈鹿"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"giraffe\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «жираф»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Giraffe“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la girafe »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la jirafa»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la giraffa»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「キリン」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“长颈鹿”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -3126,19 +5568,19 @@
         },
         {
           "language": "de",
-          "text": "Affe"
+          "text": "der Affe"
         },
         {
           "language": "fr",
-          "text": "singe"
+          "text": "le singe"
         },
         {
           "language": "es",
-          "text": "mono"
+          "text": "el mono"
         },
         {
           "language": "it",
-          "text": "scimmia"
+          "text": "la scimmia"
         },
         {
           "language": "ja",
@@ -3149,7 +5591,40 @@
           "text": "猴子"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"monkey\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «обезьяна»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Affe“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le singe »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el mono»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la scimmia»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「さる」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“猴子”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -3168,19 +5643,19 @@
         },
         {
           "language": "de",
-          "text": "Zebra"
+          "text": "das Zebra"
         },
         {
           "language": "fr",
-          "text": "zèbre"
+          "text": "le zèbre"
         },
         {
           "language": "es",
-          "text": "cebra"
+          "text": "la cebra"
         },
         {
           "language": "it",
-          "text": "zebra"
+          "text": "la zebra"
         },
         {
           "language": "ja",
@@ -3191,7 +5666,40 @@
           "text": "斑马"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"zebra\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «зебра»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Zebra“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le zèbre »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la cebra»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la zebra»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「しまうま」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“斑马”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -3210,19 +5718,19 @@
         },
         {
           "language": "de",
-          "text": "Frosch"
+          "text": "der Frosch"
         },
         {
           "language": "fr",
-          "text": "grenouille"
+          "text": "la grenouille"
         },
         {
           "language": "es",
-          "text": "rana"
+          "text": "la rana"
         },
         {
           "language": "it",
-          "text": "rana"
+          "text": "la rana"
         },
         {
           "language": "ja",
@@ -3233,7 +5741,40 @@
           "text": "青蛙"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"frog\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «лягушка»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Frosch“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la grenouille »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la rana»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la rana»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「かえる」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“青蛙”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -3252,19 +5793,19 @@
         },
         {
           "language": "de",
-          "text": "Schmetterling"
+          "text": "der Schmetterling"
         },
         {
           "language": "fr",
-          "text": "papillon"
+          "text": "le papillon"
         },
         {
           "language": "es",
-          "text": "mariposa"
+          "text": "la mariposa"
         },
         {
           "language": "it",
-          "text": "farfalla"
+          "text": "la farfalla"
         },
         {
           "language": "ja",
@@ -3275,7 +5816,40 @@
           "text": "蝴蝶"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"butterfly\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «бабочка»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Schmetterling“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le papillon »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la mariposa»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la farfalla»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ちょうちょ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“蝴蝶”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -3294,19 +5868,19 @@
         },
         {
           "language": "de",
-          "text": "Schlange"
+          "text": "die Schlange"
         },
         {
           "language": "fr",
-          "text": "serpent"
+          "text": "le serpent"
         },
         {
           "language": "es",
-          "text": "serpiente"
+          "text": "la serpiente"
         },
         {
           "language": "it",
-          "text": "serpente"
+          "text": "il serpente"
         },
         {
           "language": "ja",
@@ -3317,7 +5891,40 @@
           "text": "蛇"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"snake\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «змея»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Schlange“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le serpent »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la serpiente»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il serpente»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「へび」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“蛇”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -3336,19 +5943,19 @@
         },
         {
           "language": "de",
-          "text": "Schildkröte"
+          "text": "die Schildkröte"
         },
         {
           "language": "fr",
-          "text": "tortue"
+          "text": "la tortue"
         },
         {
           "language": "es",
-          "text": "tortuga"
+          "text": "la tortuga"
         },
         {
           "language": "it",
-          "text": "tartaruga"
+          "text": "la tartaruga"
         },
         {
           "language": "ja",
@@ -3359,7 +5966,40 @@
           "text": "乌龟"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"turtle\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «черепаха»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Schildkröte“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la tortue »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la tortuga»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la tartaruga»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「かめ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“乌龟”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -3378,19 +6018,19 @@
         },
         {
           "language": "de",
-          "text": "Pinguin"
+          "text": "der Pinguin"
         },
         {
           "language": "fr",
-          "text": "pingouin"
+          "text": "le pingouin"
         },
         {
           "language": "es",
-          "text": "pingüino"
+          "text": "el pingüino"
         },
         {
           "language": "it",
-          "text": "pinguino"
+          "text": "il pinguino"
         },
         {
           "language": "ja",
@@ -3401,7 +6041,40 @@
           "text": "企鹅"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"penguin\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «пингвин»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Pinguin“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le pingouin »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el pingüino»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il pinguino»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ペンギン」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“企鹅”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -3420,19 +6093,19 @@
         },
         {
           "language": "de",
-          "text": "Eule"
+          "text": "die Eule"
         },
         {
           "language": "fr",
-          "text": "hibou"
+          "text": "l'hibou"
         },
         {
           "language": "es",
-          "text": "búho"
+          "text": "el búho"
         },
         {
           "language": "it",
-          "text": "gufo"
+          "text": "il gufo"
         },
         {
           "language": "ja",
@@ -3443,7 +6116,40 @@
           "text": "猫头鹰"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"owl\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «сова»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Eule“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « l'hibou »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el búho»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il gufo»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ふくろう」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“猫头鹰”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -3462,19 +6168,19 @@
         },
         {
           "language": "de",
-          "text": "Orange"
+          "text": "die Orange"
         },
         {
           "language": "fr",
-          "text": "orange"
+          "text": "l'orange"
         },
         {
           "language": "es",
-          "text": "naranja"
+          "text": "la naranja"
         },
         {
           "language": "it",
-          "text": "arancia"
+          "text": "l'arancia"
         },
         {
           "language": "ja",
@@ -3485,7 +6191,40 @@
           "text": "橙子"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"orange\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «апельсин»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Orange“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « l'orange »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la naranja»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «l'arancia»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「オレンジ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“橙子”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -3504,19 +6243,19 @@
         },
         {
           "language": "de",
-          "text": "Traube"
+          "text": "die Traube"
         },
         {
           "language": "fr",
-          "text": "raisin"
+          "text": "le raisin"
         },
         {
           "language": "es",
-          "text": "uva"
+          "text": "la uva"
         },
         {
           "language": "it",
-          "text": "uva"
+          "text": "l'uva"
         },
         {
           "language": "ja",
@@ -3527,7 +6266,40 @@
           "text": "葡萄"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"grape\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «виноград»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Traube“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le raisin »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la uva»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «l'uva»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ぶどう」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“葡萄”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -3546,19 +6318,19 @@
         },
         {
           "language": "de",
-          "text": "Erdbeere"
+          "text": "die Erdbeere"
         },
         {
           "language": "fr",
-          "text": "fraise"
+          "text": "la fraise"
         },
         {
           "language": "es",
-          "text": "fresa"
+          "text": "la fresa"
         },
         {
           "language": "it",
-          "text": "fragola"
+          "text": "la fragola"
         },
         {
           "language": "ja",
@@ -3569,7 +6341,40 @@
           "text": "草莓"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"strawberry\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «клубника»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Erdbeere“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la fraise »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la fresa»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la fragola»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「いちご」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“草莓”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -3588,19 +6393,19 @@
         },
         {
           "language": "de",
-          "text": "Wassermelone"
+          "text": "die Wassermelone"
         },
         {
           "language": "fr",
-          "text": "pastèque"
+          "text": "la pastèque"
         },
         {
           "language": "es",
-          "text": "sandía"
+          "text": "la sandía"
         },
         {
           "language": "it",
-          "text": "anguria"
+          "text": "l'anguria"
         },
         {
           "language": "ja",
@@ -3611,7 +6416,40 @@
           "text": "西瓜"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"watermelon\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «арбуз»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Wassermelone“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la pastèque »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la sandía»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «l'anguria»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「すいか」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“西瓜”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -3630,19 +6468,19 @@
         },
         {
           "language": "de",
-          "text": "Karotte"
+          "text": "die Karotte"
         },
         {
           "language": "fr",
-          "text": "carotte"
+          "text": "la carotte"
         },
         {
           "language": "es",
-          "text": "zanahoria"
+          "text": "la zanahoria"
         },
         {
           "language": "it",
-          "text": "carota"
+          "text": "la carota"
         },
         {
           "language": "ja",
@@ -3653,7 +6491,40 @@
           "text": "胡萝卜"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"carrot\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «морковь»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Karotte“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la carotte »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la zanahoria»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la carota»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「にんじん」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“胡萝卜”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -3672,19 +6543,19 @@
         },
         {
           "language": "de",
-          "text": "Kartoffel"
+          "text": "die Kartoffel"
         },
         {
           "language": "fr",
-          "text": "pomme de terre"
+          "text": "la pomme de terre"
         },
         {
           "language": "es",
-          "text": "patata"
+          "text": "la patata"
         },
         {
           "language": "it",
-          "text": "patata"
+          "text": "la patata"
         },
         {
           "language": "ja",
@@ -3695,7 +6566,40 @@
           "text": "土豆"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"potato\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «картошка»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Kartoffel“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la pomme de terre »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la patata»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la patata»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「じゃがいも」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“土豆”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -3714,19 +6618,19 @@
         },
         {
           "language": "de",
-          "text": "Tomate"
+          "text": "die Tomate"
         },
         {
           "language": "fr",
-          "text": "tomate"
+          "text": "la tomate"
         },
         {
           "language": "es",
-          "text": "tomate"
+          "text": "el tomate"
         },
         {
           "language": "it",
-          "text": "pomodoro"
+          "text": "il pomodoro"
         },
         {
           "language": "ja",
@@ -3737,7 +6641,40 @@
           "text": "番茄"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"tomato\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «помидор»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Tomate“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la tomate »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el tomate»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il pomodoro»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「トマト」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“番茄”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -3756,19 +6693,19 @@
         },
         {
           "language": "de",
-          "text": "Gurke"
+          "text": "die Gurke"
         },
         {
           "language": "fr",
-          "text": "concombre"
+          "text": "le concombre"
         },
         {
           "language": "es",
-          "text": "pepino"
+          "text": "el pepino"
         },
         {
           "language": "it",
-          "text": "cetriolo"
+          "text": "il cetriolo"
         },
         {
           "language": "ja",
@@ -3779,7 +6716,40 @@
           "text": "黄瓜"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"cucumber\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «огурец»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Gurke“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le concombre »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el pepino»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il cetriolo»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「きゅうり」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“黄瓜”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -3798,19 +6768,19 @@
         },
         {
           "language": "de",
-          "text": "Eis"
+          "text": "das Eis"
         },
         {
           "language": "fr",
-          "text": "glace"
+          "text": "la glace"
         },
         {
           "language": "es",
-          "text": "helado"
+          "text": "el helado"
         },
         {
           "language": "it",
-          "text": "gelato"
+          "text": "il gelato"
         },
         {
           "language": "ja",
@@ -3821,7 +6791,40 @@
           "text": "冰淇淋"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"ice cream\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «мороженое»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Eis“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la glace »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el helado»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il gelato»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「アイスクリーム」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“冰淇淋”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -3840,19 +6843,19 @@
         },
         {
           "language": "de",
-          "text": "Pizza"
+          "text": "die Pizza"
         },
         {
           "language": "fr",
-          "text": "pizza"
+          "text": "la pizza"
         },
         {
           "language": "es",
-          "text": "pizza"
+          "text": "la pizza"
         },
         {
           "language": "it",
-          "text": "pizza"
+          "text": "la pizza"
         },
         {
           "language": "ja",
@@ -3863,7 +6866,40 @@
           "text": "披萨"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"pizza\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «пицца»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Pizza“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la pizza »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la pizza»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la pizza»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ピザ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“披萨”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -3882,19 +6918,19 @@
         },
         {
           "language": "de",
-          "text": "Pasta"
+          "text": "die Pasta"
         },
         {
           "language": "fr",
-          "text": "pâtes"
+          "text": "les pâtes"
         },
         {
           "language": "es",
-          "text": "pasta"
+          "text": "la pasta"
         },
         {
           "language": "it",
-          "text": "pasta"
+          "text": "la pasta"
         },
         {
           "language": "ja",
@@ -3905,7 +6941,40 @@
           "text": "意大利面"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"pasta\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «паста»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Pasta“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « les pâtes »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la pasta»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la pasta»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「パスタ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“意大利面”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -3924,19 +6993,19 @@
         },
         {
           "language": "de",
-          "text": "Reis"
+          "text": "der Reis"
         },
         {
           "language": "fr",
-          "text": "riz"
+          "text": "le riz"
         },
         {
           "language": "es",
-          "text": "arroz"
+          "text": "el arroz"
         },
         {
           "language": "it",
-          "text": "riso"
+          "text": "il riso"
         },
         {
           "language": "ja",
@@ -3947,7 +7016,40 @@
           "text": "米饭"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"rice\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «рис»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Reis“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le riz »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el arroz»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il riso»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ごはん」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“米饭”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -3966,19 +7068,19 @@
         },
         {
           "language": "de",
-          "text": "Fleisch"
+          "text": "das Fleisch"
         },
         {
           "language": "fr",
-          "text": "viande"
+          "text": "la viande"
         },
         {
           "language": "es",
-          "text": "carne"
+          "text": "la carne"
         },
         {
           "language": "it",
-          "text": "carne"
+          "text": "la carne"
         },
         {
           "language": "ja",
@@ -3989,7 +7091,40 @@
           "text": "肉"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"meat\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «мясо»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Fleisch“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la viande »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la carne»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la carne»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「にく」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“肉”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -4008,19 +7143,19 @@
         },
         {
           "language": "de",
-          "text": "Sandwich"
+          "text": "das Sandwich"
         },
         {
           "language": "fr",
-          "text": "sandwich"
+          "text": "le sandwich"
         },
         {
           "language": "es",
-          "text": "sándwich"
+          "text": "el sándwich"
         },
         {
           "language": "it",
-          "text": "panino"
+          "text": "il panino"
         },
         {
           "language": "ja",
@@ -4031,7 +7166,40 @@
           "text": "三明治"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"sandwich\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «бутерброд»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Sandwich“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le sandwich »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el sándwich»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il panino»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「サンドイッチ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“三明治”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -4050,19 +7218,19 @@
         },
         {
           "language": "de",
-          "text": "Ball"
+          "text": "der Ball"
         },
         {
           "language": "fr",
-          "text": "balle"
+          "text": "la balle"
         },
         {
           "language": "es",
-          "text": "pelota"
+          "text": "la pelota"
         },
         {
           "language": "it",
-          "text": "palla"
+          "text": "la palla"
         },
         {
           "language": "ja",
@@ -4073,7 +7241,40 @@
           "text": "球"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"ball\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «мяч»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Ball“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la balle »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la pelota»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la palla»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ボール」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“球”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -4092,19 +7293,19 @@
         },
         {
           "language": "de",
-          "text": "Puppe"
+          "text": "die Puppe"
         },
         {
           "language": "fr",
-          "text": "poupée"
+          "text": "la poupée"
         },
         {
           "language": "es",
-          "text": "muñeca"
+          "text": "la muñeca"
         },
         {
           "language": "it",
-          "text": "bambola"
+          "text": "la bambola"
         },
         {
           "language": "ja",
@@ -4115,7 +7316,40 @@
           "text": "娃娃"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"doll\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «кукла»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Puppe“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la poupée »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la muñeca»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la bambola»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「にんぎょう」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“娃娃”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -4134,19 +7368,19 @@
         },
         {
           "language": "de",
-          "text": "Teddybär"
+          "text": "der Teddybär"
         },
         {
           "language": "fr",
-          "text": "nounours"
+          "text": "le nounours"
         },
         {
           "language": "es",
-          "text": "osito de peluche"
+          "text": "el osito de peluche"
         },
         {
           "language": "it",
-          "text": "orsacchiotto"
+          "text": "l'orsacchiotto"
         },
         {
           "language": "ja",
@@ -4157,7 +7391,40 @@
           "text": "泰迪熊"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"teddy bear\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «плюшевый мишка»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Teddybär“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le nounours »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el osito de peluche»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «l'orsacchiotto»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「テディベア」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“泰迪熊”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -4176,19 +7443,19 @@
         },
         {
           "language": "de",
-          "text": "Spielzeugauto"
+          "text": "das Spielzeugauto"
         },
         {
           "language": "fr",
-          "text": "petite voiture"
+          "text": "la petite voiture"
         },
         {
           "language": "es",
-          "text": "carrito"
+          "text": "el carrito"
         },
         {
           "language": "it",
-          "text": "macchinina"
+          "text": "la macchinina"
         },
         {
           "language": "ja",
@@ -4199,7 +7466,40 @@
           "text": "玩具车"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"car\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «машинка»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Spielzeugauto“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la petite voiture »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el carrito»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la macchinina»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「くるま」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“玩具车”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -4218,19 +7518,19 @@
         },
         {
           "language": "de",
-          "text": "Zug"
+          "text": "der Zug"
         },
         {
           "language": "fr",
-          "text": "train"
+          "text": "le train"
         },
         {
           "language": "es",
-          "text": "tren"
+          "text": "el tren"
         },
         {
           "language": "it",
-          "text": "treno"
+          "text": "il treno"
         },
         {
           "language": "ja",
@@ -4241,7 +7541,40 @@
           "text": "火车"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"train\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «поезд»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Zug“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le train »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el tren»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il treno»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「でんしゃ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“火车”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -4260,19 +7593,19 @@
         },
         {
           "language": "de",
-          "text": "Fahrrad"
+          "text": "das Fahrrad"
         },
         {
           "language": "fr",
-          "text": "vélo"
+          "text": "le vélo"
         },
         {
           "language": "es",
-          "text": "bicicleta"
+          "text": "la bicicleta"
         },
         {
           "language": "it",
-          "text": "bici"
+          "text": "la bici"
         },
         {
           "language": "ja",
@@ -4283,7 +7616,40 @@
           "text": "自行车"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"bike\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «велосипед»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Fahrrad“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le vélo »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la bicicleta»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la bici»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「じてんしゃ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“自行车”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -4302,19 +7668,19 @@
         },
         {
           "language": "de",
-          "text": "Baustein"
+          "text": "der Baustein"
         },
         {
           "language": "fr",
-          "text": "cube"
+          "text": "le cube"
         },
         {
           "language": "es",
-          "text": "bloque"
+          "text": "el bloque"
         },
         {
           "language": "it",
-          "text": "cubo"
+          "text": "il cubo"
         },
         {
           "language": "ja",
@@ -4325,7 +7691,40 @@
           "text": "积木"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"block\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «кубик»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Baustein“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le cube »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el bloque»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il cubo»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「つみき」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“积木”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -4344,19 +7743,19 @@
         },
         {
           "language": "de",
-          "text": "Puzzle"
+          "text": "das Puzzle"
         },
         {
           "language": "fr",
-          "text": "puzzle"
+          "text": "le puzzle"
         },
         {
           "language": "es",
-          "text": "rompecabezas"
+          "text": "el rompecabezas"
         },
         {
           "language": "it",
-          "text": "puzzle"
+          "text": "il puzzle"
         },
         {
           "language": "ja",
@@ -4367,7 +7766,40 @@
           "text": "拼图"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"puzzle\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «пазл»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Puzzle“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le puzzle »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el rompecabezas»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il puzzle»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「パズル」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“拼图”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -4386,19 +7818,19 @@
         },
         {
           "language": "de",
-          "text": "Buch"
+          "text": "das Buch"
         },
         {
           "language": "fr",
-          "text": "livre"
+          "text": "le livre"
         },
         {
           "language": "es",
-          "text": "libro"
+          "text": "el libro"
         },
         {
           "language": "it",
-          "text": "libro"
+          "text": "il libro"
         },
         {
           "language": "ja",
@@ -4409,7 +7841,40 @@
           "text": "书"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"book\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «книга»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Buch“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le livre »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el libro»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il libro»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ほん」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“书”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -4428,19 +7893,19 @@
         },
         {
           "language": "de",
-          "text": "Schaukel"
+          "text": "die Schaukel"
         },
         {
           "language": "fr",
-          "text": "balançoire"
+          "text": "la balançoire"
         },
         {
           "language": "es",
-          "text": "columpio"
+          "text": "el columpio"
         },
         {
           "language": "it",
-          "text": "altalena"
+          "text": "l'altalena"
         },
         {
           "language": "ja",
@@ -4451,7 +7916,40 @@
           "text": "秋千"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"swing\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «качели»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Schaukel“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la balançoire »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el columpio»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «l'altalena»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ブランコ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“秋千”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -4470,19 +7968,19 @@
         },
         {
           "language": "de",
-          "text": "Rutsche"
+          "text": "die Rutsche"
         },
         {
           "language": "fr",
-          "text": "toboggan"
+          "text": "le toboggan"
         },
         {
           "language": "es",
-          "text": "tobogán"
+          "text": "el tobogán"
         },
         {
           "language": "it",
-          "text": "scivolo"
+          "text": "lo scivolo"
         },
         {
           "language": "ja",
@@ -4493,7 +7991,40 @@
           "text": "滑梯"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"slide\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «горка»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Rutsche“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le toboggan »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el tobogán»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «lo scivolo»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「すべりだい」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“滑梯”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -4512,19 +8043,19 @@
         },
         {
           "language": "de",
-          "text": "Trommel"
+          "text": "die Trommel"
         },
         {
           "language": "fr",
-          "text": "tambour"
+          "text": "le tambour"
         },
         {
           "language": "es",
-          "text": "tambor"
+          "text": "el tambor"
         },
         {
           "language": "it",
-          "text": "tamburo"
+          "text": "il tamburo"
         },
         {
           "language": "ja",
@@ -4535,7 +8066,40 @@
           "text": "鼓"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"drum\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «барабан»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Trommel“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le tambour »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el tambor»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il tamburo»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「たいこ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“鼓”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -4554,19 +8118,19 @@
         },
         {
           "language": "de",
-          "text": "Sonne"
+          "text": "die Sonne"
         },
         {
           "language": "fr",
-          "text": "soleil"
+          "text": "le soleil"
         },
         {
           "language": "es",
-          "text": "sol"
+          "text": "el sol"
         },
         {
           "language": "it",
-          "text": "sole"
+          "text": "il sole"
         },
         {
           "language": "ja",
@@ -4577,7 +8141,40 @@
           "text": "太阳"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"sun\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «солнце»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Sonne“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le soleil »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el sol»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il sole»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「たいよう」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“太阳”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -4596,19 +8193,19 @@
         },
         {
           "language": "de",
-          "text": "Mond"
+          "text": "der Mond"
         },
         {
           "language": "fr",
-          "text": "lune"
+          "text": "la lune"
         },
         {
           "language": "es",
-          "text": "luna"
+          "text": "la luna"
         },
         {
           "language": "it",
-          "text": "luna"
+          "text": "la luna"
         },
         {
           "language": "ja",
@@ -4619,7 +8216,40 @@
           "text": "月亮"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"moon\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «луна»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Mond“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la lune »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la luna»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la luna»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「つき」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“月亮”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -4638,19 +8268,19 @@
         },
         {
           "language": "de",
-          "text": "Stern"
+          "text": "der Stern"
         },
         {
           "language": "fr",
-          "text": "étoile"
+          "text": "l'étoile"
         },
         {
           "language": "es",
-          "text": "estrella"
+          "text": "la estrella"
         },
         {
           "language": "it",
-          "text": "stella"
+          "text": "la stella"
         },
         {
           "language": "ja",
@@ -4661,7 +8291,40 @@
           "text": "星星"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"star\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «звезда»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Stern“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « l'étoile »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la estrella»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la stella»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ほし」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“星星”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -4680,19 +8343,19 @@
         },
         {
           "language": "de",
-          "text": "Wolke"
+          "text": "die Wolke"
         },
         {
           "language": "fr",
-          "text": "nuage"
+          "text": "le nuage"
         },
         {
           "language": "es",
-          "text": "nube"
+          "text": "la nube"
         },
         {
           "language": "it",
-          "text": "nuvola"
+          "text": "la nuvola"
         },
         {
           "language": "ja",
@@ -4703,7 +8366,40 @@
           "text": "云"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"cloud\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «облако»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Wolke“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le nuage »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la nube»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la nuvola»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「くも」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“云”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -4722,19 +8418,19 @@
         },
         {
           "language": "de",
-          "text": "Regen"
+          "text": "der Regen"
         },
         {
           "language": "fr",
-          "text": "pluie"
+          "text": "la pluie"
         },
         {
           "language": "es",
-          "text": "lluvia"
+          "text": "la lluvia"
         },
         {
           "language": "it",
-          "text": "pioggia"
+          "text": "la pioggia"
         },
         {
           "language": "ja",
@@ -4745,7 +8441,40 @@
           "text": "雨"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"rain\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «дождь»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Regen“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la pluie »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la lluvia»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la pioggia»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「あめ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“雨”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -4764,19 +8493,19 @@
         },
         {
           "language": "de",
-          "text": "Schnee"
+          "text": "der Schnee"
         },
         {
           "language": "fr",
-          "text": "neige"
+          "text": "la neige"
         },
         {
           "language": "es",
-          "text": "nieve"
+          "text": "la nieve"
         },
         {
           "language": "it",
-          "text": "neve"
+          "text": "la neve"
         },
         {
           "language": "ja",
@@ -4787,7 +8516,40 @@
           "text": "雪"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"snow\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «снег»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Schnee“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la neige »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la nieve»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la neve»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ゆき」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“雪”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -4806,19 +8568,19 @@
         },
         {
           "language": "de",
-          "text": "Baum"
+          "text": "der Baum"
         },
         {
           "language": "fr",
-          "text": "arbre"
+          "text": "l'arbre"
         },
         {
           "language": "es",
-          "text": "árbol"
+          "text": "el árbol"
         },
         {
           "language": "it",
-          "text": "albero"
+          "text": "l'albero"
         },
         {
           "language": "ja",
@@ -4829,7 +8591,40 @@
           "text": "树"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"tree\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «дерево»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Baum“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « l'arbre »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el árbol»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «l'albero»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「き」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“树”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -4848,19 +8643,19 @@
         },
         {
           "language": "de",
-          "text": "Blume"
+          "text": "die Blume"
         },
         {
           "language": "fr",
-          "text": "fleur"
+          "text": "la fleur"
         },
         {
           "language": "es",
-          "text": "flor"
+          "text": "la flor"
         },
         {
           "language": "it",
-          "text": "fiore"
+          "text": "il fiore"
         },
         {
           "language": "ja",
@@ -4871,7 +8666,40 @@
           "text": "花"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"flower\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «цветок»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Blume“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la fleur »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la flor»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il fiore»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「はな」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“花”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -4890,19 +8718,19 @@
         },
         {
           "language": "de",
-          "text": "Gras"
+          "text": "das Gras"
         },
         {
           "language": "fr",
-          "text": "herbe"
+          "text": "l'herbe"
         },
         {
           "language": "es",
-          "text": "hierba"
+          "text": "la hierba"
         },
         {
           "language": "it",
-          "text": "erba"
+          "text": "l'erba"
         },
         {
           "language": "ja",
@@ -4913,7 +8741,40 @@
           "text": "草"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"grass\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «трава»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Gras“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « l'herbe »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la hierba»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «l'erba»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「くさ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“草”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -4932,19 +8793,19 @@
         },
         {
           "language": "de",
-          "text": "Himmel"
+          "text": "der Himmel"
         },
         {
           "language": "fr",
-          "text": "ciel"
+          "text": "le ciel"
         },
         {
           "language": "es",
-          "text": "cielo"
+          "text": "el cielo"
         },
         {
           "language": "it",
-          "text": "cielo"
+          "text": "il cielo"
         },
         {
           "language": "ja",
@@ -4955,7 +8816,40 @@
           "text": "天空"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"sky\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «небо»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Himmel“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le ciel »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el cielo»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il cielo»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「そら」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“天空”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -4974,19 +8868,19 @@
         },
         {
           "language": "de",
-          "text": "Wind"
+          "text": "der Wind"
         },
         {
           "language": "fr",
-          "text": "vent"
+          "text": "le vent"
         },
         {
           "language": "es",
-          "text": "viento"
+          "text": "el viento"
         },
         {
           "language": "it",
-          "text": "vento"
+          "text": "il vento"
         },
         {
           "language": "ja",
@@ -4997,7 +8891,40 @@
           "text": "风"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"wind\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «ветер»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Wind“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le vent »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el viento»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il vento»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「かぜ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“风”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -5039,7 +8966,40 @@
           "text": "跳舞"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A verb meaning \"to dance\"."
+        },
+        {
+          "language": "ru",
+          "text": "Глагол: «танцевать»."
+        },
+        {
+          "language": "de",
+          "text": "Verb: „tanzen“."
+        },
+        {
+          "language": "fr",
+          "text": "Verbe : « danser »."
+        },
+        {
+          "language": "es",
+          "text": "Verbo: «bailar»."
+        },
+        {
+          "language": "it",
+          "text": "Verbo: «ballare»."
+        },
+        {
+          "language": "ja",
+          "text": "動詞：「おどる」。"
+        },
+        {
+          "language": "zh",
+          "text": "动词：“跳舞”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -5081,7 +9041,40 @@
           "text": "唱歌"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A verb meaning \"to sing\"."
+        },
+        {
+          "language": "ru",
+          "text": "Глагол: «петь»."
+        },
+        {
+          "language": "de",
+          "text": "Verb: „singen“."
+        },
+        {
+          "language": "fr",
+          "text": "Verbe : « chanter »."
+        },
+        {
+          "language": "es",
+          "text": "Verbo: «cantar»."
+        },
+        {
+          "language": "it",
+          "text": "Verbo: «cantare»."
+        },
+        {
+          "language": "ja",
+          "text": "動詞：「うたう」。"
+        },
+        {
+          "language": "zh",
+          "text": "动词：“唱歌”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -5123,7 +9116,40 @@
           "text": "读"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A verb meaning \"to read\"."
+        },
+        {
+          "language": "ru",
+          "text": "Глагол: «читать»."
+        },
+        {
+          "language": "de",
+          "text": "Verb: „lesen“."
+        },
+        {
+          "language": "fr",
+          "text": "Verbe : « lire »."
+        },
+        {
+          "language": "es",
+          "text": "Verbo: «leer»."
+        },
+        {
+          "language": "it",
+          "text": "Verbo: «leggere»."
+        },
+        {
+          "language": "ja",
+          "text": "動詞：「よむ」。"
+        },
+        {
+          "language": "zh",
+          "text": "动词：“读”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -5165,7 +9191,40 @@
           "text": "画画"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A verb meaning \"to draw\"."
+        },
+        {
+          "language": "ru",
+          "text": "Глагол: «рисовать»."
+        },
+        {
+          "language": "de",
+          "text": "Verb: „zeichnen“."
+        },
+        {
+          "language": "fr",
+          "text": "Verbe : « dessiner »."
+        },
+        {
+          "language": "es",
+          "text": "Verbo: «dibujar»."
+        },
+        {
+          "language": "it",
+          "text": "Verbo: «disegnare»."
+        },
+        {
+          "language": "ja",
+          "text": "動詞：「えをかく」。"
+        },
+        {
+          "language": "zh",
+          "text": "动词：“画画”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -5207,7 +9266,40 @@
           "text": "写"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A verb meaning \"to write\"."
+        },
+        {
+          "language": "ru",
+          "text": "Глагол: «писать»."
+        },
+        {
+          "language": "de",
+          "text": "Verb: „schreiben“."
+        },
+        {
+          "language": "fr",
+          "text": "Verbe : « écrire »."
+        },
+        {
+          "language": "es",
+          "text": "Verbo: «escribir»."
+        },
+        {
+          "language": "it",
+          "text": "Verbo: «scrivere»."
+        },
+        {
+          "language": "ja",
+          "text": "動詞：「かく」。"
+        },
+        {
+          "language": "zh",
+          "text": "动词：“写”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -5249,7 +9341,40 @@
           "text": "拍手"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A verb meaning \"to clap\"."
+        },
+        {
+          "language": "ru",
+          "text": "Глагол: «хлопать»."
+        },
+        {
+          "language": "de",
+          "text": "Verb: „klatschen“."
+        },
+        {
+          "language": "fr",
+          "text": "Verbe : « applaudir »."
+        },
+        {
+          "language": "es",
+          "text": "Verbo: «aplaudir»."
+        },
+        {
+          "language": "it",
+          "text": "Verbo: «battere le mani»."
+        },
+        {
+          "language": "ja",
+          "text": "動詞：「てをたたく」。"
+        },
+        {
+          "language": "zh",
+          "text": "动词：“拍手”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -5291,7 +9416,40 @@
           "text": "挥手"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A verb meaning \"to wave\"."
+        },
+        {
+          "language": "ru",
+          "text": "Глагол: «махать»."
+        },
+        {
+          "language": "de",
+          "text": "Verb: „winken“."
+        },
+        {
+          "language": "fr",
+          "text": "Verbe : « faire signe »."
+        },
+        {
+          "language": "es",
+          "text": "Verbo: «saludar»."
+        },
+        {
+          "language": "it",
+          "text": "Verbo: «salutare»."
+        },
+        {
+          "language": "ja",
+          "text": "動詞：「てをふる」。"
+        },
+        {
+          "language": "zh",
+          "text": "动词：“挥手”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -5333,7 +9491,40 @@
           "text": "拥抱"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A verb meaning \"to hug\"."
+        },
+        {
+          "language": "ru",
+          "text": "Глагол: «обнимать»."
+        },
+        {
+          "language": "de",
+          "text": "Verb: „Umarmung“."
+        },
+        {
+          "language": "fr",
+          "text": "Verbe : « câlin »."
+        },
+        {
+          "language": "es",
+          "text": "Verbo: «abrazo»."
+        },
+        {
+          "language": "it",
+          "text": "Verbo: «abbraccio»."
+        },
+        {
+          "language": "ja",
+          "text": "動詞：「だきしめる」。"
+        },
+        {
+          "language": "zh",
+          "text": "动词：“拥抱”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -5375,7 +9566,40 @@
           "text": "亲亲"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A verb meaning \"to kiss\"."
+        },
+        {
+          "language": "ru",
+          "text": "Глагол: «целовать»."
+        },
+        {
+          "language": "de",
+          "text": "Verb: „Kuss“."
+        },
+        {
+          "language": "fr",
+          "text": "Verbe : « bisou »."
+        },
+        {
+          "language": "es",
+          "text": "Verbo: «beso»."
+        },
+        {
+          "language": "it",
+          "text": "Verbo: «bacio»."
+        },
+        {
+          "language": "ja",
+          "text": "動詞：「チュー」。"
+        },
+        {
+          "language": "zh",
+          "text": "动词：“亲亲”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -5417,7 +9641,40 @@
           "text": "笑"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A verb meaning \"to laugh\"."
+        },
+        {
+          "language": "ru",
+          "text": "Глагол: «смеяться»."
+        },
+        {
+          "language": "de",
+          "text": "Verb: „lachen“."
+        },
+        {
+          "language": "fr",
+          "text": "Verbe : « rire »."
+        },
+        {
+          "language": "es",
+          "text": "Verbo: «reír»."
+        },
+        {
+          "language": "it",
+          "text": "Verbo: «ridere»."
+        },
+        {
+          "language": "ja",
+          "text": "動詞：「わらう」。"
+        },
+        {
+          "language": "zh",
+          "text": "动词：“笑”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -5459,7 +9716,40 @@
           "text": "哭"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A verb meaning \"to cry\"."
+        },
+        {
+          "language": "ru",
+          "text": "Глагол: «плакать»."
+        },
+        {
+          "language": "de",
+          "text": "Verb: „weinen“."
+        },
+        {
+          "language": "fr",
+          "text": "Verbe : « pleurer »."
+        },
+        {
+          "language": "es",
+          "text": "Verbo: «llorar»."
+        },
+        {
+          "language": "it",
+          "text": "Verbo: «piangere»."
+        },
+        {
+          "language": "ja",
+          "text": "動詞：「なく」。"
+        },
+        {
+          "language": "zh",
+          "text": "动词：“哭”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -5501,7 +9791,40 @@
           "text": "微笑"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A verb meaning \"to smile\"."
+        },
+        {
+          "language": "ru",
+          "text": "Глагол: «улыбаться»."
+        },
+        {
+          "language": "de",
+          "text": "Verb: „lächeln“."
+        },
+        {
+          "language": "fr",
+          "text": "Verbe : « sourire »."
+        },
+        {
+          "language": "es",
+          "text": "Verbo: «sonreír»."
+        },
+        {
+          "language": "it",
+          "text": "Verbo: «sorridere»."
+        },
+        {
+          "language": "ja",
+          "text": "動詞：「にっこり」。"
+        },
+        {
+          "language": "zh",
+          "text": "动词：“微笑”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -5520,19 +9843,19 @@
         },
         {
           "language": "de",
-          "text": "Auto"
+          "text": "das Auto"
         },
         {
           "language": "fr",
-          "text": "voiture"
+          "text": "la voiture"
         },
         {
           "language": "es",
-          "text": "coche"
+          "text": "el coche"
         },
         {
           "language": "it",
-          "text": "macchina"
+          "text": "la macchina"
         },
         {
           "language": "ja",
@@ -5543,7 +9866,40 @@
           "text": "汽车"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"car\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «машина»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Auto“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la voiture »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el coche»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la macchina»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「くるま」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“汽车”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -5562,19 +9918,19 @@
         },
         {
           "language": "de",
-          "text": "Bus"
+          "text": "der Bus"
         },
         {
           "language": "fr",
-          "text": "bus"
+          "text": "le bus"
         },
         {
           "language": "es",
-          "text": "autobús"
+          "text": "el autobús"
         },
         {
           "language": "it",
-          "text": "autobus"
+          "text": "l'autobus"
         },
         {
           "language": "ja",
@@ -5585,7 +9941,40 @@
           "text": "公交车"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"bus\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «автобус»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Bus“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le bus »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el autobús»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «l'autobus»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「バス」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“公交车”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -5604,19 +9993,19 @@
         },
         {
           "language": "de",
-          "text": "Lastwagen"
+          "text": "der Lastwagen"
         },
         {
           "language": "fr",
-          "text": "camion"
+          "text": "le camion"
         },
         {
           "language": "es",
-          "text": "camión"
+          "text": "el camión"
         },
         {
           "language": "it",
-          "text": "camion"
+          "text": "il camion"
         },
         {
           "language": "ja",
@@ -5627,7 +10016,40 @@
           "text": "卡车"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"truck\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «грузовик»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Lastwagen“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le camion »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el camión»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il camion»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「トラック」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“卡车”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -5646,19 +10068,19 @@
         },
         {
           "language": "de",
-          "text": "Flugzeug"
+          "text": "das Flugzeug"
         },
         {
           "language": "fr",
-          "text": "avion"
+          "text": "l'avion"
         },
         {
           "language": "es",
-          "text": "avión"
+          "text": "el avión"
         },
         {
           "language": "it",
-          "text": "aereo"
+          "text": "l'aereo"
         },
         {
           "language": "ja",
@@ -5669,7 +10091,40 @@
           "text": "飞机"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"plane\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «самолёт»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Flugzeug“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « l'avion »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el avión»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «l'aereo»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ひこうき」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“飞机”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -5688,19 +10143,19 @@
         },
         {
           "language": "de",
-          "text": "Hubschrauber"
+          "text": "der Hubschrauber"
         },
         {
           "language": "fr",
-          "text": "hélicoptère"
+          "text": "l'hélicoptère"
         },
         {
           "language": "es",
-          "text": "helicóptero"
+          "text": "el helicóptero"
         },
         {
           "language": "it",
-          "text": "elicottero"
+          "text": "l'elicottero"
         },
         {
           "language": "ja",
@@ -5711,7 +10166,40 @@
           "text": "直升机"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"helicopter\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «вертолёт»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Hubschrauber“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « l'hélicoptère »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el helicóptero»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «l'elicottero»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ヘリコプター」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“直升机”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -5730,19 +10218,19 @@
         },
         {
           "language": "de",
-          "text": "Boot"
+          "text": "das Boot"
         },
         {
           "language": "fr",
-          "text": "bateau"
+          "text": "le bateau"
         },
         {
           "language": "es",
-          "text": "barco"
+          "text": "el barco"
         },
         {
           "language": "it",
-          "text": "barca"
+          "text": "la barca"
         },
         {
           "language": "ja",
@@ -5753,7 +10241,40 @@
           "text": "船"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"boat\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «лодка»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Boot“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le bateau »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el barco»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la barca»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ふね」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“船”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -5772,19 +10293,19 @@
         },
         {
           "language": "de",
-          "text": "Schiff"
+          "text": "das Schiff"
         },
         {
           "language": "fr",
-          "text": "navire"
+          "text": "le navire"
         },
         {
           "language": "es",
-          "text": "barco"
+          "text": "el barco"
         },
         {
           "language": "it",
-          "text": "nave"
+          "text": "la nave"
         },
         {
           "language": "ja",
@@ -5795,7 +10316,40 @@
           "text": "大船"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"ship\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «корабль»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Schiff“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le navire »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el barco»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la nave»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ふね」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“大船”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -5814,19 +10368,19 @@
         },
         {
           "language": "de",
-          "text": "Rakete"
+          "text": "die Rakete"
         },
         {
           "language": "fr",
-          "text": "fusée"
+          "text": "la fusée"
         },
         {
           "language": "es",
-          "text": "cohete"
+          "text": "el cohete"
         },
         {
           "language": "it",
-          "text": "razzo"
+          "text": "il razzo"
         },
         {
           "language": "ja",
@@ -5837,7 +10391,40 @@
           "text": "火箭"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"rocket\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «ракета»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Rakete“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la fusée »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el cohete»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il razzo»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ロケット」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“火箭”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -5856,19 +10443,19 @@
         },
         {
           "language": "de",
-          "text": "Fahrrad"
+          "text": "das Fahrrad"
         },
         {
           "language": "fr",
-          "text": "vélo"
+          "text": "le vélo"
         },
         {
           "language": "es",
-          "text": "bicicleta"
+          "text": "la bicicleta"
         },
         {
           "language": "it",
-          "text": "bicicletta"
+          "text": "la bicicletta"
         },
         {
           "language": "ja",
@@ -5879,7 +10466,40 @@
           "text": "自行车"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"bicycle\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «велосипед»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Fahrrad“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le vélo »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la bicicleta»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la bicicletta»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「じてんしゃ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“自行车”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -5898,19 +10518,19 @@
         },
         {
           "language": "de",
-          "text": "Urgroßmutter"
+          "text": "die Urgroßmutter"
         },
         {
           "language": "fr",
-          "text": "arrière-grand-mère"
+          "text": "l'arrière-grand-mère"
         },
         {
           "language": "es",
-          "text": "bisabuela"
+          "text": "la bisabuela"
         },
         {
           "language": "it",
-          "text": "bisnonna"
+          "text": "la bisnonna"
         },
         {
           "language": "ja",
@@ -5921,7 +10541,40 @@
           "text": "曾祖母"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"grandgrandma\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «прабабушка»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Urgroßmutter“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « l'arrière-grand-mère »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la bisabuela»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la bisnonna»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ひいおばあちゃん」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“曾祖母”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -5940,19 +10593,19 @@
         },
         {
           "language": "de",
-          "text": "Urgroßvater"
+          "text": "der Urgroßvater"
         },
         {
           "language": "fr",
-          "text": "arrière-grand-père"
+          "text": "l'arrière-grand-père"
         },
         {
           "language": "es",
-          "text": "bisabuelo"
+          "text": "el bisabuelo"
         },
         {
           "language": "it",
-          "text": "bisnonno"
+          "text": "il bisnonno"
         },
         {
           "language": "ja",
@@ -5963,7 +10616,40 @@
           "text": "曾祖父"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"grandgrandpa\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «прадедушка»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Urgroßvater“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « l'arrière-grand-père »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el bisabuelo»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il bisnonno»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ひいおじいちゃん」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“曾祖父”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -5982,19 +10668,19 @@
         },
         {
           "language": "de",
-          "text": "Bruder"
+          "text": "der Bruder"
         },
         {
           "language": "fr",
-          "text": "frère"
+          "text": "le frère"
         },
         {
           "language": "es",
-          "text": "hermano"
+          "text": "el hermano"
         },
         {
           "language": "it",
-          "text": "fratello"
+          "text": "il fratello"
         },
         {
           "language": "ja",
@@ -6005,7 +10691,40 @@
           "text": "哥哥"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"brother\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «брат»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Bruder“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le frère »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el hermano»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il fratello»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「おにいちゃん」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“哥哥”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -6024,19 +10743,19 @@
         },
         {
           "language": "de",
-          "text": "Schwester"
+          "text": "die Schwester"
         },
         {
           "language": "fr",
-          "text": "sœur"
+          "text": "la sœur"
         },
         {
           "language": "es",
-          "text": "hermana"
+          "text": "la hermana"
         },
         {
           "language": "it",
-          "text": "sorella"
+          "text": "la sorella"
         },
         {
           "language": "ja",
@@ -6047,7 +10766,40 @@
           "text": "姐姐"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"sister\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «сестра»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Schwester“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la sœur »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la hermana»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la sorella»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「おねえちゃん」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“姐姐”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -6066,19 +10818,19 @@
         },
         {
           "language": "de",
-          "text": "Tante"
+          "text": "die Tante"
         },
         {
           "language": "fr",
-          "text": "tante"
+          "text": "la tante"
         },
         {
           "language": "es",
-          "text": "tía"
+          "text": "la tía"
         },
         {
           "language": "it",
-          "text": "zia"
+          "text": "la zia"
         },
         {
           "language": "ja",
@@ -6089,7 +10841,40 @@
           "text": "阿姨"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"aunt\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «тётя»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „die Tante“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la tante »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la tía»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la zia»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「おばさん」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“阿姨”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -6108,19 +10893,19 @@
         },
         {
           "language": "de",
-          "text": "Onkel"
+          "text": "der Onkel"
         },
         {
           "language": "fr",
-          "text": "oncle"
+          "text": "l'oncle"
         },
         {
           "language": "es",
-          "text": "tío"
+          "text": "el tío"
         },
         {
           "language": "it",
-          "text": "zio"
+          "text": "lo zio"
         },
         {
           "language": "ja",
@@ -6131,7 +10916,40 @@
           "text": "叔叔"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"uncle\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «дядя»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Onkel“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « l'oncle »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el tío»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «lo zio»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「おじさん」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“叔叔”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -6150,19 +10968,19 @@
         },
         {
           "language": "de",
-          "text": "Cousin"
+          "text": "der Cousin"
         },
         {
           "language": "fr",
-          "text": "cousin"
+          "text": "le cousin"
         },
         {
           "language": "es",
-          "text": "primo"
+          "text": "el primo"
         },
         {
           "language": "it",
-          "text": "cugino"
+          "text": "il cugino"
         },
         {
           "language": "ja",
@@ -6173,7 +10991,40 @@
           "text": "表兄弟"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"cousin\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «двоюродный брат»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Cousin“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « le cousin »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el primo»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «il cugino»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「いとこ」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“表兄弟”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -6192,19 +11043,19 @@
         },
         {
           "language": "de",
-          "text": "Freund"
+          "text": "der Freund"
         },
         {
           "language": "fr",
-          "text": "ami"
+          "text": "l'ami"
         },
         {
           "language": "es",
-          "text": "amigo"
+          "text": "el amigo"
         },
         {
           "language": "it",
-          "text": "amico"
+          "text": "l'amico"
         },
         {
           "language": "ja",
@@ -6215,7 +11066,40 @@
           "text": "朋友"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"friend\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «друг»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „der Freund“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « l'ami »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «el amigo»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «l'amico»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「ともだち」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“朋友”。"
+        }
+      ],
       "assets": []
     },
     {
@@ -6234,19 +11118,19 @@
         },
         {
           "language": "de",
-          "text": "Zuhause"
+          "text": "das Zuhause"
         },
         {
           "language": "fr",
-          "text": "maison"
+          "text": "la maison"
         },
         {
           "language": "es",
-          "text": "casa"
+          "text": "la casa"
         },
         {
           "language": "it",
-          "text": "casa"
+          "text": "la casa"
         },
         {
           "language": "ja",
@@ -6257,7 +11141,40 @@
           "text": "家"
         }
       ],
-      "definitions": [],
+      "definitions": [
+        {
+          "language": "en",
+          "text": "A noun meaning \"home\"."
+        },
+        {
+          "language": "ru",
+          "text": "Существительное: «дом»."
+        },
+        {
+          "language": "de",
+          "text": "Substantiv: „das Zuhause“."
+        },
+        {
+          "language": "fr",
+          "text": "Nom : « la maison »."
+        },
+        {
+          "language": "es",
+          "text": "Sustantivo: «la casa»."
+        },
+        {
+          "language": "it",
+          "text": "Sostantivo: «la casa»."
+        },
+        {
+          "language": "ja",
+          "text": "名詞：「おうち」。"
+        },
+        {
+          "language": "zh",
+          "text": "名词：“家”。"
+        }
+      ],
       "assets": []
     }
   ],
