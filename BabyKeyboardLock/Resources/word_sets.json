@@ -423,13 +423,15 @@
       "assets": []
     },
     {
-      "id": "cat",
-      "spelling": "cat",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "cat|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "cat"
+        },
         {
           "language": "ru",
           "text": "кошка"
@@ -463,13 +465,15 @@
       "assets": []
     },
     {
-      "id": "baby",
-      "spelling": "baby",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "baby|infant",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "baby"
+        },
         {
           "language": "ru",
           "text": "малыш"
@@ -503,13 +507,15 @@
       "assets": []
     },
     {
-      "id": "milk",
-      "spelling": "milk",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "milk|drink",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "milk"
+        },
         {
           "language": "ru",
           "text": "молоко"
@@ -543,13 +549,15 @@
       "assets": []
     },
     {
-      "id": "water",
-      "spelling": "water",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "water|liquid",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "water"
+        },
         {
           "language": "ru",
           "text": "вода"
@@ -583,13 +591,15 @@
       "assets": []
     },
     {
-      "id": "yes",
-      "spelling": "yes",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "yes|affirmation",
+      "partOfSpeech": "phrase",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "yes"
+        },
         {
           "language": "ru",
           "text": "да"
@@ -623,13 +633,15 @@
       "assets": []
     },
     {
-      "id": "no",
-      "spelling": "no",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "no|negation",
+      "partOfSpeech": "phrase",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "no"
+        },
         {
           "language": "ru",
           "text": "нет"
@@ -663,13 +675,15 @@
       "assets": []
     },
     {
-      "id": "bye",
-      "spelling": "bye",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "bye|farewell",
+      "partOfSpeech": "phrase",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "bye"
+        },
         {
           "language": "ru",
           "text": "пока"
@@ -703,13 +717,15 @@
       "assets": []
     },
     {
-      "id": "hi",
-      "spelling": "hi",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "hi|greeting",
+      "partOfSpeech": "phrase",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "hi"
+        },
         {
           "language": "ru",
           "text": "привет"
@@ -743,13 +759,15 @@
       "assets": []
     },
     {
-      "id": "love",
-      "spelling": "love",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "love|affection",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "love"
+        },
         {
           "language": "ru",
           "text": "любовь"
@@ -783,13 +801,15 @@
       "assets": []
     },
     {
-      "id": "bird",
-      "spelling": "bird",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "bird|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "bird"
+        },
         {
           "language": "ru",
           "text": "птица"
@@ -823,13 +843,15 @@
       "assets": []
     },
     {
-      "id": "fish",
-      "spelling": "fish",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "fish|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "fish"
+        },
         {
           "language": "ru",
           "text": "рыба"
@@ -863,13 +885,15 @@
       "assets": []
     },
     {
-      "id": "cow",
-      "spelling": "cow",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "cow|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "cow"
+        },
         {
           "language": "ru",
           "text": "корова"
@@ -903,13 +927,15 @@
       "assets": []
     },
     {
-      "id": "duck",
-      "spelling": "duck",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "duck|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "duck"
+        },
         {
           "language": "ru",
           "text": "утка"
@@ -943,13 +969,15 @@
       "assets": []
     },
     {
-      "id": "pig",
-      "spelling": "pig",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "pig|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "pig"
+        },
         {
           "language": "ru",
           "text": "свинья"
@@ -983,13 +1011,15 @@
       "assets": []
     },
     {
-      "id": "rabbit",
-      "spelling": "rabbit",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "rabbit|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "rabbit"
+        },
         {
           "language": "ru",
           "text": "кролик"
@@ -1023,13 +1053,15 @@
       "assets": []
     },
     {
-      "id": "mouse",
-      "spelling": "mouse",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "mouse|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "mouse"
+        },
         {
           "language": "ru",
           "text": "мышь"
@@ -1063,13 +1095,15 @@
       "assets": []
     },
     {
-      "id": "bear",
-      "spelling": "bear",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "bear|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "bear"
+        },
         {
           "language": "ru",
           "text": "медведь"
@@ -1103,13 +1137,15 @@
       "assets": []
     },
     {
-      "id": "apple",
-      "spelling": "apple",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "apple|fruit",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "apple"
+        },
         {
           "language": "ru",
           "text": "яблоко"
@@ -1143,13 +1179,15 @@
       "assets": []
     },
     {
-      "id": "banana",
-      "spelling": "banana",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "banana|fruit",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "banana"
+        },
         {
           "language": "ru",
           "text": "банан"
@@ -1183,13 +1221,15 @@
       "assets": []
     },
     {
-      "id": "bread",
-      "spelling": "bread",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "bread|food",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "bread"
+        },
         {
           "language": "ru",
           "text": "хлеб"
@@ -1223,13 +1263,15 @@
       "assets": []
     },
     {
-      "id": "cookie",
-      "spelling": "cookie",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "cookie|dessert",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "cookie"
+        },
         {
           "language": "ru",
           "text": "печенье"
@@ -1263,13 +1305,15 @@
       "assets": []
     },
     {
-      "id": "juice",
-      "spelling": "juice",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "juice|drink",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "juice"
+        },
         {
           "language": "ru",
           "text": "сок"
@@ -1303,13 +1347,15 @@
       "assets": []
     },
     {
-      "id": "egg",
-      "spelling": "egg",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "egg|food",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "egg"
+        },
         {
           "language": "ru",
           "text": "яйцо"
@@ -1343,13 +1389,15 @@
       "assets": []
     },
     {
-      "id": "cheese",
-      "spelling": "cheese",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "cheese|food",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "cheese"
+        },
         {
           "language": "ru",
           "text": "сыр"
@@ -1383,13 +1431,15 @@
       "assets": []
     },
     {
-      "id": "cake",
-      "spelling": "cake",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "cake|dessert",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "cake"
+        },
         {
           "language": "ru",
           "text": "торт"
@@ -1423,13 +1473,15 @@
       "assets": []
     },
     {
-      "id": "soup",
-      "spelling": "soup",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "soup|food",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "soup"
+        },
         {
           "language": "ru",
           "text": "суп"
@@ -1463,13 +1515,15 @@
       "assets": []
     },
     {
-      "id": "tea",
-      "spelling": "tea",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "tea|drink",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "tea"
+        },
         {
           "language": "ru",
           "text": "чай"
@@ -1503,13 +1557,15 @@
       "assets": []
     },
     {
-      "id": "head",
-      "spelling": "head",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "head|body_part",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "head"
+        },
         {
           "language": "ru",
           "text": "голова"
@@ -1543,13 +1599,15 @@
       "assets": []
     },
     {
-      "id": "mouth",
-      "spelling": "mouth",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "mouth|body_part",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "mouth"
+        },
         {
           "language": "ru",
           "text": "рот"
@@ -1583,13 +1641,15 @@
       "assets": []
     },
     {
-      "id": "ear",
-      "spelling": "ear",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "ear|body_part",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "ear"
+        },
         {
           "language": "ru",
           "text": "ухо"
@@ -1623,13 +1683,15 @@
       "assets": []
     },
     {
-      "id": "hand",
-      "spelling": "hand",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "hand|body_part",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "hand"
+        },
         {
           "language": "ru",
           "text": "рука"
@@ -1663,13 +1725,15 @@
       "assets": []
     },
     {
-      "id": "finger",
-      "spelling": "finger",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "finger|body_part",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "finger"
+        },
         {
           "language": "ru",
           "text": "палец"
@@ -1703,13 +1767,15 @@
       "assets": []
     },
     {
-      "id": "foot",
-      "spelling": "foot",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "foot|body_part",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "foot"
+        },
         {
           "language": "ru",
           "text": "ступня"
@@ -1743,13 +1809,15 @@
       "assets": []
     },
     {
-      "id": "belly",
-      "spelling": "belly",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "belly|body_part",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "belly"
+        },
         {
           "language": "ru",
           "text": "живот"
@@ -1783,13 +1851,15 @@
       "assets": []
     },
     {
-      "id": "hair",
-      "spelling": "hair",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "hair|body_part",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "hair"
+        },
         {
           "language": "ru",
           "text": "волосы"
@@ -1823,13 +1893,15 @@
       "assets": []
     },
     {
-      "id": "tooth",
-      "spelling": "tooth",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "tooth|body_part",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "tooth"
+        },
         {
           "language": "ru",
           "text": "зуб"
@@ -1863,13 +1935,15 @@
       "assets": []
     },
     {
-      "id": "red",
-      "spelling": "red",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "red|color",
+      "partOfSpeech": "adjective",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "red"
+        },
         {
           "language": "ru",
           "text": "красный"
@@ -1903,13 +1977,15 @@
       "assets": []
     },
     {
-      "id": "blue",
-      "spelling": "blue",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "blue|color",
+      "partOfSpeech": "adjective",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "blue"
+        },
         {
           "language": "ru",
           "text": "синий"
@@ -1943,13 +2019,15 @@
       "assets": []
     },
     {
-      "id": "green",
-      "spelling": "green",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "green|color",
+      "partOfSpeech": "adjective",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "green"
+        },
         {
           "language": "ru",
           "text": "зелёный"
@@ -1983,13 +2061,15 @@
       "assets": []
     },
     {
-      "id": "yellow",
-      "spelling": "yellow",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "yellow|color",
+      "partOfSpeech": "adjective",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "yellow"
+        },
         {
           "language": "ru",
           "text": "жёлтый"
@@ -2023,13 +2103,15 @@
       "assets": []
     },
     {
-      "id": "orange|оранжевый",
-      "spelling": "orange",
-      "meaningKey": "оранжевый",
-      "partOfSpeech": null,
+      "id": "orange|color",
+      "partOfSpeech": "adjective",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "orange"
+        },
         {
           "language": "ru",
           "text": "оранжевый"
@@ -2063,13 +2145,15 @@
       "assets": []
     },
     {
-      "id": "purple",
-      "spelling": "purple",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "purple|color",
+      "partOfSpeech": "adjective",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "purple"
+        },
         {
           "language": "ru",
           "text": "фиолетовый"
@@ -2103,13 +2187,15 @@
       "assets": []
     },
     {
-      "id": "pink",
-      "spelling": "pink",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "pink|color",
+      "partOfSpeech": "adjective",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "pink"
+        },
         {
           "language": "ru",
           "text": "розовый"
@@ -2143,13 +2229,15 @@
       "assets": []
     },
     {
-      "id": "brown",
-      "spelling": "brown",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "brown|color",
+      "partOfSpeech": "adjective",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "brown"
+        },
         {
           "language": "ru",
           "text": "коричневый"
@@ -2183,13 +2271,15 @@
       "assets": []
     },
     {
-      "id": "black",
-      "spelling": "black",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "black|color",
+      "partOfSpeech": "adjective",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "black"
+        },
         {
           "language": "ru",
           "text": "чёрный"
@@ -2223,13 +2313,15 @@
       "assets": []
     },
     {
-      "id": "white",
-      "spelling": "white",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "white|color",
+      "partOfSpeech": "adjective",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "white"
+        },
         {
           "language": "ru",
           "text": "белый"
@@ -2263,13 +2355,15 @@
       "assets": []
     },
     {
-      "id": "gray",
-      "spelling": "gray",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "gray|color",
+      "partOfSpeech": "adjective",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "gray"
+        },
         {
           "language": "ru",
           "text": "серый"
@@ -2303,13 +2397,15 @@
       "assets": []
     },
     {
-      "id": "eat",
-      "spelling": "eat",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "eat|consume",
+      "partOfSpeech": "verb",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "eat"
+        },
         {
           "language": "ru",
           "text": "есть"
@@ -2343,13 +2439,15 @@
       "assets": []
     },
     {
-      "id": "drink",
-      "spelling": "drink",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "drink|consume_liquid",
+      "partOfSpeech": "verb",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "drink"
+        },
         {
           "language": "ru",
           "text": "пить"
@@ -2383,13 +2481,15 @@
       "assets": []
     },
     {
-      "id": "sleep",
-      "spelling": "sleep",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "sleep|rest",
+      "partOfSpeech": "verb",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "sleep"
+        },
         {
           "language": "ru",
           "text": "спать"
@@ -2423,13 +2523,15 @@
       "assets": []
     },
     {
-      "id": "walk",
-      "spelling": "walk",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "walk|walk",
+      "partOfSpeech": "verb",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "walk"
+        },
         {
           "language": "ru",
           "text": "ходить"
@@ -2463,13 +2565,15 @@
       "assets": []
     },
     {
-      "id": "run",
-      "spelling": "run",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "run|run",
+      "partOfSpeech": "verb",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "run"
+        },
         {
           "language": "ru",
           "text": "бегать"
@@ -2503,13 +2607,15 @@
       "assets": []
     },
     {
-      "id": "jump",
-      "spelling": "jump",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "jump|jump",
+      "partOfSpeech": "verb",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "jump"
+        },
         {
           "language": "ru",
           "text": "прыгать"
@@ -2543,13 +2649,15 @@
       "assets": []
     },
     {
-      "id": "play",
-      "spelling": "play",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "play|play",
+      "partOfSpeech": "verb",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "play"
+        },
         {
           "language": "ru",
           "text": "играть"
@@ -2583,13 +2691,15 @@
       "assets": []
     },
     {
-      "id": "sit",
-      "spelling": "sit",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "sit|sit",
+      "partOfSpeech": "verb",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "sit"
+        },
         {
           "language": "ru",
           "text": "сидеть"
@@ -2623,13 +2733,15 @@
       "assets": []
     },
     {
-      "id": "stand",
-      "spelling": "stand",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "stand|stand",
+      "partOfSpeech": "verb",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "stand"
+        },
         {
           "language": "ru",
           "text": "стоять"
@@ -2663,13 +2775,15 @@
       "assets": []
     },
     {
-      "id": "look",
-      "spelling": "look",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "look|look",
+      "partOfSpeech": "verb",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "look"
+        },
         {
           "language": "ru",
           "text": "смотреть"
@@ -2703,13 +2817,15 @@
       "assets": []
     },
     {
-      "id": "horse",
-      "spelling": "horse",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "horse|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "horse"
+        },
         {
           "language": "ru",
           "text": "лошадь"
@@ -2743,13 +2859,15 @@
       "assets": []
     },
     {
-      "id": "sheep",
-      "spelling": "sheep",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "sheep|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "sheep"
+        },
         {
           "language": "ru",
           "text": "овца"
@@ -2783,13 +2901,15 @@
       "assets": []
     },
     {
-      "id": "chicken",
-      "spelling": "chicken",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "chicken|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "chicken"
+        },
         {
           "language": "ru",
           "text": "курица"
@@ -2823,13 +2943,15 @@
       "assets": []
     },
     {
-      "id": "lion",
-      "spelling": "lion",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "lion|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "lion"
+        },
         {
           "language": "ru",
           "text": "лев"
@@ -2863,13 +2985,15 @@
       "assets": []
     },
     {
-      "id": "tiger",
-      "spelling": "tiger",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "tiger|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "tiger"
+        },
         {
           "language": "ru",
           "text": "тигр"
@@ -2903,13 +3027,15 @@
       "assets": []
     },
     {
-      "id": "elephant",
-      "spelling": "elephant",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "elephant|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "elephant"
+        },
         {
           "language": "ru",
           "text": "слон"
@@ -2943,13 +3069,15 @@
       "assets": []
     },
     {
-      "id": "giraffe",
-      "spelling": "giraffe",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "giraffe|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "giraffe"
+        },
         {
           "language": "ru",
           "text": "жираф"
@@ -2983,13 +3111,15 @@
       "assets": []
     },
     {
-      "id": "monkey",
-      "spelling": "monkey",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "monkey|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "monkey"
+        },
         {
           "language": "ru",
           "text": "обезьяна"
@@ -3023,13 +3153,15 @@
       "assets": []
     },
     {
-      "id": "zebra",
-      "spelling": "zebra",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "zebra|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "zebra"
+        },
         {
           "language": "ru",
           "text": "зебра"
@@ -3063,13 +3195,15 @@
       "assets": []
     },
     {
-      "id": "frog",
-      "spelling": "frog",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "frog|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "frog"
+        },
         {
           "language": "ru",
           "text": "лягушка"
@@ -3103,13 +3237,15 @@
       "assets": []
     },
     {
-      "id": "butterfly",
-      "spelling": "butterfly",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "butterfly|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "butterfly"
+        },
         {
           "language": "ru",
           "text": "бабочка"
@@ -3143,13 +3279,15 @@
       "assets": []
     },
     {
-      "id": "snake",
-      "spelling": "snake",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "snake|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "snake"
+        },
         {
           "language": "ru",
           "text": "змея"
@@ -3183,13 +3321,15 @@
       "assets": []
     },
     {
-      "id": "turtle",
-      "spelling": "turtle",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "turtle|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "turtle"
+        },
         {
           "language": "ru",
           "text": "черепаха"
@@ -3223,13 +3363,15 @@
       "assets": []
     },
     {
-      "id": "penguin",
-      "spelling": "penguin",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "penguin|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "penguin"
+        },
         {
           "language": "ru",
           "text": "пингвин"
@@ -3263,13 +3405,15 @@
       "assets": []
     },
     {
-      "id": "owl",
-      "spelling": "owl",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "owl|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "owl"
+        },
         {
           "language": "ru",
           "text": "сова"
@@ -3303,13 +3447,15 @@
       "assets": []
     },
     {
-      "id": "orange|апельсин",
-      "spelling": "orange",
-      "meaningKey": "апельсин",
-      "partOfSpeech": null,
+      "id": "orange|fruit",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "orange"
+        },
         {
           "language": "ru",
           "text": "апельсин"
@@ -3343,13 +3489,15 @@
       "assets": []
     },
     {
-      "id": "grape",
-      "spelling": "grape",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "grape|fruit",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "grape"
+        },
         {
           "language": "ru",
           "text": "виноград"
@@ -3383,13 +3531,15 @@
       "assets": []
     },
     {
-      "id": "strawberry",
-      "spelling": "strawberry",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "strawberry|fruit",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "strawberry"
+        },
         {
           "language": "ru",
           "text": "клубника"
@@ -3423,13 +3573,15 @@
       "assets": []
     },
     {
-      "id": "watermelon",
-      "spelling": "watermelon",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "watermelon|fruit",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "watermelon"
+        },
         {
           "language": "ru",
           "text": "арбуз"
@@ -3463,13 +3615,15 @@
       "assets": []
     },
     {
-      "id": "carrot",
-      "spelling": "carrot",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "carrot|vegetable",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "carrot"
+        },
         {
           "language": "ru",
           "text": "морковь"
@@ -3503,13 +3657,15 @@
       "assets": []
     },
     {
-      "id": "potato",
-      "spelling": "potato",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "potato|vegetable",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "potato"
+        },
         {
           "language": "ru",
           "text": "картошка"
@@ -3543,13 +3699,15 @@
       "assets": []
     },
     {
-      "id": "tomato",
-      "spelling": "tomato",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "tomato|vegetable",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "tomato"
+        },
         {
           "language": "ru",
           "text": "помидор"
@@ -3583,13 +3741,15 @@
       "assets": []
     },
     {
-      "id": "cucumber",
-      "spelling": "cucumber",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "cucumber|vegetable",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "cucumber"
+        },
         {
           "language": "ru",
           "text": "огурец"
@@ -3623,13 +3783,15 @@
       "assets": []
     },
     {
-      "id": "ice cream",
-      "spelling": "ice cream",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "ice cream|dessert",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "ice cream"
+        },
         {
           "language": "ru",
           "text": "мороженое"
@@ -3663,13 +3825,15 @@
       "assets": []
     },
     {
-      "id": "pizza",
-      "spelling": "pizza",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "pizza|food",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "pizza"
+        },
         {
           "language": "ru",
           "text": "пицца"
@@ -3703,13 +3867,15 @@
       "assets": []
     },
     {
-      "id": "pasta",
-      "spelling": "pasta",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "pasta|food",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "pasta"
+        },
         {
           "language": "ru",
           "text": "паста"
@@ -3743,13 +3909,15 @@
       "assets": []
     },
     {
-      "id": "rice",
-      "spelling": "rice",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "rice|food",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "rice"
+        },
         {
           "language": "ru",
           "text": "рис"
@@ -3783,13 +3951,15 @@
       "assets": []
     },
     {
-      "id": "meat",
-      "spelling": "meat",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "meat|food",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "meat"
+        },
         {
           "language": "ru",
           "text": "мясо"
@@ -3823,13 +3993,15 @@
       "assets": []
     },
     {
-      "id": "sandwich",
-      "spelling": "sandwich",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "sandwich|food",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "sandwich"
+        },
         {
           "language": "ru",
           "text": "бутерброд"
@@ -3863,13 +4035,15 @@
       "assets": []
     },
     {
-      "id": "ball",
-      "spelling": "ball",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "ball|toy",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "ball"
+        },
         {
           "language": "ru",
           "text": "мяч"
@@ -3903,13 +4077,15 @@
       "assets": []
     },
     {
-      "id": "doll",
-      "spelling": "doll",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "doll|toy",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "doll"
+        },
         {
           "language": "ru",
           "text": "кукла"
@@ -3943,13 +4119,15 @@
       "assets": []
     },
     {
-      "id": "teddy bear",
-      "spelling": "teddy bear",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "teddy bear|toy",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "teddy bear"
+        },
         {
           "language": "ru",
           "text": "плюшевый мишка"
@@ -3983,13 +4161,15 @@
       "assets": []
     },
     {
-      "id": "car|машинка",
-      "spelling": "car",
-      "meaningKey": "машинка",
-      "partOfSpeech": null,
+      "id": "car|toy_car",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "car"
+        },
         {
           "language": "ru",
           "text": "машинка"
@@ -4023,13 +4203,15 @@
       "assets": []
     },
     {
-      "id": "train",
-      "spelling": "train",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "train|vehicle",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "train"
+        },
         {
           "language": "ru",
           "text": "поезд"
@@ -4063,13 +4245,15 @@
       "assets": []
     },
     {
-      "id": "bike",
-      "spelling": "bike",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "bike|bicycle",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "bike"
+        },
         {
           "language": "ru",
           "text": "велосипед"
@@ -4103,13 +4287,15 @@
       "assets": []
     },
     {
-      "id": "block",
-      "spelling": "block",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "block|toy_block",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "block"
+        },
         {
           "language": "ru",
           "text": "кубик"
@@ -4143,13 +4329,15 @@
       "assets": []
     },
     {
-      "id": "puzzle",
-      "spelling": "puzzle",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "puzzle|toy",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "puzzle"
+        },
         {
           "language": "ru",
           "text": "пазл"
@@ -4183,13 +4371,15 @@
       "assets": []
     },
     {
-      "id": "book",
-      "spelling": "book",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "book|object",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "book"
+        },
         {
           "language": "ru",
           "text": "книга"
@@ -4223,13 +4413,15 @@
       "assets": []
     },
     {
-      "id": "swing",
-      "spelling": "swing",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "swing|playground",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "swing"
+        },
         {
           "language": "ru",
           "text": "качели"
@@ -4263,13 +4455,15 @@
       "assets": []
     },
     {
-      "id": "slide",
-      "spelling": "slide",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "slide|playground",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "slide"
+        },
         {
           "language": "ru",
           "text": "горка"
@@ -4303,13 +4497,15 @@
       "assets": []
     },
     {
-      "id": "drum",
-      "spelling": "drum",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "drum|instrument",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "drum"
+        },
         {
           "language": "ru",
           "text": "барабан"
@@ -4343,13 +4539,15 @@
       "assets": []
     },
     {
-      "id": "sun",
-      "spelling": "sun",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "sun|celestial_object",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "sun"
+        },
         {
           "language": "ru",
           "text": "солнце"
@@ -4383,13 +4581,15 @@
       "assets": []
     },
     {
-      "id": "moon",
-      "spelling": "moon",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "moon|celestial_object",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "moon"
+        },
         {
           "language": "ru",
           "text": "луна"
@@ -4423,13 +4623,15 @@
       "assets": []
     },
     {
-      "id": "star",
-      "spelling": "star",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "star|celestial_object",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "star"
+        },
         {
           "language": "ru",
           "text": "звезда"
@@ -4463,13 +4665,15 @@
       "assets": []
     },
     {
-      "id": "cloud",
-      "spelling": "cloud",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "cloud|weather",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "cloud"
+        },
         {
           "language": "ru",
           "text": "облако"
@@ -4503,13 +4707,15 @@
       "assets": []
     },
     {
-      "id": "rain",
-      "spelling": "rain",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "rain|weather",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "rain"
+        },
         {
           "language": "ru",
           "text": "дождь"
@@ -4543,13 +4749,15 @@
       "assets": []
     },
     {
-      "id": "snow",
-      "spelling": "snow",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "snow|weather",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "snow"
+        },
         {
           "language": "ru",
           "text": "снег"
@@ -4583,13 +4791,15 @@
       "assets": []
     },
     {
-      "id": "tree",
-      "spelling": "tree",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "tree|plant",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "tree"
+        },
         {
           "language": "ru",
           "text": "дерево"
@@ -4623,13 +4833,15 @@
       "assets": []
     },
     {
-      "id": "flower",
-      "spelling": "flower",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "flower|plant",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "flower"
+        },
         {
           "language": "ru",
           "text": "цветок"
@@ -4663,13 +4875,15 @@
       "assets": []
     },
     {
-      "id": "grass",
-      "spelling": "grass",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "grass|plant",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "grass"
+        },
         {
           "language": "ru",
           "text": "трава"
@@ -4703,13 +4917,15 @@
       "assets": []
     },
     {
-      "id": "sky",
-      "spelling": "sky",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "sky|weather",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "sky"
+        },
         {
           "language": "ru",
           "text": "небо"
@@ -4743,13 +4959,15 @@
       "assets": []
     },
     {
-      "id": "wind",
-      "spelling": "wind",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "wind|weather",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "wind"
+        },
         {
           "language": "ru",
           "text": "ветер"
@@ -4783,13 +5001,15 @@
       "assets": []
     },
     {
-      "id": "dance",
-      "spelling": "dance",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "dance|dance",
+      "partOfSpeech": "verb",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "dance"
+        },
         {
           "language": "ru",
           "text": "танцевать"
@@ -4823,13 +5043,15 @@
       "assets": []
     },
     {
-      "id": "sing",
-      "spelling": "sing",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "sing|sing",
+      "partOfSpeech": "verb",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "sing"
+        },
         {
           "language": "ru",
           "text": "петь"
@@ -4863,13 +5085,15 @@
       "assets": []
     },
     {
-      "id": "read",
-      "spelling": "read",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "read|read",
+      "partOfSpeech": "verb",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "read"
+        },
         {
           "language": "ru",
           "text": "читать"
@@ -4903,13 +5127,15 @@
       "assets": []
     },
     {
-      "id": "draw",
-      "spelling": "draw",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "draw|draw",
+      "partOfSpeech": "verb",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "draw"
+        },
         {
           "language": "ru",
           "text": "рисовать"
@@ -4943,13 +5169,15 @@
       "assets": []
     },
     {
-      "id": "write",
-      "spelling": "write",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "write|write",
+      "partOfSpeech": "verb",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "write"
+        },
         {
           "language": "ru",
           "text": "писать"
@@ -4983,13 +5211,15 @@
       "assets": []
     },
     {
-      "id": "clap",
-      "spelling": "clap",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "clap|clap",
+      "partOfSpeech": "verb",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "clap"
+        },
         {
           "language": "ru",
           "text": "хлопать"
@@ -5023,13 +5253,15 @@
       "assets": []
     },
     {
-      "id": "wave",
-      "spelling": "wave",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "wave|wave_hand",
+      "partOfSpeech": "verb",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "wave"
+        },
         {
           "language": "ru",
           "text": "махать"
@@ -5063,13 +5295,15 @@
       "assets": []
     },
     {
-      "id": "hug",
-      "spelling": "hug",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "hug|embrace",
+      "partOfSpeech": "verb",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "hug"
+        },
         {
           "language": "ru",
           "text": "обнимать"
@@ -5103,13 +5337,15 @@
       "assets": []
     },
     {
-      "id": "kiss",
-      "spelling": "kiss",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "kiss|kiss",
+      "partOfSpeech": "verb",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "kiss"
+        },
         {
           "language": "ru",
           "text": "целовать"
@@ -5143,13 +5379,15 @@
       "assets": []
     },
     {
-      "id": "laugh",
-      "spelling": "laugh",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "laugh|laugh",
+      "partOfSpeech": "verb",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "laugh"
+        },
         {
           "language": "ru",
           "text": "смеяться"
@@ -5183,13 +5421,15 @@
       "assets": []
     },
     {
-      "id": "cry",
-      "spelling": "cry",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "cry|cry",
+      "partOfSpeech": "verb",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "cry"
+        },
         {
           "language": "ru",
           "text": "плакать"
@@ -5223,13 +5463,15 @@
       "assets": []
     },
     {
-      "id": "smile",
-      "spelling": "smile",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "smile|smile",
+      "partOfSpeech": "verb",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "smile"
+        },
         {
           "language": "ru",
           "text": "улыбаться"
@@ -5263,13 +5505,15 @@
       "assets": []
     },
     {
-      "id": "car|машина",
-      "spelling": "car",
-      "meaningKey": "машина",
-      "partOfSpeech": null,
+      "id": "car|automobile",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "car"
+        },
         {
           "language": "ru",
           "text": "машина"
@@ -5303,13 +5547,15 @@
       "assets": []
     },
     {
-      "id": "bus",
-      "spelling": "bus",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "bus|vehicle",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "bus"
+        },
         {
           "language": "ru",
           "text": "автобус"
@@ -5343,13 +5589,15 @@
       "assets": []
     },
     {
-      "id": "truck",
-      "spelling": "truck",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "truck|vehicle",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "truck"
+        },
         {
           "language": "ru",
           "text": "грузовик"
@@ -5383,13 +5631,15 @@
       "assets": []
     },
     {
-      "id": "plane",
-      "spelling": "plane",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "plane|aircraft",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "plane"
+        },
         {
           "language": "ru",
           "text": "самолёт"
@@ -5423,13 +5673,15 @@
       "assets": []
     },
     {
-      "id": "helicopter",
-      "spelling": "helicopter",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "helicopter|aircraft",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "helicopter"
+        },
         {
           "language": "ru",
           "text": "вертолёт"
@@ -5463,13 +5715,15 @@
       "assets": []
     },
     {
-      "id": "boat",
-      "spelling": "boat",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "boat|watercraft",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "boat"
+        },
         {
           "language": "ru",
           "text": "лодка"
@@ -5503,13 +5757,15 @@
       "assets": []
     },
     {
-      "id": "ship",
-      "spelling": "ship",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "ship|watercraft",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "ship"
+        },
         {
           "language": "ru",
           "text": "корабль"
@@ -5543,13 +5799,15 @@
       "assets": []
     },
     {
-      "id": "rocket",
-      "spelling": "rocket",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "rocket|spacecraft",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "rocket"
+        },
         {
           "language": "ru",
           "text": "ракета"
@@ -5583,13 +5841,15 @@
       "assets": []
     },
     {
-      "id": "bicycle",
-      "spelling": "bicycle",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "bicycle|bicycle",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "bicycle"
+        },
         {
           "language": "ru",
           "text": "велосипед"
@@ -5623,13 +5883,15 @@
       "assets": []
     },
     {
-      "id": "grandgrandma",
-      "spelling": "grandgrandma",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "grandgrandma|great_grandmother",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "grandgrandma"
+        },
         {
           "language": "ru",
           "text": "прабабушка"
@@ -5663,13 +5925,15 @@
       "assets": []
     },
     {
-      "id": "grandgrandpa",
-      "spelling": "grandgrandpa",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "grandgrandpa|great_grandfather",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "grandgrandpa"
+        },
         {
           "language": "ru",
           "text": "прадедушка"
@@ -5703,13 +5967,15 @@
       "assets": []
     },
     {
-      "id": "brother",
-      "spelling": "brother",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "brother|brother",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "brother"
+        },
         {
           "language": "ru",
           "text": "брат"
@@ -5743,13 +6009,15 @@
       "assets": []
     },
     {
-      "id": "sister",
-      "spelling": "sister",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "sister|sister",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "sister"
+        },
         {
           "language": "ru",
           "text": "сестра"
@@ -5783,13 +6051,15 @@
       "assets": []
     },
     {
-      "id": "aunt",
-      "spelling": "aunt",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "aunt|aunt",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "aunt"
+        },
         {
           "language": "ru",
           "text": "тётя"
@@ -5823,13 +6093,15 @@
       "assets": []
     },
     {
-      "id": "uncle",
-      "spelling": "uncle",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "uncle|uncle",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "uncle"
+        },
         {
           "language": "ru",
           "text": "дядя"
@@ -5863,13 +6135,15 @@
       "assets": []
     },
     {
-      "id": "cousin",
-      "spelling": "cousin",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "cousin|cousin",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "cousin"
+        },
         {
           "language": "ru",
           "text": "двоюродный брат"
@@ -5903,13 +6177,15 @@
       "assets": []
     },
     {
-      "id": "friend",
-      "spelling": "friend",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "friend|friend",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "friend"
+        },
         {
           "language": "ru",
           "text": "друг"
@@ -5943,13 +6219,15 @@
       "assets": []
     },
     {
-      "id": "home",
-      "spelling": "home",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "home|home_place",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "home"
+        },
         {
           "language": "ru",
           "text": "дом"
@@ -5988,246 +6266,246 @@
       "id": "basic-words-0",
       "name": "Basic Words",
       "wordIDs": [
-        "mama",
-        "papa",
-        "grandma",
-        "grandpa",
-        "arm",
-        "leg",
-        "nose",
-        "eye",
-        "family",
-        "dog",
-        "cat"
+        "mama|mother",
+        "papa|father",
+        "grandma|grandmother",
+        "grandpa|grandfather",
+        "arm|body_part",
+        "leg|body_part",
+        "nose|body_part",
+        "eye|body_part",
+        "family|kinship_group",
+        "dog|animal",
+        "cat|animal"
       ]
     },
     {
       "id": "starter-10-words-1",
       "name": "Starter (10 words)",
       "wordIDs": [
-        "mama",
-        "papa",
-        "baby",
-        "milk",
-        "water",
-        "yes",
-        "no",
-        "bye",
-        "hi",
-        "love"
+        "mama|mother",
+        "papa|father",
+        "baby|infant",
+        "milk|drink",
+        "water|liquid",
+        "yes|affirmation",
+        "no|negation",
+        "bye|farewell",
+        "hi|greeting",
+        "love|affection"
       ]
     },
     {
       "id": "animals---easy-10-words-2",
       "name": "Animals - Easy (10 words)",
       "wordIDs": [
-        "cat",
-        "dog",
-        "bird",
-        "fish",
-        "cow",
-        "duck",
-        "pig",
-        "rabbit",
-        "mouse",
-        "bear"
+        "cat|animal",
+        "dog|animal",
+        "bird|animal",
+        "fish|animal",
+        "cow|animal",
+        "duck|animal",
+        "pig|animal",
+        "rabbit|animal",
+        "mouse|animal",
+        "bear|animal"
       ]
     },
     {
       "id": "food---easy-10-words-3",
       "name": "Food - Easy (10 words)",
       "wordIDs": [
-        "apple",
-        "banana",
-        "bread",
-        "cookie",
-        "juice",
-        "egg",
-        "cheese",
-        "cake",
-        "soup",
-        "tea"
+        "apple|fruit",
+        "banana|fruit",
+        "bread|food",
+        "cookie|dessert",
+        "juice|drink",
+        "egg|food",
+        "cheese|food",
+        "cake|dessert",
+        "soup|food",
+        "tea|drink"
       ]
     },
     {
       "id": "body-parts-12-words-4",
       "name": "Body Parts (12 words)",
       "wordIDs": [
-        "head",
-        "eye",
-        "nose",
-        "mouth",
-        "ear",
-        "hand",
-        "finger",
-        "leg",
-        "foot",
-        "belly",
-        "hair",
-        "tooth"
+        "head|body_part",
+        "eye|body_part",
+        "nose|body_part",
+        "mouth|body_part",
+        "ear|body_part",
+        "hand|body_part",
+        "finger|body_part",
+        "leg|body_part",
+        "foot|body_part",
+        "belly|body_part",
+        "hair|body_part",
+        "tooth|body_part"
       ]
     },
     {
       "id": "colors-11-words-5",
       "name": "Colors (11 words)",
       "wordIDs": [
-        "red",
-        "blue",
-        "green",
-        "yellow",
-        "orange|оранжевый",
-        "purple",
-        "pink",
-        "brown",
-        "black",
-        "white",
-        "gray"
+        "red|color",
+        "blue|color",
+        "green|color",
+        "yellow|color",
+        "orange|color",
+        "purple|color",
+        "pink|color",
+        "brown|color",
+        "black|color",
+        "white|color",
+        "gray|color"
       ]
     },
     {
       "id": "actions---easy-10-words-6",
       "name": "Actions - Easy (10 words)",
       "wordIDs": [
-        "eat",
-        "drink",
-        "sleep",
-        "walk",
-        "run",
-        "jump",
-        "play",
-        "sit",
-        "stand",
-        "look"
+        "eat|consume",
+        "drink|consume_liquid",
+        "sleep|rest",
+        "walk|walk",
+        "run|run",
+        "jump|jump",
+        "play|play",
+        "sit|sit",
+        "stand|stand",
+        "look|look"
       ]
     },
     {
       "id": "animals---medium-15-words-7",
       "name": "Animals - Medium (15 words)",
       "wordIDs": [
-        "horse",
-        "sheep",
-        "chicken",
-        "lion",
-        "tiger",
-        "elephant",
-        "giraffe",
-        "monkey",
-        "zebra",
-        "frog",
-        "butterfly",
-        "snake",
-        "turtle",
-        "penguin",
-        "owl"
+        "horse|animal",
+        "sheep|animal",
+        "chicken|animal",
+        "lion|animal",
+        "tiger|animal",
+        "elephant|animal",
+        "giraffe|animal",
+        "monkey|animal",
+        "zebra|animal",
+        "frog|animal",
+        "butterfly|animal",
+        "snake|animal",
+        "turtle|animal",
+        "penguin|animal",
+        "owl|animal"
       ]
     },
     {
       "id": "food---medium-15-words-8",
       "name": "Food - Medium (15 words)",
       "wordIDs": [
-        "orange|апельсин",
-        "grape",
-        "strawberry",
-        "watermelon",
-        "carrot",
-        "potato",
-        "tomato",
-        "cucumber",
-        "ice cream",
-        "pizza",
-        "pasta",
-        "rice",
-        "meat",
-        "chicken",
-        "sandwich"
+        "orange|fruit",
+        "grape|fruit",
+        "strawberry|fruit",
+        "watermelon|fruit",
+        "carrot|vegetable",
+        "potato|vegetable",
+        "tomato|vegetable",
+        "cucumber|vegetable",
+        "ice cream|dessert",
+        "pizza|food",
+        "pasta|food",
+        "rice|food",
+        "meat|food",
+        "chicken|animal",
+        "sandwich|food"
       ]
     },
     {
       "id": "toys-play-12-words-9",
       "name": "Toys & Play (12 words)",
       "wordIDs": [
-        "ball",
-        "doll",
-        "teddy bear",
-        "car|машинка",
-        "train",
-        "bike",
-        "block",
-        "puzzle",
-        "book",
-        "swing",
-        "slide",
-        "drum"
+        "ball|toy",
+        "doll|toy",
+        "teddy bear|toy",
+        "car|toy_car",
+        "train|vehicle",
+        "bike|bicycle",
+        "block|toy_block",
+        "puzzle|toy",
+        "book|object",
+        "swing|playground",
+        "slide|playground",
+        "drum|instrument"
       ]
     },
     {
       "id": "nature-12-words-10",
       "name": "Nature (12 words)",
       "wordIDs": [
-        "sun",
-        "moon",
-        "star",
-        "cloud",
-        "rain",
-        "snow",
-        "tree",
-        "flower",
-        "grass",
-        "water",
-        "sky",
-        "wind"
+        "sun|celestial_object",
+        "moon|celestial_object",
+        "star|celestial_object",
+        "cloud|weather",
+        "rain|weather",
+        "snow|weather",
+        "tree|plant",
+        "flower|plant",
+        "grass|plant",
+        "water|liquid",
+        "sky|weather",
+        "wind|weather"
       ]
     },
     {
       "id": "actions---medium-12-words-11",
       "name": "Actions - Medium (12 words)",
       "wordIDs": [
-        "dance",
-        "sing",
-        "read",
-        "draw",
-        "write",
-        "clap",
-        "wave",
-        "hug",
-        "kiss",
-        "laugh",
-        "cry",
-        "smile"
+        "dance|dance",
+        "sing|sing",
+        "read|read",
+        "draw|draw",
+        "write|write",
+        "clap|clap",
+        "wave|wave_hand",
+        "hug|embrace",
+        "kiss|kiss",
+        "laugh|laugh",
+        "cry|cry",
+        "smile|smile"
       ]
     },
     {
       "id": "vehicles-10-words-12",
       "name": "Vehicles (10 words)",
       "wordIDs": [
-        "car|машина",
-        "bus",
-        "truck",
-        "train",
-        "plane",
-        "helicopter",
-        "boat",
-        "ship",
-        "rocket",
-        "bicycle"
+        "car|automobile",
+        "bus|vehicle",
+        "truck|vehicle",
+        "train|vehicle",
+        "plane|aircraft",
+        "helicopter|aircraft",
+        "boat|watercraft",
+        "ship|watercraft",
+        "rocket|spacecraft",
+        "bicycle|bicycle"
       ]
     },
     {
       "id": "family-12-words-13",
       "name": "Family (11 words)",
       "wordIDs": [
-        "grandma",
-        "grandpa",
-        "grandgrandma",
-        "grandgrandpa",
-        "brother",
-        "sister",
-        "aunt",
-        "uncle",
-        "cousin",
-        "friend",
-        "family",
-        "home"
+        "grandma|grandmother",
+        "grandpa|grandfather",
+        "grandgrandma|great_grandmother",
+        "grandgrandpa|great_grandfather",
+        "brother|brother",
+        "sister|sister",
+        "aunt|aunt",
+        "uncle|uncle",
+        "cousin|cousin",
+        "friend|friend",
+        "family|kinship_group",
+        "home|home_place"
       ]
     },
     {
