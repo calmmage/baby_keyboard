@@ -3,160 +3,420 @@
   "source": "BabyKeyboardLock/utils/RandomWordList.swift",
   "entries": [
     {
-      "id": "mama",
-      "spelling": "mama",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "mama|mother",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "mama"
+        },
         {
           "language": "ru",
           "text": "мама"
+        },
+        {
+          "language": "de",
+          "text": "Mama"
+        },
+        {
+          "language": "fr",
+          "text": "maman"
+        },
+        {
+          "language": "es",
+          "text": "mamá"
+        },
+        {
+          "language": "it",
+          "text": "mamma"
+        },
+        {
+          "language": "ja",
+          "text": "ママ"
+        },
+        {
+          "language": "zh",
+          "text": "妈妈"
         }
       ],
       "definitions": [],
       "assets": []
     },
     {
-      "id": "papa",
-      "spelling": "papa",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "papa|father",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "papa"
+        },
         {
           "language": "ru",
           "text": "папа"
+        },
+        {
+          "language": "de",
+          "text": "Papa"
+        },
+        {
+          "language": "fr",
+          "text": "papa"
+        },
+        {
+          "language": "es",
+          "text": "papá"
+        },
+        {
+          "language": "it",
+          "text": "papà"
+        },
+        {
+          "language": "ja",
+          "text": "パパ"
+        },
+        {
+          "language": "zh",
+          "text": "爸爸"
         }
       ],
       "definitions": [],
       "assets": []
     },
     {
-      "id": "grandma",
-      "spelling": "grandma",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "grandma|grandmother",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "grandma"
+        },
         {
           "language": "ru",
           "text": "бабушка"
+        },
+        {
+          "language": "de",
+          "text": "Oma"
+        },
+        {
+          "language": "fr",
+          "text": "mamie"
+        },
+        {
+          "language": "es",
+          "text": "abuela"
+        },
+        {
+          "language": "it",
+          "text": "nonna"
+        },
+        {
+          "language": "ja",
+          "text": "おばあちゃん"
+        },
+        {
+          "language": "zh",
+          "text": "奶奶"
         }
       ],
       "definitions": [],
       "assets": []
     },
     {
-      "id": "grandpa",
-      "spelling": "grandpa",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "grandpa|grandfather",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "grandpa"
+        },
         {
           "language": "ru",
           "text": "дедушка"
+        },
+        {
+          "language": "de",
+          "text": "Opa"
+        },
+        {
+          "language": "fr",
+          "text": "papi"
+        },
+        {
+          "language": "es",
+          "text": "abuelo"
+        },
+        {
+          "language": "it",
+          "text": "nonno"
+        },
+        {
+          "language": "ja",
+          "text": "おじいちゃん"
+        },
+        {
+          "language": "zh",
+          "text": "爷爷"
         }
       ],
       "definitions": [],
       "assets": []
     },
     {
-      "id": "arm",
-      "spelling": "arm",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "arm|body_part",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "arm"
+        },
         {
           "language": "ru",
           "text": "рука"
+        },
+        {
+          "language": "de",
+          "text": "Arm"
+        },
+        {
+          "language": "fr",
+          "text": "bras"
+        },
+        {
+          "language": "es",
+          "text": "brazo"
+        },
+        {
+          "language": "it",
+          "text": "braccio"
+        },
+        {
+          "language": "ja",
+          "text": "うで"
+        },
+        {
+          "language": "zh",
+          "text": "手臂"
         }
       ],
       "definitions": [],
       "assets": []
     },
     {
-      "id": "leg",
-      "spelling": "leg",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "leg|body_part",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "leg"
+        },
         {
           "language": "ru",
           "text": "нога"
+        },
+        {
+          "language": "de",
+          "text": "Bein"
+        },
+        {
+          "language": "fr",
+          "text": "jambe"
+        },
+        {
+          "language": "es",
+          "text": "pierna"
+        },
+        {
+          "language": "it",
+          "text": "gamba"
+        },
+        {
+          "language": "ja",
+          "text": "あし"
+        },
+        {
+          "language": "zh",
+          "text": "腿"
         }
       ],
       "definitions": [],
       "assets": []
     },
     {
-      "id": "nose",
-      "spelling": "nose",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "nose|body_part",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "nose"
+        },
         {
           "language": "ru",
           "text": "нос"
+        },
+        {
+          "language": "de",
+          "text": "Nase"
+        },
+        {
+          "language": "fr",
+          "text": "nez"
+        },
+        {
+          "language": "es",
+          "text": "nariz"
+        },
+        {
+          "language": "it",
+          "text": "naso"
+        },
+        {
+          "language": "ja",
+          "text": "はな"
+        },
+        {
+          "language": "zh",
+          "text": "鼻子"
         }
       ],
       "definitions": [],
       "assets": []
     },
     {
-      "id": "eye",
-      "spelling": "eye",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "eye|body_part",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "eye"
+        },
         {
           "language": "ru",
           "text": "глаз"
+        },
+        {
+          "language": "de",
+          "text": "Auge"
+        },
+        {
+          "language": "fr",
+          "text": "œil"
+        },
+        {
+          "language": "es",
+          "text": "ojo"
+        },
+        {
+          "language": "it",
+          "text": "occhio"
+        },
+        {
+          "language": "ja",
+          "text": "め"
+        },
+        {
+          "language": "zh",
+          "text": "眼睛"
         }
       ],
       "definitions": [],
       "assets": []
     },
     {
-      "id": "family",
-      "spelling": "family",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "family|kinship_group",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
+        {
+          "language": "en",
+          "text": "family"
+        },
         {
           "language": "ru",
           "text": "семья"
+        },
+        {
+          "language": "de",
+          "text": "Familie"
+        },
+        {
+          "language": "fr",
+          "text": "famille"
+        },
+        {
+          "language": "es",
+          "text": "familia"
+        },
+        {
+          "language": "it",
+          "text": "famiglia"
+        },
+        {
+          "language": "ja",
+          "text": "かぞく"
+        },
+        {
+          "language": "zh",
+          "text": "家人"
         }
       ],
       "definitions": [],
       "assets": []
     },
     {
-      "id": "dog",
-      "spelling": "dog",
-      "meaningKey": null,
-      "partOfSpeech": null,
+      "id": "dog|animal",
+      "partOfSpeech": "noun",
       "category": null,
       "tags": [],
       "translations": [
         {
+          "language": "en",
+          "text": "dog"
+        },
+        {
           "language": "ru",
           "text": "собака"
+        },
+        {
+          "language": "de",
+          "text": "Hund"
+        },
+        {
+          "language": "fr",
+          "text": "chien"
+        },
+        {
+          "language": "es",
+          "text": "perro"
+        },
+        {
+          "language": "it",
+          "text": "cane"
+        },
+        {
+          "language": "ja",
+          "text": "いぬ"
+        },
+        {
+          "language": "zh",
+          "text": "狗"
         }
       ],
       "definitions": [],
@@ -173,6 +433,30 @@
         {
           "language": "ru",
           "text": "кошка"
+        },
+        {
+          "language": "de",
+          "text": "Katze"
+        },
+        {
+          "language": "fr",
+          "text": "chat"
+        },
+        {
+          "language": "es",
+          "text": "gato"
+        },
+        {
+          "language": "it",
+          "text": "gatto"
+        },
+        {
+          "language": "ja",
+          "text": "ねこ"
+        },
+        {
+          "language": "zh",
+          "text": "猫"
         }
       ],
       "definitions": [],
@@ -189,6 +473,30 @@
         {
           "language": "ru",
           "text": "малыш"
+        },
+        {
+          "language": "de",
+          "text": "Baby"
+        },
+        {
+          "language": "fr",
+          "text": "bébé"
+        },
+        {
+          "language": "es",
+          "text": "bebé"
+        },
+        {
+          "language": "it",
+          "text": "bebè"
+        },
+        {
+          "language": "ja",
+          "text": "あかちゃん"
+        },
+        {
+          "language": "zh",
+          "text": "宝宝"
         }
       ],
       "definitions": [],
@@ -205,6 +513,30 @@
         {
           "language": "ru",
           "text": "молоко"
+        },
+        {
+          "language": "de",
+          "text": "Milch"
+        },
+        {
+          "language": "fr",
+          "text": "lait"
+        },
+        {
+          "language": "es",
+          "text": "leche"
+        },
+        {
+          "language": "it",
+          "text": "latte"
+        },
+        {
+          "language": "ja",
+          "text": "ミルク"
+        },
+        {
+          "language": "zh",
+          "text": "牛奶"
         }
       ],
       "definitions": [],
@@ -221,6 +553,30 @@
         {
           "language": "ru",
           "text": "вода"
+        },
+        {
+          "language": "de",
+          "text": "Wasser"
+        },
+        {
+          "language": "fr",
+          "text": "eau"
+        },
+        {
+          "language": "es",
+          "text": "agua"
+        },
+        {
+          "language": "it",
+          "text": "acqua"
+        },
+        {
+          "language": "ja",
+          "text": "みず"
+        },
+        {
+          "language": "zh",
+          "text": "水"
         }
       ],
       "definitions": [],
@@ -237,6 +593,30 @@
         {
           "language": "ru",
           "text": "да"
+        },
+        {
+          "language": "de",
+          "text": "ja"
+        },
+        {
+          "language": "fr",
+          "text": "oui"
+        },
+        {
+          "language": "es",
+          "text": "sí"
+        },
+        {
+          "language": "it",
+          "text": "sì"
+        },
+        {
+          "language": "ja",
+          "text": "はい"
+        },
+        {
+          "language": "zh",
+          "text": "是"
         }
       ],
       "definitions": [],
@@ -253,6 +633,30 @@
         {
           "language": "ru",
           "text": "нет"
+        },
+        {
+          "language": "de",
+          "text": "nein"
+        },
+        {
+          "language": "fr",
+          "text": "non"
+        },
+        {
+          "language": "es",
+          "text": "no"
+        },
+        {
+          "language": "it",
+          "text": "no"
+        },
+        {
+          "language": "ja",
+          "text": "いいえ"
+        },
+        {
+          "language": "zh",
+          "text": "不"
         }
       ],
       "definitions": [],
@@ -269,6 +673,30 @@
         {
           "language": "ru",
           "text": "пока"
+        },
+        {
+          "language": "de",
+          "text": "Tschüss"
+        },
+        {
+          "language": "fr",
+          "text": "au revoir"
+        },
+        {
+          "language": "es",
+          "text": "adiós"
+        },
+        {
+          "language": "it",
+          "text": "ciao"
+        },
+        {
+          "language": "ja",
+          "text": "バイバイ"
+        },
+        {
+          "language": "zh",
+          "text": "再见"
         }
       ],
       "definitions": [],
@@ -285,6 +713,30 @@
         {
           "language": "ru",
           "text": "привет"
+        },
+        {
+          "language": "de",
+          "text": "Hallo"
+        },
+        {
+          "language": "fr",
+          "text": "salut"
+        },
+        {
+          "language": "es",
+          "text": "hola"
+        },
+        {
+          "language": "it",
+          "text": "ciao"
+        },
+        {
+          "language": "ja",
+          "text": "こんにちは"
+        },
+        {
+          "language": "zh",
+          "text": "你好"
         }
       ],
       "definitions": [],
@@ -301,6 +753,30 @@
         {
           "language": "ru",
           "text": "любовь"
+        },
+        {
+          "language": "de",
+          "text": "Liebe"
+        },
+        {
+          "language": "fr",
+          "text": "amour"
+        },
+        {
+          "language": "es",
+          "text": "amor"
+        },
+        {
+          "language": "it",
+          "text": "amore"
+        },
+        {
+          "language": "ja",
+          "text": "あい"
+        },
+        {
+          "language": "zh",
+          "text": "爱"
         }
       ],
       "definitions": [],
@@ -317,6 +793,30 @@
         {
           "language": "ru",
           "text": "птица"
+        },
+        {
+          "language": "de",
+          "text": "Vogel"
+        },
+        {
+          "language": "fr",
+          "text": "oiseau"
+        },
+        {
+          "language": "es",
+          "text": "pájaro"
+        },
+        {
+          "language": "it",
+          "text": "uccello"
+        },
+        {
+          "language": "ja",
+          "text": "とり"
+        },
+        {
+          "language": "zh",
+          "text": "鸟"
         }
       ],
       "definitions": [],
@@ -333,6 +833,30 @@
         {
           "language": "ru",
           "text": "рыба"
+        },
+        {
+          "language": "de",
+          "text": "Fisch"
+        },
+        {
+          "language": "fr",
+          "text": "poisson"
+        },
+        {
+          "language": "es",
+          "text": "pez"
+        },
+        {
+          "language": "it",
+          "text": "pesce"
+        },
+        {
+          "language": "ja",
+          "text": "さかな"
+        },
+        {
+          "language": "zh",
+          "text": "鱼"
         }
       ],
       "definitions": [],
@@ -349,6 +873,30 @@
         {
           "language": "ru",
           "text": "корова"
+        },
+        {
+          "language": "de",
+          "text": "Kuh"
+        },
+        {
+          "language": "fr",
+          "text": "vache"
+        },
+        {
+          "language": "es",
+          "text": "vaca"
+        },
+        {
+          "language": "it",
+          "text": "mucca"
+        },
+        {
+          "language": "ja",
+          "text": "うし"
+        },
+        {
+          "language": "zh",
+          "text": "牛"
         }
       ],
       "definitions": [],
@@ -365,6 +913,30 @@
         {
           "language": "ru",
           "text": "утка"
+        },
+        {
+          "language": "de",
+          "text": "Ente"
+        },
+        {
+          "language": "fr",
+          "text": "canard"
+        },
+        {
+          "language": "es",
+          "text": "pato"
+        },
+        {
+          "language": "it",
+          "text": "anatra"
+        },
+        {
+          "language": "ja",
+          "text": "あひる"
+        },
+        {
+          "language": "zh",
+          "text": "鸭子"
         }
       ],
       "definitions": [],
@@ -381,6 +953,30 @@
         {
           "language": "ru",
           "text": "свинья"
+        },
+        {
+          "language": "de",
+          "text": "Schwein"
+        },
+        {
+          "language": "fr",
+          "text": "cochon"
+        },
+        {
+          "language": "es",
+          "text": "cerdo"
+        },
+        {
+          "language": "it",
+          "text": "maiale"
+        },
+        {
+          "language": "ja",
+          "text": "ぶた"
+        },
+        {
+          "language": "zh",
+          "text": "猪"
         }
       ],
       "definitions": [],
@@ -397,6 +993,30 @@
         {
           "language": "ru",
           "text": "кролик"
+        },
+        {
+          "language": "de",
+          "text": "Kaninchen"
+        },
+        {
+          "language": "fr",
+          "text": "lapin"
+        },
+        {
+          "language": "es",
+          "text": "conejo"
+        },
+        {
+          "language": "it",
+          "text": "coniglio"
+        },
+        {
+          "language": "ja",
+          "text": "うさぎ"
+        },
+        {
+          "language": "zh",
+          "text": "兔子"
         }
       ],
       "definitions": [],
@@ -413,6 +1033,30 @@
         {
           "language": "ru",
           "text": "мышь"
+        },
+        {
+          "language": "de",
+          "text": "Maus"
+        },
+        {
+          "language": "fr",
+          "text": "souris"
+        },
+        {
+          "language": "es",
+          "text": "ratón"
+        },
+        {
+          "language": "it",
+          "text": "topo"
+        },
+        {
+          "language": "ja",
+          "text": "ねずみ"
+        },
+        {
+          "language": "zh",
+          "text": "老鼠"
         }
       ],
       "definitions": [],
@@ -429,6 +1073,30 @@
         {
           "language": "ru",
           "text": "медведь"
+        },
+        {
+          "language": "de",
+          "text": "Bär"
+        },
+        {
+          "language": "fr",
+          "text": "ours"
+        },
+        {
+          "language": "es",
+          "text": "oso"
+        },
+        {
+          "language": "it",
+          "text": "orso"
+        },
+        {
+          "language": "ja",
+          "text": "くま"
+        },
+        {
+          "language": "zh",
+          "text": "熊"
         }
       ],
       "definitions": [],
@@ -445,6 +1113,30 @@
         {
           "language": "ru",
           "text": "яблоко"
+        },
+        {
+          "language": "de",
+          "text": "Apfel"
+        },
+        {
+          "language": "fr",
+          "text": "pomme"
+        },
+        {
+          "language": "es",
+          "text": "manzana"
+        },
+        {
+          "language": "it",
+          "text": "mela"
+        },
+        {
+          "language": "ja",
+          "text": "りんご"
+        },
+        {
+          "language": "zh",
+          "text": "苹果"
         }
       ],
       "definitions": [],
@@ -461,6 +1153,30 @@
         {
           "language": "ru",
           "text": "банан"
+        },
+        {
+          "language": "de",
+          "text": "Banane"
+        },
+        {
+          "language": "fr",
+          "text": "banane"
+        },
+        {
+          "language": "es",
+          "text": "plátano"
+        },
+        {
+          "language": "it",
+          "text": "banana"
+        },
+        {
+          "language": "ja",
+          "text": "バナナ"
+        },
+        {
+          "language": "zh",
+          "text": "香蕉"
         }
       ],
       "definitions": [],
@@ -477,6 +1193,30 @@
         {
           "language": "ru",
           "text": "хлеб"
+        },
+        {
+          "language": "de",
+          "text": "Brot"
+        },
+        {
+          "language": "fr",
+          "text": "pain"
+        },
+        {
+          "language": "es",
+          "text": "pan"
+        },
+        {
+          "language": "it",
+          "text": "pane"
+        },
+        {
+          "language": "ja",
+          "text": "パン"
+        },
+        {
+          "language": "zh",
+          "text": "面包"
         }
       ],
       "definitions": [],
@@ -493,6 +1233,30 @@
         {
           "language": "ru",
           "text": "печенье"
+        },
+        {
+          "language": "de",
+          "text": "Keks"
+        },
+        {
+          "language": "fr",
+          "text": "biscuit"
+        },
+        {
+          "language": "es",
+          "text": "galleta"
+        },
+        {
+          "language": "it",
+          "text": "biscotto"
+        },
+        {
+          "language": "ja",
+          "text": "クッキー"
+        },
+        {
+          "language": "zh",
+          "text": "饼干"
         }
       ],
       "definitions": [],
@@ -509,6 +1273,30 @@
         {
           "language": "ru",
           "text": "сок"
+        },
+        {
+          "language": "de",
+          "text": "Saft"
+        },
+        {
+          "language": "fr",
+          "text": "jus"
+        },
+        {
+          "language": "es",
+          "text": "jugo"
+        },
+        {
+          "language": "it",
+          "text": "succo"
+        },
+        {
+          "language": "ja",
+          "text": "ジュース"
+        },
+        {
+          "language": "zh",
+          "text": "果汁"
         }
       ],
       "definitions": [],
@@ -525,6 +1313,30 @@
         {
           "language": "ru",
           "text": "яйцо"
+        },
+        {
+          "language": "de",
+          "text": "Ei"
+        },
+        {
+          "language": "fr",
+          "text": "œuf"
+        },
+        {
+          "language": "es",
+          "text": "huevo"
+        },
+        {
+          "language": "it",
+          "text": "uovo"
+        },
+        {
+          "language": "ja",
+          "text": "たまご"
+        },
+        {
+          "language": "zh",
+          "text": "蛋"
         }
       ],
       "definitions": [],
@@ -541,6 +1353,30 @@
         {
           "language": "ru",
           "text": "сыр"
+        },
+        {
+          "language": "de",
+          "text": "Käse"
+        },
+        {
+          "language": "fr",
+          "text": "fromage"
+        },
+        {
+          "language": "es",
+          "text": "queso"
+        },
+        {
+          "language": "it",
+          "text": "formaggio"
+        },
+        {
+          "language": "ja",
+          "text": "チーズ"
+        },
+        {
+          "language": "zh",
+          "text": "奶酪"
         }
       ],
       "definitions": [],
@@ -557,6 +1393,30 @@
         {
           "language": "ru",
           "text": "торт"
+        },
+        {
+          "language": "de",
+          "text": "Kuchen"
+        },
+        {
+          "language": "fr",
+          "text": "gâteau"
+        },
+        {
+          "language": "es",
+          "text": "pastel"
+        },
+        {
+          "language": "it",
+          "text": "torta"
+        },
+        {
+          "language": "ja",
+          "text": "ケーキ"
+        },
+        {
+          "language": "zh",
+          "text": "蛋糕"
         }
       ],
       "definitions": [],
@@ -573,6 +1433,30 @@
         {
           "language": "ru",
           "text": "суп"
+        },
+        {
+          "language": "de",
+          "text": "Suppe"
+        },
+        {
+          "language": "fr",
+          "text": "soupe"
+        },
+        {
+          "language": "es",
+          "text": "sopa"
+        },
+        {
+          "language": "it",
+          "text": "zuppa"
+        },
+        {
+          "language": "ja",
+          "text": "スープ"
+        },
+        {
+          "language": "zh",
+          "text": "汤"
         }
       ],
       "definitions": [],
@@ -589,6 +1473,30 @@
         {
           "language": "ru",
           "text": "чай"
+        },
+        {
+          "language": "de",
+          "text": "Tee"
+        },
+        {
+          "language": "fr",
+          "text": "thé"
+        },
+        {
+          "language": "es",
+          "text": "té"
+        },
+        {
+          "language": "it",
+          "text": "tè"
+        },
+        {
+          "language": "ja",
+          "text": "おちゃ"
+        },
+        {
+          "language": "zh",
+          "text": "茶"
         }
       ],
       "definitions": [],
@@ -605,6 +1513,30 @@
         {
           "language": "ru",
           "text": "голова"
+        },
+        {
+          "language": "de",
+          "text": "Kopf"
+        },
+        {
+          "language": "fr",
+          "text": "tête"
+        },
+        {
+          "language": "es",
+          "text": "cabeza"
+        },
+        {
+          "language": "it",
+          "text": "testa"
+        },
+        {
+          "language": "ja",
+          "text": "あたま"
+        },
+        {
+          "language": "zh",
+          "text": "头"
         }
       ],
       "definitions": [],
@@ -621,6 +1553,30 @@
         {
           "language": "ru",
           "text": "рот"
+        },
+        {
+          "language": "de",
+          "text": "Mund"
+        },
+        {
+          "language": "fr",
+          "text": "bouche"
+        },
+        {
+          "language": "es",
+          "text": "boca"
+        },
+        {
+          "language": "it",
+          "text": "bocca"
+        },
+        {
+          "language": "ja",
+          "text": "くち"
+        },
+        {
+          "language": "zh",
+          "text": "嘴"
         }
       ],
       "definitions": [],
@@ -637,6 +1593,30 @@
         {
           "language": "ru",
           "text": "ухо"
+        },
+        {
+          "language": "de",
+          "text": "Ohr"
+        },
+        {
+          "language": "fr",
+          "text": "oreille"
+        },
+        {
+          "language": "es",
+          "text": "oreja"
+        },
+        {
+          "language": "it",
+          "text": "orecchio"
+        },
+        {
+          "language": "ja",
+          "text": "みみ"
+        },
+        {
+          "language": "zh",
+          "text": "耳朵"
         }
       ],
       "definitions": [],
@@ -653,6 +1633,30 @@
         {
           "language": "ru",
           "text": "рука"
+        },
+        {
+          "language": "de",
+          "text": "Hand"
+        },
+        {
+          "language": "fr",
+          "text": "main"
+        },
+        {
+          "language": "es",
+          "text": "mano"
+        },
+        {
+          "language": "it",
+          "text": "mano"
+        },
+        {
+          "language": "ja",
+          "text": "て"
+        },
+        {
+          "language": "zh",
+          "text": "手"
         }
       ],
       "definitions": [],
@@ -669,6 +1673,30 @@
         {
           "language": "ru",
           "text": "палец"
+        },
+        {
+          "language": "de",
+          "text": "Finger"
+        },
+        {
+          "language": "fr",
+          "text": "doigt"
+        },
+        {
+          "language": "es",
+          "text": "dedo"
+        },
+        {
+          "language": "it",
+          "text": "dito"
+        },
+        {
+          "language": "ja",
+          "text": "ゆび"
+        },
+        {
+          "language": "zh",
+          "text": "手指"
         }
       ],
       "definitions": [],
@@ -685,6 +1713,30 @@
         {
           "language": "ru",
           "text": "ступня"
+        },
+        {
+          "language": "de",
+          "text": "Fuß"
+        },
+        {
+          "language": "fr",
+          "text": "pied"
+        },
+        {
+          "language": "es",
+          "text": "pie"
+        },
+        {
+          "language": "it",
+          "text": "piede"
+        },
+        {
+          "language": "ja",
+          "text": "あし"
+        },
+        {
+          "language": "zh",
+          "text": "脚"
         }
       ],
       "definitions": [],
@@ -701,6 +1753,30 @@
         {
           "language": "ru",
           "text": "живот"
+        },
+        {
+          "language": "de",
+          "text": "Bauch"
+        },
+        {
+          "language": "fr",
+          "text": "ventre"
+        },
+        {
+          "language": "es",
+          "text": "barriga"
+        },
+        {
+          "language": "it",
+          "text": "pancia"
+        },
+        {
+          "language": "ja",
+          "text": "おなか"
+        },
+        {
+          "language": "zh",
+          "text": "肚子"
         }
       ],
       "definitions": [],
@@ -717,6 +1793,30 @@
         {
           "language": "ru",
           "text": "волосы"
+        },
+        {
+          "language": "de",
+          "text": "Haar"
+        },
+        {
+          "language": "fr",
+          "text": "cheveux"
+        },
+        {
+          "language": "es",
+          "text": "pelo"
+        },
+        {
+          "language": "it",
+          "text": "capelli"
+        },
+        {
+          "language": "ja",
+          "text": "かみ"
+        },
+        {
+          "language": "zh",
+          "text": "头发"
         }
       ],
       "definitions": [],
@@ -733,6 +1833,30 @@
         {
           "language": "ru",
           "text": "зуб"
+        },
+        {
+          "language": "de",
+          "text": "Zahn"
+        },
+        {
+          "language": "fr",
+          "text": "dent"
+        },
+        {
+          "language": "es",
+          "text": "diente"
+        },
+        {
+          "language": "it",
+          "text": "dente"
+        },
+        {
+          "language": "ja",
+          "text": "は"
+        },
+        {
+          "language": "zh",
+          "text": "牙齿"
         }
       ],
       "definitions": [],
@@ -749,6 +1873,30 @@
         {
           "language": "ru",
           "text": "красный"
+        },
+        {
+          "language": "de",
+          "text": "rot"
+        },
+        {
+          "language": "fr",
+          "text": "rouge"
+        },
+        {
+          "language": "es",
+          "text": "rojo"
+        },
+        {
+          "language": "it",
+          "text": "rosso"
+        },
+        {
+          "language": "ja",
+          "text": "あか"
+        },
+        {
+          "language": "zh",
+          "text": "红色"
         }
       ],
       "definitions": [],
@@ -765,6 +1913,30 @@
         {
           "language": "ru",
           "text": "синий"
+        },
+        {
+          "language": "de",
+          "text": "Blau"
+        },
+        {
+          "language": "fr",
+          "text": "bleu"
+        },
+        {
+          "language": "es",
+          "text": "azul"
+        },
+        {
+          "language": "it",
+          "text": "blu"
+        },
+        {
+          "language": "ja",
+          "text": "あお"
+        },
+        {
+          "language": "zh",
+          "text": "蓝色"
         }
       ],
       "definitions": [],
@@ -781,6 +1953,30 @@
         {
           "language": "ru",
           "text": "зелёный"
+        },
+        {
+          "language": "de",
+          "text": "Grün"
+        },
+        {
+          "language": "fr",
+          "text": "vert"
+        },
+        {
+          "language": "es",
+          "text": "verde"
+        },
+        {
+          "language": "it",
+          "text": "verde"
+        },
+        {
+          "language": "ja",
+          "text": "みどり"
+        },
+        {
+          "language": "zh",
+          "text": "绿色"
         }
       ],
       "definitions": [],
@@ -797,6 +1993,30 @@
         {
           "language": "ru",
           "text": "жёлтый"
+        },
+        {
+          "language": "de",
+          "text": "Gelb"
+        },
+        {
+          "language": "fr",
+          "text": "jaune"
+        },
+        {
+          "language": "es",
+          "text": "amarillo"
+        },
+        {
+          "language": "it",
+          "text": "giallo"
+        },
+        {
+          "language": "ja",
+          "text": "きいろ"
+        },
+        {
+          "language": "zh",
+          "text": "黄色"
         }
       ],
       "definitions": [],
@@ -813,6 +2033,30 @@
         {
           "language": "ru",
           "text": "оранжевый"
+        },
+        {
+          "language": "de",
+          "text": "Orange"
+        },
+        {
+          "language": "fr",
+          "text": "orange"
+        },
+        {
+          "language": "es",
+          "text": "naranja"
+        },
+        {
+          "language": "it",
+          "text": "arancione"
+        },
+        {
+          "language": "ja",
+          "text": "オレンジ"
+        },
+        {
+          "language": "zh",
+          "text": "橙色"
         }
       ],
       "definitions": [],
@@ -829,6 +2073,30 @@
         {
           "language": "ru",
           "text": "фиолетовый"
+        },
+        {
+          "language": "de",
+          "text": "Lila"
+        },
+        {
+          "language": "fr",
+          "text": "violet"
+        },
+        {
+          "language": "es",
+          "text": "morado"
+        },
+        {
+          "language": "it",
+          "text": "viola"
+        },
+        {
+          "language": "ja",
+          "text": "むらさき"
+        },
+        {
+          "language": "zh",
+          "text": "紫色"
         }
       ],
       "definitions": [],
@@ -845,6 +2113,30 @@
         {
           "language": "ru",
           "text": "розовый"
+        },
+        {
+          "language": "de",
+          "text": "Rosa"
+        },
+        {
+          "language": "fr",
+          "text": "rose"
+        },
+        {
+          "language": "es",
+          "text": "rosa"
+        },
+        {
+          "language": "it",
+          "text": "rosa"
+        },
+        {
+          "language": "ja",
+          "text": "ピンク"
+        },
+        {
+          "language": "zh",
+          "text": "粉色"
         }
       ],
       "definitions": [],
@@ -861,6 +2153,30 @@
         {
           "language": "ru",
           "text": "коричневый"
+        },
+        {
+          "language": "de",
+          "text": "Braun"
+        },
+        {
+          "language": "fr",
+          "text": "marron"
+        },
+        {
+          "language": "es",
+          "text": "marrón"
+        },
+        {
+          "language": "it",
+          "text": "marrone"
+        },
+        {
+          "language": "ja",
+          "text": "ちゃいろ"
+        },
+        {
+          "language": "zh",
+          "text": "棕色"
         }
       ],
       "definitions": [],
@@ -877,6 +2193,30 @@
         {
           "language": "ru",
           "text": "чёрный"
+        },
+        {
+          "language": "de",
+          "text": "Schwarz"
+        },
+        {
+          "language": "fr",
+          "text": "noir"
+        },
+        {
+          "language": "es",
+          "text": "negro"
+        },
+        {
+          "language": "it",
+          "text": "nero"
+        },
+        {
+          "language": "ja",
+          "text": "くろ"
+        },
+        {
+          "language": "zh",
+          "text": "黑色"
         }
       ],
       "definitions": [],
@@ -893,6 +2233,30 @@
         {
           "language": "ru",
           "text": "белый"
+        },
+        {
+          "language": "de",
+          "text": "Weiß"
+        },
+        {
+          "language": "fr",
+          "text": "blanc"
+        },
+        {
+          "language": "es",
+          "text": "blanco"
+        },
+        {
+          "language": "it",
+          "text": "bianco"
+        },
+        {
+          "language": "ja",
+          "text": "しろ"
+        },
+        {
+          "language": "zh",
+          "text": "白色"
         }
       ],
       "definitions": [],
@@ -909,6 +2273,30 @@
         {
           "language": "ru",
           "text": "серый"
+        },
+        {
+          "language": "de",
+          "text": "Grau"
+        },
+        {
+          "language": "fr",
+          "text": "gris"
+        },
+        {
+          "language": "es",
+          "text": "gris"
+        },
+        {
+          "language": "it",
+          "text": "grigio"
+        },
+        {
+          "language": "ja",
+          "text": "はいいろ"
+        },
+        {
+          "language": "zh",
+          "text": "灰色"
         }
       ],
       "definitions": [],
@@ -925,6 +2313,30 @@
         {
           "language": "ru",
           "text": "есть"
+        },
+        {
+          "language": "de",
+          "text": "essen"
+        },
+        {
+          "language": "fr",
+          "text": "manger"
+        },
+        {
+          "language": "es",
+          "text": "comer"
+        },
+        {
+          "language": "it",
+          "text": "mangiare"
+        },
+        {
+          "language": "ja",
+          "text": "たべる"
+        },
+        {
+          "language": "zh",
+          "text": "吃"
         }
       ],
       "definitions": [],
@@ -941,6 +2353,30 @@
         {
           "language": "ru",
           "text": "пить"
+        },
+        {
+          "language": "de",
+          "text": "trinken"
+        },
+        {
+          "language": "fr",
+          "text": "boire"
+        },
+        {
+          "language": "es",
+          "text": "beber"
+        },
+        {
+          "language": "it",
+          "text": "bere"
+        },
+        {
+          "language": "ja",
+          "text": "のむ"
+        },
+        {
+          "language": "zh",
+          "text": "喝"
         }
       ],
       "definitions": [],
@@ -957,6 +2393,30 @@
         {
           "language": "ru",
           "text": "спать"
+        },
+        {
+          "language": "de",
+          "text": "schlafen"
+        },
+        {
+          "language": "fr",
+          "text": "dormir"
+        },
+        {
+          "language": "es",
+          "text": "dormir"
+        },
+        {
+          "language": "it",
+          "text": "dormire"
+        },
+        {
+          "language": "ja",
+          "text": "ねる"
+        },
+        {
+          "language": "zh",
+          "text": "睡觉"
         }
       ],
       "definitions": [],
@@ -973,6 +2433,30 @@
         {
           "language": "ru",
           "text": "ходить"
+        },
+        {
+          "language": "de",
+          "text": "gehen"
+        },
+        {
+          "language": "fr",
+          "text": "marcher"
+        },
+        {
+          "language": "es",
+          "text": "caminar"
+        },
+        {
+          "language": "it",
+          "text": "camminare"
+        },
+        {
+          "language": "ja",
+          "text": "あるく"
+        },
+        {
+          "language": "zh",
+          "text": "走路"
         }
       ],
       "definitions": [],
@@ -989,6 +2473,30 @@
         {
           "language": "ru",
           "text": "бегать"
+        },
+        {
+          "language": "de",
+          "text": "laufen"
+        },
+        {
+          "language": "fr",
+          "text": "courir"
+        },
+        {
+          "language": "es",
+          "text": "correr"
+        },
+        {
+          "language": "it",
+          "text": "correre"
+        },
+        {
+          "language": "ja",
+          "text": "はしる"
+        },
+        {
+          "language": "zh",
+          "text": "跑"
         }
       ],
       "definitions": [],
@@ -1005,6 +2513,30 @@
         {
           "language": "ru",
           "text": "прыгать"
+        },
+        {
+          "language": "de",
+          "text": "springen"
+        },
+        {
+          "language": "fr",
+          "text": "sauter"
+        },
+        {
+          "language": "es",
+          "text": "saltar"
+        },
+        {
+          "language": "it",
+          "text": "saltare"
+        },
+        {
+          "language": "ja",
+          "text": "ジャンプ"
+        },
+        {
+          "language": "zh",
+          "text": "跳"
         }
       ],
       "definitions": [],
@@ -1021,6 +2553,30 @@
         {
           "language": "ru",
           "text": "играть"
+        },
+        {
+          "language": "de",
+          "text": "spielen"
+        },
+        {
+          "language": "fr",
+          "text": "jouer"
+        },
+        {
+          "language": "es",
+          "text": "jugar"
+        },
+        {
+          "language": "it",
+          "text": "giocare"
+        },
+        {
+          "language": "ja",
+          "text": "あそぶ"
+        },
+        {
+          "language": "zh",
+          "text": "玩"
         }
       ],
       "definitions": [],
@@ -1037,6 +2593,30 @@
         {
           "language": "ru",
           "text": "сидеть"
+        },
+        {
+          "language": "de",
+          "text": "sitzen"
+        },
+        {
+          "language": "fr",
+          "text": "s'asseoir"
+        },
+        {
+          "language": "es",
+          "text": "sentarse"
+        },
+        {
+          "language": "it",
+          "text": "sedersi"
+        },
+        {
+          "language": "ja",
+          "text": "すわる"
+        },
+        {
+          "language": "zh",
+          "text": "坐"
         }
       ],
       "definitions": [],
@@ -1053,6 +2633,30 @@
         {
           "language": "ru",
           "text": "стоять"
+        },
+        {
+          "language": "de",
+          "text": "stehen"
+        },
+        {
+          "language": "fr",
+          "text": "se lever"
+        },
+        {
+          "language": "es",
+          "text": "estar de pie"
+        },
+        {
+          "language": "it",
+          "text": "stare in piedi"
+        },
+        {
+          "language": "ja",
+          "text": "たつ"
+        },
+        {
+          "language": "zh",
+          "text": "站"
         }
       ],
       "definitions": [],
@@ -1069,6 +2673,30 @@
         {
           "language": "ru",
           "text": "смотреть"
+        },
+        {
+          "language": "de",
+          "text": "schauen"
+        },
+        {
+          "language": "fr",
+          "text": "regarder"
+        },
+        {
+          "language": "es",
+          "text": "mirar"
+        },
+        {
+          "language": "it",
+          "text": "guardare"
+        },
+        {
+          "language": "ja",
+          "text": "みる"
+        },
+        {
+          "language": "zh",
+          "text": "看"
         }
       ],
       "definitions": [],
@@ -1085,6 +2713,30 @@
         {
           "language": "ru",
           "text": "лошадь"
+        },
+        {
+          "language": "de",
+          "text": "Pferd"
+        },
+        {
+          "language": "fr",
+          "text": "cheval"
+        },
+        {
+          "language": "es",
+          "text": "caballo"
+        },
+        {
+          "language": "it",
+          "text": "cavallo"
+        },
+        {
+          "language": "ja",
+          "text": "うま"
+        },
+        {
+          "language": "zh",
+          "text": "马"
         }
       ],
       "definitions": [],
@@ -1101,6 +2753,30 @@
         {
           "language": "ru",
           "text": "овца"
+        },
+        {
+          "language": "de",
+          "text": "Schaf"
+        },
+        {
+          "language": "fr",
+          "text": "mouton"
+        },
+        {
+          "language": "es",
+          "text": "oveja"
+        },
+        {
+          "language": "it",
+          "text": "pecora"
+        },
+        {
+          "language": "ja",
+          "text": "ひつじ"
+        },
+        {
+          "language": "zh",
+          "text": "羊"
         }
       ],
       "definitions": [],
@@ -1117,6 +2793,30 @@
         {
           "language": "ru",
           "text": "курица"
+        },
+        {
+          "language": "de",
+          "text": "Huhn"
+        },
+        {
+          "language": "fr",
+          "text": "poulet"
+        },
+        {
+          "language": "es",
+          "text": "pollo"
+        },
+        {
+          "language": "it",
+          "text": "pollo"
+        },
+        {
+          "language": "ja",
+          "text": "にわとり"
+        },
+        {
+          "language": "zh",
+          "text": "鸡"
         }
       ],
       "definitions": [],
@@ -1133,6 +2833,30 @@
         {
           "language": "ru",
           "text": "лев"
+        },
+        {
+          "language": "de",
+          "text": "Löwe"
+        },
+        {
+          "language": "fr",
+          "text": "lion"
+        },
+        {
+          "language": "es",
+          "text": "león"
+        },
+        {
+          "language": "it",
+          "text": "leone"
+        },
+        {
+          "language": "ja",
+          "text": "ライオン"
+        },
+        {
+          "language": "zh",
+          "text": "狮子"
         }
       ],
       "definitions": [],
@@ -1149,6 +2873,30 @@
         {
           "language": "ru",
           "text": "тигр"
+        },
+        {
+          "language": "de",
+          "text": "Tiger"
+        },
+        {
+          "language": "fr",
+          "text": "tigre"
+        },
+        {
+          "language": "es",
+          "text": "tigre"
+        },
+        {
+          "language": "it",
+          "text": "tigre"
+        },
+        {
+          "language": "ja",
+          "text": "とら"
+        },
+        {
+          "language": "zh",
+          "text": "老虎"
         }
       ],
       "definitions": [],
@@ -1165,6 +2913,30 @@
         {
           "language": "ru",
           "text": "слон"
+        },
+        {
+          "language": "de",
+          "text": "Elefant"
+        },
+        {
+          "language": "fr",
+          "text": "éléphant"
+        },
+        {
+          "language": "es",
+          "text": "elefante"
+        },
+        {
+          "language": "it",
+          "text": "elefante"
+        },
+        {
+          "language": "ja",
+          "text": "ぞう"
+        },
+        {
+          "language": "zh",
+          "text": "大象"
         }
       ],
       "definitions": [],
@@ -1181,6 +2953,30 @@
         {
           "language": "ru",
           "text": "жираф"
+        },
+        {
+          "language": "de",
+          "text": "Giraffe"
+        },
+        {
+          "language": "fr",
+          "text": "girafe"
+        },
+        {
+          "language": "es",
+          "text": "jirafa"
+        },
+        {
+          "language": "it",
+          "text": "giraffa"
+        },
+        {
+          "language": "ja",
+          "text": "キリン"
+        },
+        {
+          "language": "zh",
+          "text": "长颈鹿"
         }
       ],
       "definitions": [],
@@ -1197,6 +2993,30 @@
         {
           "language": "ru",
           "text": "обезьяна"
+        },
+        {
+          "language": "de",
+          "text": "Affe"
+        },
+        {
+          "language": "fr",
+          "text": "singe"
+        },
+        {
+          "language": "es",
+          "text": "mono"
+        },
+        {
+          "language": "it",
+          "text": "scimmia"
+        },
+        {
+          "language": "ja",
+          "text": "さる"
+        },
+        {
+          "language": "zh",
+          "text": "猴子"
         }
       ],
       "definitions": [],
@@ -1213,6 +3033,30 @@
         {
           "language": "ru",
           "text": "зебра"
+        },
+        {
+          "language": "de",
+          "text": "Zebra"
+        },
+        {
+          "language": "fr",
+          "text": "zèbre"
+        },
+        {
+          "language": "es",
+          "text": "cebra"
+        },
+        {
+          "language": "it",
+          "text": "zebra"
+        },
+        {
+          "language": "ja",
+          "text": "しまうま"
+        },
+        {
+          "language": "zh",
+          "text": "斑马"
         }
       ],
       "definitions": [],
@@ -1229,6 +3073,30 @@
         {
           "language": "ru",
           "text": "лягушка"
+        },
+        {
+          "language": "de",
+          "text": "Frosch"
+        },
+        {
+          "language": "fr",
+          "text": "grenouille"
+        },
+        {
+          "language": "es",
+          "text": "rana"
+        },
+        {
+          "language": "it",
+          "text": "rana"
+        },
+        {
+          "language": "ja",
+          "text": "かえる"
+        },
+        {
+          "language": "zh",
+          "text": "青蛙"
         }
       ],
       "definitions": [],
@@ -1245,6 +3113,30 @@
         {
           "language": "ru",
           "text": "бабочка"
+        },
+        {
+          "language": "de",
+          "text": "Schmetterling"
+        },
+        {
+          "language": "fr",
+          "text": "papillon"
+        },
+        {
+          "language": "es",
+          "text": "mariposa"
+        },
+        {
+          "language": "it",
+          "text": "farfalla"
+        },
+        {
+          "language": "ja",
+          "text": "ちょうちょ"
+        },
+        {
+          "language": "zh",
+          "text": "蝴蝶"
         }
       ],
       "definitions": [],
@@ -1261,6 +3153,30 @@
         {
           "language": "ru",
           "text": "змея"
+        },
+        {
+          "language": "de",
+          "text": "Schlange"
+        },
+        {
+          "language": "fr",
+          "text": "serpent"
+        },
+        {
+          "language": "es",
+          "text": "serpiente"
+        },
+        {
+          "language": "it",
+          "text": "serpente"
+        },
+        {
+          "language": "ja",
+          "text": "へび"
+        },
+        {
+          "language": "zh",
+          "text": "蛇"
         }
       ],
       "definitions": [],
@@ -1277,6 +3193,30 @@
         {
           "language": "ru",
           "text": "черепаха"
+        },
+        {
+          "language": "de",
+          "text": "Schildkröte"
+        },
+        {
+          "language": "fr",
+          "text": "tortue"
+        },
+        {
+          "language": "es",
+          "text": "tortuga"
+        },
+        {
+          "language": "it",
+          "text": "tartaruga"
+        },
+        {
+          "language": "ja",
+          "text": "かめ"
+        },
+        {
+          "language": "zh",
+          "text": "乌龟"
         }
       ],
       "definitions": [],
@@ -1293,6 +3233,30 @@
         {
           "language": "ru",
           "text": "пингвин"
+        },
+        {
+          "language": "de",
+          "text": "Pinguin"
+        },
+        {
+          "language": "fr",
+          "text": "pingouin"
+        },
+        {
+          "language": "es",
+          "text": "pingüino"
+        },
+        {
+          "language": "it",
+          "text": "pinguino"
+        },
+        {
+          "language": "ja",
+          "text": "ペンギン"
+        },
+        {
+          "language": "zh",
+          "text": "企鹅"
         }
       ],
       "definitions": [],
@@ -1309,6 +3273,30 @@
         {
           "language": "ru",
           "text": "сова"
+        },
+        {
+          "language": "de",
+          "text": "Eule"
+        },
+        {
+          "language": "fr",
+          "text": "hibou"
+        },
+        {
+          "language": "es",
+          "text": "búho"
+        },
+        {
+          "language": "it",
+          "text": "gufo"
+        },
+        {
+          "language": "ja",
+          "text": "ふくろう"
+        },
+        {
+          "language": "zh",
+          "text": "猫头鹰"
         }
       ],
       "definitions": [],
@@ -1325,6 +3313,30 @@
         {
           "language": "ru",
           "text": "апельсин"
+        },
+        {
+          "language": "de",
+          "text": "Orange"
+        },
+        {
+          "language": "fr",
+          "text": "orange"
+        },
+        {
+          "language": "es",
+          "text": "naranja"
+        },
+        {
+          "language": "it",
+          "text": "arancia"
+        },
+        {
+          "language": "ja",
+          "text": "オレンジ"
+        },
+        {
+          "language": "zh",
+          "text": "橙子"
         }
       ],
       "definitions": [],
@@ -1341,6 +3353,30 @@
         {
           "language": "ru",
           "text": "виноград"
+        },
+        {
+          "language": "de",
+          "text": "Traube"
+        },
+        {
+          "language": "fr",
+          "text": "raisin"
+        },
+        {
+          "language": "es",
+          "text": "uva"
+        },
+        {
+          "language": "it",
+          "text": "uva"
+        },
+        {
+          "language": "ja",
+          "text": "ぶどう"
+        },
+        {
+          "language": "zh",
+          "text": "葡萄"
         }
       ],
       "definitions": [],
@@ -1357,6 +3393,30 @@
         {
           "language": "ru",
           "text": "клубника"
+        },
+        {
+          "language": "de",
+          "text": "Erdbeere"
+        },
+        {
+          "language": "fr",
+          "text": "fraise"
+        },
+        {
+          "language": "es",
+          "text": "fresa"
+        },
+        {
+          "language": "it",
+          "text": "fragola"
+        },
+        {
+          "language": "ja",
+          "text": "いちご"
+        },
+        {
+          "language": "zh",
+          "text": "草莓"
         }
       ],
       "definitions": [],
@@ -1373,6 +3433,30 @@
         {
           "language": "ru",
           "text": "арбуз"
+        },
+        {
+          "language": "de",
+          "text": "Wassermelone"
+        },
+        {
+          "language": "fr",
+          "text": "pastèque"
+        },
+        {
+          "language": "es",
+          "text": "sandía"
+        },
+        {
+          "language": "it",
+          "text": "anguria"
+        },
+        {
+          "language": "ja",
+          "text": "すいか"
+        },
+        {
+          "language": "zh",
+          "text": "西瓜"
         }
       ],
       "definitions": [],
@@ -1389,6 +3473,30 @@
         {
           "language": "ru",
           "text": "морковь"
+        },
+        {
+          "language": "de",
+          "text": "Karotte"
+        },
+        {
+          "language": "fr",
+          "text": "carotte"
+        },
+        {
+          "language": "es",
+          "text": "zanahoria"
+        },
+        {
+          "language": "it",
+          "text": "carota"
+        },
+        {
+          "language": "ja",
+          "text": "にんじん"
+        },
+        {
+          "language": "zh",
+          "text": "胡萝卜"
         }
       ],
       "definitions": [],
@@ -1405,6 +3513,30 @@
         {
           "language": "ru",
           "text": "картошка"
+        },
+        {
+          "language": "de",
+          "text": "Kartoffel"
+        },
+        {
+          "language": "fr",
+          "text": "pomme de terre"
+        },
+        {
+          "language": "es",
+          "text": "patata"
+        },
+        {
+          "language": "it",
+          "text": "patata"
+        },
+        {
+          "language": "ja",
+          "text": "じゃがいも"
+        },
+        {
+          "language": "zh",
+          "text": "土豆"
         }
       ],
       "definitions": [],
@@ -1421,6 +3553,30 @@
         {
           "language": "ru",
           "text": "помидор"
+        },
+        {
+          "language": "de",
+          "text": "Tomate"
+        },
+        {
+          "language": "fr",
+          "text": "tomate"
+        },
+        {
+          "language": "es",
+          "text": "tomate"
+        },
+        {
+          "language": "it",
+          "text": "pomodoro"
+        },
+        {
+          "language": "ja",
+          "text": "トマト"
+        },
+        {
+          "language": "zh",
+          "text": "番茄"
         }
       ],
       "definitions": [],
@@ -1437,6 +3593,30 @@
         {
           "language": "ru",
           "text": "огурец"
+        },
+        {
+          "language": "de",
+          "text": "Gurke"
+        },
+        {
+          "language": "fr",
+          "text": "concombre"
+        },
+        {
+          "language": "es",
+          "text": "pepino"
+        },
+        {
+          "language": "it",
+          "text": "cetriolo"
+        },
+        {
+          "language": "ja",
+          "text": "きゅうり"
+        },
+        {
+          "language": "zh",
+          "text": "黄瓜"
         }
       ],
       "definitions": [],
@@ -1453,6 +3633,30 @@
         {
           "language": "ru",
           "text": "мороженое"
+        },
+        {
+          "language": "de",
+          "text": "Eis"
+        },
+        {
+          "language": "fr",
+          "text": "glace"
+        },
+        {
+          "language": "es",
+          "text": "helado"
+        },
+        {
+          "language": "it",
+          "text": "gelato"
+        },
+        {
+          "language": "ja",
+          "text": "アイスクリーム"
+        },
+        {
+          "language": "zh",
+          "text": "冰淇淋"
         }
       ],
       "definitions": [],
@@ -1469,6 +3673,30 @@
         {
           "language": "ru",
           "text": "пицца"
+        },
+        {
+          "language": "de",
+          "text": "Pizza"
+        },
+        {
+          "language": "fr",
+          "text": "pizza"
+        },
+        {
+          "language": "es",
+          "text": "pizza"
+        },
+        {
+          "language": "it",
+          "text": "pizza"
+        },
+        {
+          "language": "ja",
+          "text": "ピザ"
+        },
+        {
+          "language": "zh",
+          "text": "披萨"
         }
       ],
       "definitions": [],
@@ -1485,6 +3713,30 @@
         {
           "language": "ru",
           "text": "паста"
+        },
+        {
+          "language": "de",
+          "text": "Pasta"
+        },
+        {
+          "language": "fr",
+          "text": "pâtes"
+        },
+        {
+          "language": "es",
+          "text": "pasta"
+        },
+        {
+          "language": "it",
+          "text": "pasta"
+        },
+        {
+          "language": "ja",
+          "text": "パスタ"
+        },
+        {
+          "language": "zh",
+          "text": "意大利面"
         }
       ],
       "definitions": [],
@@ -1501,6 +3753,30 @@
         {
           "language": "ru",
           "text": "рис"
+        },
+        {
+          "language": "de",
+          "text": "Reis"
+        },
+        {
+          "language": "fr",
+          "text": "riz"
+        },
+        {
+          "language": "es",
+          "text": "arroz"
+        },
+        {
+          "language": "it",
+          "text": "riso"
+        },
+        {
+          "language": "ja",
+          "text": "ごはん"
+        },
+        {
+          "language": "zh",
+          "text": "米饭"
         }
       ],
       "definitions": [],
@@ -1517,6 +3793,30 @@
         {
           "language": "ru",
           "text": "мясо"
+        },
+        {
+          "language": "de",
+          "text": "Fleisch"
+        },
+        {
+          "language": "fr",
+          "text": "viande"
+        },
+        {
+          "language": "es",
+          "text": "carne"
+        },
+        {
+          "language": "it",
+          "text": "carne"
+        },
+        {
+          "language": "ja",
+          "text": "にく"
+        },
+        {
+          "language": "zh",
+          "text": "肉"
         }
       ],
       "definitions": [],
@@ -1533,6 +3833,30 @@
         {
           "language": "ru",
           "text": "бутерброд"
+        },
+        {
+          "language": "de",
+          "text": "Sandwich"
+        },
+        {
+          "language": "fr",
+          "text": "sandwich"
+        },
+        {
+          "language": "es",
+          "text": "sándwich"
+        },
+        {
+          "language": "it",
+          "text": "panino"
+        },
+        {
+          "language": "ja",
+          "text": "サンドイッチ"
+        },
+        {
+          "language": "zh",
+          "text": "三明治"
         }
       ],
       "definitions": [],
@@ -1549,6 +3873,30 @@
         {
           "language": "ru",
           "text": "мяч"
+        },
+        {
+          "language": "de",
+          "text": "Ball"
+        },
+        {
+          "language": "fr",
+          "text": "balle"
+        },
+        {
+          "language": "es",
+          "text": "pelota"
+        },
+        {
+          "language": "it",
+          "text": "palla"
+        },
+        {
+          "language": "ja",
+          "text": "ボール"
+        },
+        {
+          "language": "zh",
+          "text": "球"
         }
       ],
       "definitions": [],
@@ -1565,6 +3913,30 @@
         {
           "language": "ru",
           "text": "кукла"
+        },
+        {
+          "language": "de",
+          "text": "Puppe"
+        },
+        {
+          "language": "fr",
+          "text": "poupée"
+        },
+        {
+          "language": "es",
+          "text": "muñeca"
+        },
+        {
+          "language": "it",
+          "text": "bambola"
+        },
+        {
+          "language": "ja",
+          "text": "にんぎょう"
+        },
+        {
+          "language": "zh",
+          "text": "娃娃"
         }
       ],
       "definitions": [],
@@ -1581,6 +3953,30 @@
         {
           "language": "ru",
           "text": "плюшевый мишка"
+        },
+        {
+          "language": "de",
+          "text": "Teddybär"
+        },
+        {
+          "language": "fr",
+          "text": "nounours"
+        },
+        {
+          "language": "es",
+          "text": "osito de peluche"
+        },
+        {
+          "language": "it",
+          "text": "orsacchiotto"
+        },
+        {
+          "language": "ja",
+          "text": "テディベア"
+        },
+        {
+          "language": "zh",
+          "text": "泰迪熊"
         }
       ],
       "definitions": [],
@@ -1597,6 +3993,30 @@
         {
           "language": "ru",
           "text": "машинка"
+        },
+        {
+          "language": "de",
+          "text": "Spielzeugauto"
+        },
+        {
+          "language": "fr",
+          "text": "petite voiture"
+        },
+        {
+          "language": "es",
+          "text": "carrito"
+        },
+        {
+          "language": "it",
+          "text": "macchinina"
+        },
+        {
+          "language": "ja",
+          "text": "くるま"
+        },
+        {
+          "language": "zh",
+          "text": "玩具车"
         }
       ],
       "definitions": [],
@@ -1613,6 +4033,30 @@
         {
           "language": "ru",
           "text": "поезд"
+        },
+        {
+          "language": "de",
+          "text": "Zug"
+        },
+        {
+          "language": "fr",
+          "text": "train"
+        },
+        {
+          "language": "es",
+          "text": "tren"
+        },
+        {
+          "language": "it",
+          "text": "treno"
+        },
+        {
+          "language": "ja",
+          "text": "でんしゃ"
+        },
+        {
+          "language": "zh",
+          "text": "火车"
         }
       ],
       "definitions": [],
@@ -1629,6 +4073,30 @@
         {
           "language": "ru",
           "text": "велосипед"
+        },
+        {
+          "language": "de",
+          "text": "Fahrrad"
+        },
+        {
+          "language": "fr",
+          "text": "vélo"
+        },
+        {
+          "language": "es",
+          "text": "bicicleta"
+        },
+        {
+          "language": "it",
+          "text": "bici"
+        },
+        {
+          "language": "ja",
+          "text": "じてんしゃ"
+        },
+        {
+          "language": "zh",
+          "text": "自行车"
         }
       ],
       "definitions": [],
@@ -1645,6 +4113,30 @@
         {
           "language": "ru",
           "text": "кубик"
+        },
+        {
+          "language": "de",
+          "text": "Baustein"
+        },
+        {
+          "language": "fr",
+          "text": "cube"
+        },
+        {
+          "language": "es",
+          "text": "bloque"
+        },
+        {
+          "language": "it",
+          "text": "cubo"
+        },
+        {
+          "language": "ja",
+          "text": "つみき"
+        },
+        {
+          "language": "zh",
+          "text": "积木"
         }
       ],
       "definitions": [],
@@ -1661,6 +4153,30 @@
         {
           "language": "ru",
           "text": "пазл"
+        },
+        {
+          "language": "de",
+          "text": "Puzzle"
+        },
+        {
+          "language": "fr",
+          "text": "puzzle"
+        },
+        {
+          "language": "es",
+          "text": "rompecabezas"
+        },
+        {
+          "language": "it",
+          "text": "puzzle"
+        },
+        {
+          "language": "ja",
+          "text": "パズル"
+        },
+        {
+          "language": "zh",
+          "text": "拼图"
         }
       ],
       "definitions": [],
@@ -1677,6 +4193,30 @@
         {
           "language": "ru",
           "text": "книга"
+        },
+        {
+          "language": "de",
+          "text": "Buch"
+        },
+        {
+          "language": "fr",
+          "text": "livre"
+        },
+        {
+          "language": "es",
+          "text": "libro"
+        },
+        {
+          "language": "it",
+          "text": "libro"
+        },
+        {
+          "language": "ja",
+          "text": "ほん"
+        },
+        {
+          "language": "zh",
+          "text": "书"
         }
       ],
       "definitions": [],
@@ -1693,6 +4233,30 @@
         {
           "language": "ru",
           "text": "качели"
+        },
+        {
+          "language": "de",
+          "text": "Schaukel"
+        },
+        {
+          "language": "fr",
+          "text": "balançoire"
+        },
+        {
+          "language": "es",
+          "text": "columpio"
+        },
+        {
+          "language": "it",
+          "text": "altalena"
+        },
+        {
+          "language": "ja",
+          "text": "ブランコ"
+        },
+        {
+          "language": "zh",
+          "text": "秋千"
         }
       ],
       "definitions": [],
@@ -1709,6 +4273,30 @@
         {
           "language": "ru",
           "text": "горка"
+        },
+        {
+          "language": "de",
+          "text": "Rutsche"
+        },
+        {
+          "language": "fr",
+          "text": "toboggan"
+        },
+        {
+          "language": "es",
+          "text": "tobogán"
+        },
+        {
+          "language": "it",
+          "text": "scivolo"
+        },
+        {
+          "language": "ja",
+          "text": "すべりだい"
+        },
+        {
+          "language": "zh",
+          "text": "滑梯"
         }
       ],
       "definitions": [],
@@ -1725,6 +4313,30 @@
         {
           "language": "ru",
           "text": "барабан"
+        },
+        {
+          "language": "de",
+          "text": "Trommel"
+        },
+        {
+          "language": "fr",
+          "text": "tambour"
+        },
+        {
+          "language": "es",
+          "text": "tambor"
+        },
+        {
+          "language": "it",
+          "text": "tamburo"
+        },
+        {
+          "language": "ja",
+          "text": "たいこ"
+        },
+        {
+          "language": "zh",
+          "text": "鼓"
         }
       ],
       "definitions": [],
@@ -1741,6 +4353,30 @@
         {
           "language": "ru",
           "text": "солнце"
+        },
+        {
+          "language": "de",
+          "text": "Sonne"
+        },
+        {
+          "language": "fr",
+          "text": "soleil"
+        },
+        {
+          "language": "es",
+          "text": "sol"
+        },
+        {
+          "language": "it",
+          "text": "sole"
+        },
+        {
+          "language": "ja",
+          "text": "たいよう"
+        },
+        {
+          "language": "zh",
+          "text": "太阳"
         }
       ],
       "definitions": [],
@@ -1757,6 +4393,30 @@
         {
           "language": "ru",
           "text": "луна"
+        },
+        {
+          "language": "de",
+          "text": "Mond"
+        },
+        {
+          "language": "fr",
+          "text": "lune"
+        },
+        {
+          "language": "es",
+          "text": "luna"
+        },
+        {
+          "language": "it",
+          "text": "luna"
+        },
+        {
+          "language": "ja",
+          "text": "つき"
+        },
+        {
+          "language": "zh",
+          "text": "月亮"
         }
       ],
       "definitions": [],
@@ -1773,6 +4433,30 @@
         {
           "language": "ru",
           "text": "звезда"
+        },
+        {
+          "language": "de",
+          "text": "Stern"
+        },
+        {
+          "language": "fr",
+          "text": "étoile"
+        },
+        {
+          "language": "es",
+          "text": "estrella"
+        },
+        {
+          "language": "it",
+          "text": "stella"
+        },
+        {
+          "language": "ja",
+          "text": "ほし"
+        },
+        {
+          "language": "zh",
+          "text": "星星"
         }
       ],
       "definitions": [],
@@ -1789,6 +4473,30 @@
         {
           "language": "ru",
           "text": "облако"
+        },
+        {
+          "language": "de",
+          "text": "Wolke"
+        },
+        {
+          "language": "fr",
+          "text": "nuage"
+        },
+        {
+          "language": "es",
+          "text": "nube"
+        },
+        {
+          "language": "it",
+          "text": "nuvola"
+        },
+        {
+          "language": "ja",
+          "text": "くも"
+        },
+        {
+          "language": "zh",
+          "text": "云"
         }
       ],
       "definitions": [],
@@ -1805,6 +4513,30 @@
         {
           "language": "ru",
           "text": "дождь"
+        },
+        {
+          "language": "de",
+          "text": "Regen"
+        },
+        {
+          "language": "fr",
+          "text": "pluie"
+        },
+        {
+          "language": "es",
+          "text": "lluvia"
+        },
+        {
+          "language": "it",
+          "text": "pioggia"
+        },
+        {
+          "language": "ja",
+          "text": "あめ"
+        },
+        {
+          "language": "zh",
+          "text": "雨"
         }
       ],
       "definitions": [],
@@ -1821,6 +4553,30 @@
         {
           "language": "ru",
           "text": "снег"
+        },
+        {
+          "language": "de",
+          "text": "Schnee"
+        },
+        {
+          "language": "fr",
+          "text": "neige"
+        },
+        {
+          "language": "es",
+          "text": "nieve"
+        },
+        {
+          "language": "it",
+          "text": "neve"
+        },
+        {
+          "language": "ja",
+          "text": "ゆき"
+        },
+        {
+          "language": "zh",
+          "text": "雪"
         }
       ],
       "definitions": [],
@@ -1837,6 +4593,30 @@
         {
           "language": "ru",
           "text": "дерево"
+        },
+        {
+          "language": "de",
+          "text": "Baum"
+        },
+        {
+          "language": "fr",
+          "text": "arbre"
+        },
+        {
+          "language": "es",
+          "text": "árbol"
+        },
+        {
+          "language": "it",
+          "text": "albero"
+        },
+        {
+          "language": "ja",
+          "text": "き"
+        },
+        {
+          "language": "zh",
+          "text": "树"
         }
       ],
       "definitions": [],
@@ -1853,6 +4633,30 @@
         {
           "language": "ru",
           "text": "цветок"
+        },
+        {
+          "language": "de",
+          "text": "Blume"
+        },
+        {
+          "language": "fr",
+          "text": "fleur"
+        },
+        {
+          "language": "es",
+          "text": "flor"
+        },
+        {
+          "language": "it",
+          "text": "fiore"
+        },
+        {
+          "language": "ja",
+          "text": "はな"
+        },
+        {
+          "language": "zh",
+          "text": "花"
         }
       ],
       "definitions": [],
@@ -1869,6 +4673,30 @@
         {
           "language": "ru",
           "text": "трава"
+        },
+        {
+          "language": "de",
+          "text": "Gras"
+        },
+        {
+          "language": "fr",
+          "text": "herbe"
+        },
+        {
+          "language": "es",
+          "text": "hierba"
+        },
+        {
+          "language": "it",
+          "text": "erba"
+        },
+        {
+          "language": "ja",
+          "text": "くさ"
+        },
+        {
+          "language": "zh",
+          "text": "草"
         }
       ],
       "definitions": [],
@@ -1885,6 +4713,30 @@
         {
           "language": "ru",
           "text": "небо"
+        },
+        {
+          "language": "de",
+          "text": "Himmel"
+        },
+        {
+          "language": "fr",
+          "text": "ciel"
+        },
+        {
+          "language": "es",
+          "text": "cielo"
+        },
+        {
+          "language": "it",
+          "text": "cielo"
+        },
+        {
+          "language": "ja",
+          "text": "そら"
+        },
+        {
+          "language": "zh",
+          "text": "天空"
         }
       ],
       "definitions": [],
@@ -1901,6 +4753,30 @@
         {
           "language": "ru",
           "text": "ветер"
+        },
+        {
+          "language": "de",
+          "text": "Wind"
+        },
+        {
+          "language": "fr",
+          "text": "vent"
+        },
+        {
+          "language": "es",
+          "text": "viento"
+        },
+        {
+          "language": "it",
+          "text": "vento"
+        },
+        {
+          "language": "ja",
+          "text": "かぜ"
+        },
+        {
+          "language": "zh",
+          "text": "风"
         }
       ],
       "definitions": [],
@@ -1917,6 +4793,30 @@
         {
           "language": "ru",
           "text": "танцевать"
+        },
+        {
+          "language": "de",
+          "text": "tanzen"
+        },
+        {
+          "language": "fr",
+          "text": "danser"
+        },
+        {
+          "language": "es",
+          "text": "bailar"
+        },
+        {
+          "language": "it",
+          "text": "ballare"
+        },
+        {
+          "language": "ja",
+          "text": "おどる"
+        },
+        {
+          "language": "zh",
+          "text": "跳舞"
         }
       ],
       "definitions": [],
@@ -1933,6 +4833,30 @@
         {
           "language": "ru",
           "text": "петь"
+        },
+        {
+          "language": "de",
+          "text": "singen"
+        },
+        {
+          "language": "fr",
+          "text": "chanter"
+        },
+        {
+          "language": "es",
+          "text": "cantar"
+        },
+        {
+          "language": "it",
+          "text": "cantare"
+        },
+        {
+          "language": "ja",
+          "text": "うたう"
+        },
+        {
+          "language": "zh",
+          "text": "唱歌"
         }
       ],
       "definitions": [],
@@ -1949,6 +4873,30 @@
         {
           "language": "ru",
           "text": "читать"
+        },
+        {
+          "language": "de",
+          "text": "lesen"
+        },
+        {
+          "language": "fr",
+          "text": "lire"
+        },
+        {
+          "language": "es",
+          "text": "leer"
+        },
+        {
+          "language": "it",
+          "text": "leggere"
+        },
+        {
+          "language": "ja",
+          "text": "よむ"
+        },
+        {
+          "language": "zh",
+          "text": "读"
         }
       ],
       "definitions": [],
@@ -1965,6 +4913,30 @@
         {
           "language": "ru",
           "text": "рисовать"
+        },
+        {
+          "language": "de",
+          "text": "zeichnen"
+        },
+        {
+          "language": "fr",
+          "text": "dessiner"
+        },
+        {
+          "language": "es",
+          "text": "dibujar"
+        },
+        {
+          "language": "it",
+          "text": "disegnare"
+        },
+        {
+          "language": "ja",
+          "text": "えをかく"
+        },
+        {
+          "language": "zh",
+          "text": "画画"
         }
       ],
       "definitions": [],
@@ -1981,6 +4953,30 @@
         {
           "language": "ru",
           "text": "писать"
+        },
+        {
+          "language": "de",
+          "text": "schreiben"
+        },
+        {
+          "language": "fr",
+          "text": "écrire"
+        },
+        {
+          "language": "es",
+          "text": "escribir"
+        },
+        {
+          "language": "it",
+          "text": "scrivere"
+        },
+        {
+          "language": "ja",
+          "text": "かく"
+        },
+        {
+          "language": "zh",
+          "text": "写"
         }
       ],
       "definitions": [],
@@ -1997,6 +4993,30 @@
         {
           "language": "ru",
           "text": "хлопать"
+        },
+        {
+          "language": "de",
+          "text": "klatschen"
+        },
+        {
+          "language": "fr",
+          "text": "applaudir"
+        },
+        {
+          "language": "es",
+          "text": "aplaudir"
+        },
+        {
+          "language": "it",
+          "text": "battere le mani"
+        },
+        {
+          "language": "ja",
+          "text": "てをたたく"
+        },
+        {
+          "language": "zh",
+          "text": "拍手"
         }
       ],
       "definitions": [],
@@ -2013,6 +5033,30 @@
         {
           "language": "ru",
           "text": "махать"
+        },
+        {
+          "language": "de",
+          "text": "winken"
+        },
+        {
+          "language": "fr",
+          "text": "faire signe"
+        },
+        {
+          "language": "es",
+          "text": "saludar"
+        },
+        {
+          "language": "it",
+          "text": "salutare"
+        },
+        {
+          "language": "ja",
+          "text": "てをふる"
+        },
+        {
+          "language": "zh",
+          "text": "挥手"
         }
       ],
       "definitions": [],
@@ -2029,6 +5073,30 @@
         {
           "language": "ru",
           "text": "обнимать"
+        },
+        {
+          "language": "de",
+          "text": "Umarmung"
+        },
+        {
+          "language": "fr",
+          "text": "câlin"
+        },
+        {
+          "language": "es",
+          "text": "abrazo"
+        },
+        {
+          "language": "it",
+          "text": "abbraccio"
+        },
+        {
+          "language": "ja",
+          "text": "だきしめる"
+        },
+        {
+          "language": "zh",
+          "text": "拥抱"
         }
       ],
       "definitions": [],
@@ -2045,6 +5113,30 @@
         {
           "language": "ru",
           "text": "целовать"
+        },
+        {
+          "language": "de",
+          "text": "Kuss"
+        },
+        {
+          "language": "fr",
+          "text": "bisou"
+        },
+        {
+          "language": "es",
+          "text": "beso"
+        },
+        {
+          "language": "it",
+          "text": "bacio"
+        },
+        {
+          "language": "ja",
+          "text": "チュー"
+        },
+        {
+          "language": "zh",
+          "text": "亲亲"
         }
       ],
       "definitions": [],
@@ -2061,6 +5153,30 @@
         {
           "language": "ru",
           "text": "смеяться"
+        },
+        {
+          "language": "de",
+          "text": "lachen"
+        },
+        {
+          "language": "fr",
+          "text": "rire"
+        },
+        {
+          "language": "es",
+          "text": "reír"
+        },
+        {
+          "language": "it",
+          "text": "ridere"
+        },
+        {
+          "language": "ja",
+          "text": "わらう"
+        },
+        {
+          "language": "zh",
+          "text": "笑"
         }
       ],
       "definitions": [],
@@ -2077,6 +5193,30 @@
         {
           "language": "ru",
           "text": "плакать"
+        },
+        {
+          "language": "de",
+          "text": "weinen"
+        },
+        {
+          "language": "fr",
+          "text": "pleurer"
+        },
+        {
+          "language": "es",
+          "text": "llorar"
+        },
+        {
+          "language": "it",
+          "text": "piangere"
+        },
+        {
+          "language": "ja",
+          "text": "なく"
+        },
+        {
+          "language": "zh",
+          "text": "哭"
         }
       ],
       "definitions": [],
@@ -2093,6 +5233,30 @@
         {
           "language": "ru",
           "text": "улыбаться"
+        },
+        {
+          "language": "de",
+          "text": "lächeln"
+        },
+        {
+          "language": "fr",
+          "text": "sourire"
+        },
+        {
+          "language": "es",
+          "text": "sonreír"
+        },
+        {
+          "language": "it",
+          "text": "sorridere"
+        },
+        {
+          "language": "ja",
+          "text": "にっこり"
+        },
+        {
+          "language": "zh",
+          "text": "微笑"
         }
       ],
       "definitions": [],
@@ -2109,6 +5273,30 @@
         {
           "language": "ru",
           "text": "машина"
+        },
+        {
+          "language": "de",
+          "text": "Auto"
+        },
+        {
+          "language": "fr",
+          "text": "voiture"
+        },
+        {
+          "language": "es",
+          "text": "coche"
+        },
+        {
+          "language": "it",
+          "text": "macchina"
+        },
+        {
+          "language": "ja",
+          "text": "くるま"
+        },
+        {
+          "language": "zh",
+          "text": "汽车"
         }
       ],
       "definitions": [],
@@ -2125,6 +5313,30 @@
         {
           "language": "ru",
           "text": "автобус"
+        },
+        {
+          "language": "de",
+          "text": "Bus"
+        },
+        {
+          "language": "fr",
+          "text": "bus"
+        },
+        {
+          "language": "es",
+          "text": "autobús"
+        },
+        {
+          "language": "it",
+          "text": "autobus"
+        },
+        {
+          "language": "ja",
+          "text": "バス"
+        },
+        {
+          "language": "zh",
+          "text": "公交车"
         }
       ],
       "definitions": [],
@@ -2141,6 +5353,30 @@
         {
           "language": "ru",
           "text": "грузовик"
+        },
+        {
+          "language": "de",
+          "text": "Lastwagen"
+        },
+        {
+          "language": "fr",
+          "text": "camion"
+        },
+        {
+          "language": "es",
+          "text": "camión"
+        },
+        {
+          "language": "it",
+          "text": "camion"
+        },
+        {
+          "language": "ja",
+          "text": "トラック"
+        },
+        {
+          "language": "zh",
+          "text": "卡车"
         }
       ],
       "definitions": [],
@@ -2157,6 +5393,30 @@
         {
           "language": "ru",
           "text": "самолёт"
+        },
+        {
+          "language": "de",
+          "text": "Flugzeug"
+        },
+        {
+          "language": "fr",
+          "text": "avion"
+        },
+        {
+          "language": "es",
+          "text": "avión"
+        },
+        {
+          "language": "it",
+          "text": "aereo"
+        },
+        {
+          "language": "ja",
+          "text": "ひこうき"
+        },
+        {
+          "language": "zh",
+          "text": "飞机"
         }
       ],
       "definitions": [],
@@ -2173,6 +5433,30 @@
         {
           "language": "ru",
           "text": "вертолёт"
+        },
+        {
+          "language": "de",
+          "text": "Hubschrauber"
+        },
+        {
+          "language": "fr",
+          "text": "hélicoptère"
+        },
+        {
+          "language": "es",
+          "text": "helicóptero"
+        },
+        {
+          "language": "it",
+          "text": "elicottero"
+        },
+        {
+          "language": "ja",
+          "text": "ヘリコプター"
+        },
+        {
+          "language": "zh",
+          "text": "直升机"
         }
       ],
       "definitions": [],
@@ -2189,6 +5473,30 @@
         {
           "language": "ru",
           "text": "лодка"
+        },
+        {
+          "language": "de",
+          "text": "Boot"
+        },
+        {
+          "language": "fr",
+          "text": "bateau"
+        },
+        {
+          "language": "es",
+          "text": "barco"
+        },
+        {
+          "language": "it",
+          "text": "barca"
+        },
+        {
+          "language": "ja",
+          "text": "ふね"
+        },
+        {
+          "language": "zh",
+          "text": "船"
         }
       ],
       "definitions": [],
@@ -2205,6 +5513,30 @@
         {
           "language": "ru",
           "text": "корабль"
+        },
+        {
+          "language": "de",
+          "text": "Schiff"
+        },
+        {
+          "language": "fr",
+          "text": "navire"
+        },
+        {
+          "language": "es",
+          "text": "barco"
+        },
+        {
+          "language": "it",
+          "text": "nave"
+        },
+        {
+          "language": "ja",
+          "text": "ふね"
+        },
+        {
+          "language": "zh",
+          "text": "大船"
         }
       ],
       "definitions": [],
@@ -2221,6 +5553,30 @@
         {
           "language": "ru",
           "text": "ракета"
+        },
+        {
+          "language": "de",
+          "text": "Rakete"
+        },
+        {
+          "language": "fr",
+          "text": "fusée"
+        },
+        {
+          "language": "es",
+          "text": "cohete"
+        },
+        {
+          "language": "it",
+          "text": "razzo"
+        },
+        {
+          "language": "ja",
+          "text": "ロケット"
+        },
+        {
+          "language": "zh",
+          "text": "火箭"
         }
       ],
       "definitions": [],
@@ -2237,6 +5593,30 @@
         {
           "language": "ru",
           "text": "велосипед"
+        },
+        {
+          "language": "de",
+          "text": "Fahrrad"
+        },
+        {
+          "language": "fr",
+          "text": "vélo"
+        },
+        {
+          "language": "es",
+          "text": "bicicleta"
+        },
+        {
+          "language": "it",
+          "text": "bicicletta"
+        },
+        {
+          "language": "ja",
+          "text": "じてんしゃ"
+        },
+        {
+          "language": "zh",
+          "text": "自行车"
         }
       ],
       "definitions": [],
@@ -2253,6 +5633,30 @@
         {
           "language": "ru",
           "text": "прабабушка"
+        },
+        {
+          "language": "de",
+          "text": "Urgroßmutter"
+        },
+        {
+          "language": "fr",
+          "text": "arrière-grand-mère"
+        },
+        {
+          "language": "es",
+          "text": "bisabuela"
+        },
+        {
+          "language": "it",
+          "text": "bisnonna"
+        },
+        {
+          "language": "ja",
+          "text": "ひいおばあちゃん"
+        },
+        {
+          "language": "zh",
+          "text": "曾祖母"
         }
       ],
       "definitions": [],
@@ -2269,6 +5673,30 @@
         {
           "language": "ru",
           "text": "прадедушка"
+        },
+        {
+          "language": "de",
+          "text": "Urgroßvater"
+        },
+        {
+          "language": "fr",
+          "text": "arrière-grand-père"
+        },
+        {
+          "language": "es",
+          "text": "bisabuelo"
+        },
+        {
+          "language": "it",
+          "text": "bisnonno"
+        },
+        {
+          "language": "ja",
+          "text": "ひいおじいちゃん"
+        },
+        {
+          "language": "zh",
+          "text": "曾祖父"
         }
       ],
       "definitions": [],
@@ -2285,6 +5713,30 @@
         {
           "language": "ru",
           "text": "брат"
+        },
+        {
+          "language": "de",
+          "text": "Bruder"
+        },
+        {
+          "language": "fr",
+          "text": "frère"
+        },
+        {
+          "language": "es",
+          "text": "hermano"
+        },
+        {
+          "language": "it",
+          "text": "fratello"
+        },
+        {
+          "language": "ja",
+          "text": "おにいちゃん"
+        },
+        {
+          "language": "zh",
+          "text": "哥哥"
         }
       ],
       "definitions": [],
@@ -2301,6 +5753,30 @@
         {
           "language": "ru",
           "text": "сестра"
+        },
+        {
+          "language": "de",
+          "text": "Schwester"
+        },
+        {
+          "language": "fr",
+          "text": "sœur"
+        },
+        {
+          "language": "es",
+          "text": "hermana"
+        },
+        {
+          "language": "it",
+          "text": "sorella"
+        },
+        {
+          "language": "ja",
+          "text": "おねえちゃん"
+        },
+        {
+          "language": "zh",
+          "text": "姐姐"
         }
       ],
       "definitions": [],
@@ -2317,6 +5793,30 @@
         {
           "language": "ru",
           "text": "тётя"
+        },
+        {
+          "language": "de",
+          "text": "Tante"
+        },
+        {
+          "language": "fr",
+          "text": "tante"
+        },
+        {
+          "language": "es",
+          "text": "tía"
+        },
+        {
+          "language": "it",
+          "text": "zia"
+        },
+        {
+          "language": "ja",
+          "text": "おばさん"
+        },
+        {
+          "language": "zh",
+          "text": "阿姨"
         }
       ],
       "definitions": [],
@@ -2333,6 +5833,30 @@
         {
           "language": "ru",
           "text": "дядя"
+        },
+        {
+          "language": "de",
+          "text": "Onkel"
+        },
+        {
+          "language": "fr",
+          "text": "oncle"
+        },
+        {
+          "language": "es",
+          "text": "tío"
+        },
+        {
+          "language": "it",
+          "text": "zio"
+        },
+        {
+          "language": "ja",
+          "text": "おじさん"
+        },
+        {
+          "language": "zh",
+          "text": "叔叔"
         }
       ],
       "definitions": [],
@@ -2349,6 +5873,30 @@
         {
           "language": "ru",
           "text": "двоюродный брат"
+        },
+        {
+          "language": "de",
+          "text": "Cousin"
+        },
+        {
+          "language": "fr",
+          "text": "cousin"
+        },
+        {
+          "language": "es",
+          "text": "primo"
+        },
+        {
+          "language": "it",
+          "text": "cugino"
+        },
+        {
+          "language": "ja",
+          "text": "いとこ"
+        },
+        {
+          "language": "zh",
+          "text": "表兄弟"
         }
       ],
       "definitions": [],
@@ -2365,6 +5913,30 @@
         {
           "language": "ru",
           "text": "друг"
+        },
+        {
+          "language": "de",
+          "text": "Freund"
+        },
+        {
+          "language": "fr",
+          "text": "ami"
+        },
+        {
+          "language": "es",
+          "text": "amigo"
+        },
+        {
+          "language": "it",
+          "text": "amico"
+        },
+        {
+          "language": "ja",
+          "text": "ともだち"
+        },
+        {
+          "language": "zh",
+          "text": "朋友"
         }
       ],
       "definitions": [],
@@ -2381,6 +5953,30 @@
         {
           "language": "ru",
           "text": "дом"
+        },
+        {
+          "language": "de",
+          "text": "Zuhause"
+        },
+        {
+          "language": "fr",
+          "text": "maison"
+        },
+        {
+          "language": "es",
+          "text": "casa"
+        },
+        {
+          "language": "it",
+          "text": "casa"
+        },
+        {
+          "language": "ja",
+          "text": "おうち"
+        },
+        {
+          "language": "zh",
+          "text": "家"
         }
       ],
       "definitions": [],
