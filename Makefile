@@ -4,6 +4,7 @@ PYTHON := .venv/bin/python3
 .DEFAULT_GOAL := help
 .PHONY: test-openimage run-openimage test-gemini run-gemini
 .PHONY: list-words dictionary-showcase
+.PHONY: generate-library-words generate-llm-definitions
 .PHONY: deploy update clean archive export install
 .PHONY: s3-bucket-setup s3-media-sync
 .PHONY: web-install web-dev web-build web-start
@@ -78,6 +79,12 @@ list-words:
 dictionary-showcase:
 	uv run python -m scripts.word_dictionary_showcase --lang en --summary $(ARGS)
 
+generate-library-words:
+	uv run python -m scripts.generate_library_words $(ARGS)
+
+generate-llm-definitions:
+	uv run python -m scripts.generate_llm_definitions $(ARGS)
+
 web-install:
 	@cd $(WEB_DIR) && $(WEB_PM) install $(WEB_INSTALL_ARGS)
 
@@ -139,6 +146,8 @@ help:
 	@printf "make generate-images\n"
 	@printf "make download-openimages\n"
 	@printf "make dictionary-showcase\n"
+	@printf "make generate-library-words [ARGS='--count 200 --out /tmp/word_candidates.json']\n"
+	@printf "make generate-llm-definitions [ARGS='--model claude-3-5-haiku-latest --language en --limit 50 --write']\n"
 	@printf "make web-install\n"
 	@printf "make web-dev [WEB_PORT=3000]\n"
 	@printf "make web-build\n"

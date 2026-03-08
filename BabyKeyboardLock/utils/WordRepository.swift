@@ -55,6 +55,7 @@ final class WordRepository {
                 ) ?? entry.translations.first?.text ?? entry.spelling
                 let clarification = (entry.meaningKey ?? "").isEmpty ? nil : entry.meaningKey
                 return RandomWord(
+                    id: entry.id,
                     english: entry.spelling,
                     translation: translation,
                     clarification: clarification
@@ -65,6 +66,19 @@ final class WordRepository {
             }
         }
         return mapped
+    }
+
+    func translation(wordID: String, languageCode: String) -> String? {
+        let candidates = normalizedLanguageCandidates(languageCode)
+        if candidates.isEmpty {
+            return nil
+        }
+        let normalizedWordID = wordID.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !normalizedWordID.isEmpty,
+              let entry = entriesByID[normalizedWordID] else {
+            return nil
+        }
+        return translation(for: entry, languageCandidates: candidates)
     }
 
     func translation(english: String, meaningKey: String?, languageCode: String) -> String? {
@@ -91,6 +105,40 @@ final class WordRepository {
             }
         }
         return nil
+    }
+
+    func entry(wordID: String) -> WordDataEntry? {
+        let normalizedWordID = wordID.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !normalizedWordID.isEmpty else {
+            return nil
+        }
+        return entriesByID[normalizedWordID]
+    }
+
+    func missingTranslationCounts(languageCodes: [String]) -> [String: Int] {
+        guard let catalog else {
+            return [:]
+        }
+
+        var normalizedLanguages: [String] = []
+        var seen = Set<String>()
+        for raw in languageCodes {
+            let normalized = raw.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+            let base = normalized.split(separator: "-").first.map(String.init) ?? normalized
+            guard !base.isEmpty, !seen.contains(base) else { continue }
+            normalizedLanguages.append(base)
+            seen.insert(base)
+        }
+
+        var counts = Dictionary(uniqueKeysWithValues: normalizedLanguages.map { ($0, 0) })
+        for entry in catalog.entries {
+            for language in normalizedLanguages {
+                if translation(for: entry, languageCandidates: [language]) == nil {
+                    counts[language, default: 0] += 1
+                }
+            }
+        }
+        return counts
     }
 
     func entry(english: String, meaningKey: String?) -> WordDataEntry? {

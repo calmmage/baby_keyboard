@@ -7,6 +7,10 @@
     - `key: c1f0a9be`
     - Capture reusable LLM rules in-repo (`LLM_RULES.md`)
     - PRD: `dev/notes/actions/02-07-llm-rules.md`
+- [x] ai
+    - `key: e3b45d72`
+    - Add custom image preview + 90-degree rotation support
+    - PRD: `dev/notes/actions/02-07-image-rotation.md`
 ## 2025-11-01
 - [x] y
     - `key: b394d43b`

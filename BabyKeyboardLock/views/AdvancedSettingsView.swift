@@ -17,45 +17,64 @@ struct AdvancedSettingsView: View {
                     Label("General", systemImage: "gearshape")
                 }
 
-            VoiceLanguageSettingsView()
+            SpeechSettingsView()
                 .tabItem {
-                    Label("Voice", systemImage: "waveform")
+                    Label("Speech", systemImage: "waveform")
                 }
 
-            BabyProfileSettingsView()
+            LibrarySettingsView()
                 .tabItem {
-                    Label("Profile", systemImage: "person.crop.circle")
+                    Label("Library", systemImage: "books.vertical")
                 }
 
-            LearningPoolSettingsView()
+            MediaSettingsView()
                 .tabItem {
-                    Label("Learning Pool", systemImage: "chart.bar.doc.horizontal")
-                }
-
-            Text("More settings coming soon")
-                .foregroundColor(.secondary)
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .tabItem {
-                    Label("Advanced", systemImage: "slider.horizontal.3")
+                    Label("Media", systemImage: "photo.on.rectangle")
                 }
         }
-        .frame(width: 560, height: 460)
+        .frame(width: 720, height: 560)
     }
 }
 
 struct GeneralSettingsView: View {
+    @StateObject private var randomWordList = RandomWordList.shared
     @AppStorage("lockKeyboardOnLaunch") private var lockKeyboardOnLaunch: Bool = false
     @AppStorage("launchOnStartup") private var launchOnStartup: Bool = false {
         didSet {
             LaunchAtStartup.shared.setEnabled(launchOnStartup)
         }
     }
+    @State private var babyName: String = ""
+    @State private var babyNameTranslation: String = ""
+    @State private var babyNameProbability: Double = 0.125
 
     var body: some View {
         Form {
             Section("Startup") {
                 Toggle("Lock keyboard on launch", isOn: $lockKeyboardOnLaunch)
                 Toggle("Launch on startup", isOn: $launchOnStartup)
+            }
+
+            Section("Baby Name") {
+                TextField("Name", text: $babyName)
+                    .onChange(of: babyName) { _, newValue in
+                        randomWordList.setBabyName(newValue)
+                    }
+
+                TextField("Second language name", text: $babyNameTranslation)
+                    .onChange(of: babyNameTranslation) { _, newValue in
+                        randomWordList.setBabyNameTranslation(newValue)
+                    }
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Baby name frequency (random mode): \(String(format: "%.0f%%", babyNameProbability * 100))")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Slider(value: $babyNameProbability, in: 0...1, step: 0.01)
+                        .onChange(of: babyNameProbability) { _, newValue in
+                            randomWordList.setBabyNameProbability(newValue)
+                        }
+                }
             }
 
             Section("Shortcuts") {
@@ -68,20 +87,536 @@ struct GeneralSettingsView: View {
         .padding(20)
         .onAppear {
             launchOnStartup = LaunchAtStartup.shared.isEnabled()
+            babyName = randomWordList.babyName
+            babyNameTranslation = randomWordList.babyNameTranslation
+            babyNameProbability = randomWordList.babyNameProbability
         }
     }
 }
 
-struct VoiceLanguageSettingsView: View {
+struct SpeechSettingsView: View {
     @ObservedObject private var eventHandler: EventHandler = EventHandler.shared
-    @AppStorage("selectedPrimaryLanguage") private var selectedPrimaryLanguage: TranslationLanguage = .english
-    @AppStorage("selectedTranslationLanguage") private var selectedTranslationLanguage: TranslationLanguage = .none
     @AppStorage("usePersonalVoice") private var usePersonalVoice: Bool = false
     @AppStorage("wordsThrottleInterval") private var savedWordsThrottleInterval: Double = 1.5
+    @AppStorage("selectedPrimaryLanguage") private var selectedPrimaryLanguage: TranslationLanguage = .english
+    @AppStorage("selectedTranslationLanguage") private var selectedTranslationLanguage: TranslationLanguage = .none
+    @AppStorage("wordTranslationDelay") private var wordTranslationDelay: Double = 0.8
+    @AppStorage("wordDisplayDuration") private var wordDisplayDuration: Double = DEFAULT_WORD_DISPLAY_DURATION
 
     var body: some View {
         let primaryLanguages = TranslationLanguage.allCases.filter { $0 != .none }
 
+        Form {
+            Section("Language") {
+                Picker("Primary", selection: $eventHandler.selectedPrimaryLanguage) {
+                    ForEach(primaryLanguages) { language in
+                        Text(language.localizedString)
+                    }
+                }
+                .onChange(of: eventHandler.selectedPrimaryLanguage) { _, newValue in
+                    selectedPrimaryLanguage = newValue
+                }
+
+                Picker("Secondary", selection: $eventHandler.selectedTranslationLanguage) {
+                    ForEach(TranslationLanguage.allCases) { language in
+                        Text(language.localizedString)
+                    }
+                }
+                .onChange(of: eventHandler.selectedTranslationLanguage) { _, newValue in
+                    selectedTranslationLanguage = newValue
+                }
+            }
+
+            Section("Voice") {
+                Toggle(isOn: $eventHandler.usePersonalVoice) {
+                    HStack {
+                        Text("Use Personal Voice")
+                        Button(action: {
+                            let alert = NSAlert()
+                            alert.messageText = "About Personal Voice"
+                            alert.informativeText = "Personal Voice uses your own voice created in System Settings > Accessibility > Personal Voice. You need to create a Personal Voice before using this feature."
+                            alert.alertStyle = .informational
+                            alert.addButton(withTitle: "OK")
+                            alert.runModal()
+                        }) {
+                            Image(systemName: "info.circle")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+                .onChange(of: eventHandler.usePersonalVoice) { _, newValue in
+                    usePersonalVoice = newValue
+                }
+            }
+
+            Section("Timing") {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Delay between words: \(String(format: "%.1f", eventHandler.wordsThrottleInterval))s")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Slider(value: $eventHandler.wordsThrottleInterval, in: 0.1...3.0, step: 0.1)
+                        .onChange(of: eventHandler.wordsThrottleInterval) { _, newValue in
+                            savedWordsThrottleInterval = newValue
+                        }
+                }
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Secondary-language delay: \(String(format: "%.1f", wordTranslationDelay))s")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Slider(value: $wordTranslationDelay, in: 0.0...2.5, step: 0.1)
+                        .onChange(of: wordTranslationDelay) { _, newValue in
+                            eventHandler.wordTranslationDelay = newValue
+                        }
+                }
+
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("Word card duration: \(String(format: "%.1f", wordDisplayDuration))s")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Slider(value: $wordDisplayDuration, in: 1.0...15.0, step: 0.5)
+                }
+            }
+        }
+        .formStyle(.grouped)
+        .padding(20)
+        .onAppear {
+            eventHandler.usePersonalVoice = usePersonalVoice
+            eventHandler.selectedPrimaryLanguage = selectedPrimaryLanguage
+            eventHandler.selectedTranslationLanguage = selectedTranslationLanguage
+            eventHandler.wordsThrottleInterval = savedWordsThrottleInterval
+            eventHandler.wordTranslationDelay = wordTranslationDelay
+        }
+    }
+}
+
+struct LibrarySettingsView: View {
+    @StateObject private var randomWordList = RandomWordList.shared
+    @ObservedObject private var eventHandler: EventHandler = EventHandler.shared
+    @AppStorage("selectedWordSetType") private var savedWordSetType: String = WordSetType.randomShortWords.rawValue
+    @State private var showRandomWordEditor = false
+    @State private var showMainWordsEditor = false
+    @State private var learningPoolWindow: NSWindow?
+    @State private var featuredWordsWindow: NSWindow?
+
+    var body: some View {
+        Form {
+            Section("Word Source") {
+                Picker("Mode", selection: Binding(
+                    get: { randomWordList.wordSourceMode },
+                    set: { randomWordList.setWordSourceMode($0) }
+                )) {
+                    ForEach(WordSourceMode.allCases) { mode in
+                        Text(mode.title).tag(mode)
+                    }
+                }
+                .pickerStyle(.segmented)
+
+                Text(randomWordList.wordSourceMode == .poolFeatured
+                     ? "Mode 1 uses learning pool + featured topics + extra words."
+                     : "Mode 2 uses explicit legacy set selection.")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+
+            Section("Word Set Type") {
+                Picker("Engine", selection: $eventHandler.selectedWordSetType) {
+                    ForEach(WordSetType.allCases) { type in
+                        Text(type.localizedString).tag(type)
+                    }
+                }
+                .onChange(of: eventHandler.selectedWordSetType) { _, newValue in
+                    savedWordSetType = newValue.rawValue
+                }
+            }
+
+            if randomWordList.wordSourceMode == .poolFeatured {
+                Section("Featured Topics") {
+                    if randomWordList.allWordSetNamesSorted.isEmpty {
+                        Text("No topics found")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    } else {
+                        ForEach(randomWordList.allWordSetNamesSorted, id: \.self) { setName in
+                            Toggle(
+                                "\(setName) (\(randomWordList.wordCountForSet(named: setName)))",
+                                isOn: Binding(
+                                    get: { randomWordList.isTopicFeatured(setName: setName) },
+                                    set: { randomWordList.setTopicFeatured($0, setName: setName) }
+                                )
+                            )
+                        }
+                    }
+                }
+
+                Section("Extra Pool Words") {
+                    Text("\(randomWordList.getFeaturedWords().count) extra word(s)")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Button("Edit extra words") {
+                        openFeaturedWordsWindow()
+                    }
+                    .buttonStyle(.plain)
+                }
+
+                Section("Pool Controls") {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Pool size: \(randomWordList.learningPoolSize)")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Slider(
+                            value: Binding(
+                                get: { Double(randomWordList.learningPoolSize) },
+                                set: { randomWordList.setLearningPoolSize(Int($0)) }
+                            ),
+                            in: 5.0...200.0,
+                            step: 5.0
+                        )
+                    }
+
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Known mix: \(Int(randomWordList.learningKnownRatio * 100))%")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Slider(
+                            value: Binding(
+                                get: { randomWordList.learningKnownRatio },
+                                set: { randomWordList.setLearningKnownRatio($0) }
+                            ),
+                            in: 0.0...1.0,
+                            step: 0.05
+                        )
+                    }
+
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Favorites mix: \(Int(randomWordList.learningFavoriteRatio * 100))%")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Slider(
+                            value: Binding(
+                                get: { randomWordList.learningFavoriteRatio },
+                                set: { randomWordList.setLearningFavoriteRatio($0) }
+                            ),
+                            in: 0.0...1.0,
+                            step: 0.05
+                        )
+                    }
+
+                    HStack(spacing: 14) {
+                        Button("Refresh pool now") {
+                            randomWordList.refreshLearningPool(force: true)
+                        }
+                        .buttonStyle(.plain)
+
+                        Button("Manage pool words") {
+                            openLearningPoolWindow()
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            } else {
+                Section("Legacy Sets") {
+                    Text("\(randomWordList.enabledSetIndices.count) enabled (\(randomWordList.words.count) words)")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Button("Edit random sets") {
+                        showRandomWordEditor = true
+                    }
+                    .buttonStyle(.plain)
+
+                    Button("Edit main words") {
+                        showMainWordsEditor = true
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+        .formStyle(.grouped)
+        .padding(20)
+        .sheet(isPresented: $showRandomWordEditor) {
+            RandomWordEditorView()
+        }
+        .sheet(isPresented: $showMainWordsEditor) {
+            WordSetEditorView()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .closeMenusRequested)) { _ in
+            showRandomWordEditor = false
+            showMainWordsEditor = false
+        }
+        .onAppear {
+            if let parsed = WordSetType(rawValue: savedWordSetType) {
+                eventHandler.selectedWordSetType = parsed
+            }
+        }
+    }
+
+    private func openLearningPoolWindow() {
+        if let existingWindow = NSApp.windows.first(where: { $0.identifier?.rawValue == LearningPoolWindowID }) {
+            existingWindow.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            learningPoolWindow = existingWindow
+            return
+        }
+
+        let host = NSHostingController(rootView: LearningWordEditorView(initialShowOnlyPool: true))
+        let window = NSWindow(contentViewController: host)
+        window.title = "Learning Rotation"
+        window.identifier = NSUserInterfaceItemIdentifier(LearningPoolWindowID)
+        window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
+        window.minSize = NSSize(width: 900, height: 520)
+        window.setContentSize(NSSize(width: 1300, height: 850))
+        window.isReleasedWhenClosed = false
+        window.center()
+        window.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+        learningPoolWindow = window
+    }
+
+    private func openFeaturedWordsWindow() {
+        if let existingWindow = NSApp.windows.first(where: { $0.identifier?.rawValue == FeaturedWordsWindowID }) {
+            existingWindow.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            featuredWordsWindow = existingWindow
+            return
+        }
+
+        let host = NSHostingController(rootView: FeaturedWordsEditorView())
+        let window = NSWindow(contentViewController: host)
+        window.title = "Featured Words"
+        window.identifier = NSUserInterfaceItemIdentifier(FeaturedWordsWindowID)
+        window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
+        window.minSize = NSSize(width: 760, height: 520)
+        window.setContentSize(NSSize(width: 920, height: 680))
+        window.isReleasedWhenClosed = false
+        window.center()
+        window.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+        featuredWordsWindow = window
+    }
+}
+
+struct MediaSettingsView: View {
+    @StateObject private var randomWordList = RandomWordList.shared
+    @AppStorage("showFlashcards") private var showFlashcards: Bool = false
+    @AppStorage("showVideoCards") private var showVideoCards: Bool = false
+    @AppStorage("videoCardDemoMode") private var videoCardDemoMode: Bool = false
+    @AppStorage("videoCardDemoWord") private var videoCardDemoWord: String = "cat"
+    @AppStorage("flashcardStyle") private var flashcardStyleStorage: String = FlashcardStyle.noImageToken
+    @AppStorage("flashcardImageSize") private var flashcardImageSize: Double = 150.0
+    @State private var babyImagePath: String = ""
+    @State private var customImagesFolderStatus: String = ""
+    @State private var showCustomWordImageEditor = false
+
+    private var enabledFlashcardStyles: Set<FlashcardStyle> {
+        FlashcardStyle.pool(from: flashcardStyleStorage)
+    }
+
+    private var flashcardStylesBinding: Binding<Set<FlashcardStyle>> {
+        Binding(
+            get: { enabledFlashcardStyles },
+            set: { flashcardStyleStorage = FlashcardStyle.serializedPool($0) }
+        )
+    }
+
+    var body: some View {
+        Form {
+            Section("Flashcards") {
+                Toggle("Show Flashcards", isOn: $showFlashcards)
+
+                if showFlashcards {
+                    FlashcardStylePicker(enabledStyles: flashcardStylesBinding)
+                        .disabled(videoCardDemoMode && showVideoCards)
+
+                    Toggle("Show Video Cards", isOn: $showVideoCards)
+
+                    if showVideoCards {
+                        Toggle("Video Demo: Force Single Word", isOn: $videoCardDemoMode)
+                        if videoCardDemoMode {
+                            TextField("Demo word", text: $videoCardDemoWord)
+                        }
+                    }
+
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("Card size: \(Int(flashcardImageSize))px")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Slider(value: $flashcardImageSize, in: 50...1000, step: 50)
+                    }
+                }
+            }
+
+            Section("Images") {
+                HStack {
+                    Text("Baby image")
+                    Spacer()
+                    if !babyImagePath.isEmpty {
+                        Text(URL(fileURLWithPath: babyImagePath).lastPathComponent)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .lineLimit(1)
+                            .frame(maxWidth: 220, alignment: .trailing)
+                    }
+
+                    Button(babyImagePath.isEmpty ? "Select" : "Change") {
+                        selectBabyImage()
+                    }
+                    .buttonStyle(.plain)
+
+                    if !babyImagePath.isEmpty {
+                        Button("Clear") {
+                            babyImagePath = ""
+                            randomWordList.setBabyImagePath("")
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Other custom images")
+                        Text("Add images for mama, papa, family, etc.")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        if !randomWordList.customWordImages.isEmpty {
+                            Text("\(randomWordList.customWordImages.count) custom image(s)")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                    Spacer()
+                    Button("Manage") {
+                        showCustomWordImageEditor = true
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+
+            Section("Images Folder Sync") {
+                HStack {
+                    if randomWordList.customImagesFolderPath.isEmpty {
+                        Text("No folder selected")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    } else {
+                        Text(URL(fileURLWithPath: randomWordList.customImagesFolderPath).lastPathComponent)
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .lineLimit(1)
+                    }
+                    Spacer()
+                }
+
+                HStack(spacing: 12) {
+                    Button(randomWordList.customImagesFolderPath.isEmpty ? "Select folder" : "Change folder") {
+                        selectCustomImagesFolder()
+                    }
+                    .buttonStyle(.plain)
+
+                    Button("Sync now") {
+                        syncCustomImagesFolder()
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(randomWordList.customImagesFolderPath.isEmpty)
+
+                    if !randomWordList.customImagesFolderPath.isEmpty {
+                        Button("Clear") {
+                            clearCustomImagesFolder()
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+
+                if !customImagesFolderStatus.isEmpty {
+                    Text(customImagesFolderStatus)
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                }
+            }
+        }
+        .formStyle(.grouped)
+        .padding(20)
+        .sheet(isPresented: $showCustomWordImageEditor) {
+            CustomWordImageEditorView()
+        }
+        .onAppear {
+            babyImagePath = randomWordList.babyImagePath
+            customImagesFolderStatus = ""
+            enforceDemoFlashcardStyleIfNeeded()
+        }
+        .onChange(of: videoCardDemoMode) { _, _ in
+            enforceDemoFlashcardStyleIfNeeded()
+        }
+        .onChange(of: flashcardStyleStorage) { _, _ in
+            enforceDemoFlashcardStyleIfNeeded()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .closeMenusRequested)) { _ in
+            showCustomWordImageEditor = false
+        }
+    }
+
+    private func enforceDemoFlashcardStyleIfNeeded() {
+        guard videoCardDemoMode else { return }
+        let simpleOnly = FlashcardStyle.serializedPool(Set([.simple]))
+        if flashcardStyleStorage != simpleOnly {
+            flashcardStyleStorage = simpleOnly
+        }
+    }
+
+    private func selectBabyImage() {
+        let panel = NSOpenPanel()
+        panel.canChooseFiles = true
+        panel.canChooseDirectories = false
+        panel.allowsMultipleSelection = false
+        panel.allowedContentTypes = [.image]
+        panel.message = "Select an image for your baby"
+
+        panel.begin { response in
+            if response == .OK, let url = panel.url {
+                babyImagePath = url.path
+                randomWordList.setBabyImageURL(url)
+            }
+        }
+    }
+
+    private func selectCustomImagesFolder() {
+        let panel = NSOpenPanel()
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.allowsMultipleSelection = false
+        panel.canCreateDirectories = false
+        panel.message = "Select a folder with word images/videos (filename should match word or word|meaning)"
+
+        panel.begin { response in
+            if response == .OK, let url = panel.url {
+                randomWordList.setCustomImagesFolderURL(url)
+                syncCustomImagesFolder()
+            }
+        }
+    }
+
+    private func syncCustomImagesFolder() {
+        let imported = randomWordList.syncCustomImagesFromFolder()
+        if imported == 0 {
+            customImagesFolderStatus = "No new media files imported."
+        } else {
+            customImagesFolderStatus = "Imported \(imported) media file(s) from folder."
+        }
+    }
+
+    private func clearCustomImagesFolder() {
+        randomWordList.clearCustomImagesFolder()
+        customImagesFolderStatus = "Folder sync disabled."
+    }
+}
+
+struct VoiceSettingsView: View {
+    @ObservedObject private var eventHandler: EventHandler = EventHandler.shared
+    @AppStorage("usePersonalVoice") private var usePersonalVoice: Bool = false
+    @AppStorage("wordsThrottleInterval") private var savedWordsThrottleInterval: Double = 1.5
+
+    var body: some View {
         Form {
             Section("Voice") {
                 Toggle(isOn: $eventHandler.usePersonalVoice) {
@@ -121,7 +656,24 @@ struct VoiceLanguageSettingsView: View {
                         .frame(width: 35)
                 }
             }
+        }
+        .formStyle(.grouped)
+        .padding(20)
+        .onAppear {
+            eventHandler.usePersonalVoice = usePersonalVoice
+        }
+    }
+}
 
+struct LanguageSettingsView: View {
+    @ObservedObject private var eventHandler: EventHandler = EventHandler.shared
+    @AppStorage("selectedPrimaryLanguage") private var selectedPrimaryLanguage: TranslationLanguage = .english
+    @AppStorage("selectedTranslationLanguage") private var selectedTranslationLanguage: TranslationLanguage = .none
+
+    var body: some View {
+        let primaryLanguages = TranslationLanguage.allCases.filter { $0 != .none }
+
+        Form {
             Section("Language") {
                 Picker("Primary", selection: $eventHandler.selectedPrimaryLanguage) {
                     ForEach(primaryLanguages) { language in
@@ -144,9 +696,6 @@ struct VoiceLanguageSettingsView: View {
         }
         .formStyle(.grouped)
         .padding(20)
-        .onAppear {
-            eventHandler.usePersonalVoice = usePersonalVoice
-        }
     }
 }
 
@@ -581,9 +1130,7 @@ struct LearningPoolSettingsView: View {
 
     private func sortedLearningPoolWords() -> [LearningWord] {
         randomWordList.getCurrentLearningPool().sorted { lhs, rhs in
-            let lhsKey = "\(lhs.word)|\(lhs.clarification)"
-            let rhsKey = "\(rhs.word)|\(rhs.clarification)"
-            return lhsKey.localizedCaseInsensitiveCompare(rhsKey) == .orderedAscending
+            lhs.id.localizedCaseInsensitiveCompare(rhs.id) == .orderedAscending
         }
     }
 }

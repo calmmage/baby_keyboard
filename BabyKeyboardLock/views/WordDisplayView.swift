@@ -30,6 +30,12 @@ struct WordDisplayView: View {
     private var enabledFlashcardStyles: Set<FlashcardStyle> {
         FlashcardStyle.pool(from: flashcardStyleStorage)
     }
+    private var effectiveEnabledFlashcardStyles: Set<FlashcardStyle> {
+        if videoCardDemoMode {
+            return Set([.simple])
+        }
+        return enabledFlashcardStyles
+    }
     
     // Calculate dynamic background size based on content
     private var backgroundSize: CGSize {
@@ -226,13 +232,15 @@ struct WordDisplayView: View {
                     meaningKey: clarificationForImage
                 )
                 self.word = primaryWord
-                if let secondaryWord = secondaryWord, secondaryWord != primaryWord {
+                if let secondaryWord = secondaryWord,
+                   !secondaryWord.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+                   eventHandler.selectedTranslationLanguage != .none {
                     self.translation = secondaryWord
                 } else {
                     self.translation = ""
                 }
 
-                activeFlashcardStyle = FlashcardStyle.randomStyle(from: enabledFlashcardStyles)
+                activeFlashcardStyle = FlashcardStyle.randomStyle(from: effectiveEnabledFlashcardStyles)
                 updateMediaAvailability(
                     englishWord: englishWord,
                     clarification: clarificationForImage,
@@ -254,13 +262,26 @@ struct WordDisplayView: View {
             }
         }
         .onChange(of: flashcardStyleStorage) { _, _ in
-            activeFlashcardStyle = FlashcardStyle.randomStyle(from: enabledFlashcardStyles)
+            activeFlashcardStyle = FlashcardStyle.randomStyle(from: effectiveEnabledFlashcardStyles)
 
             if showWord {
                 let imageWord = englishWordForImage.isEmpty ? word : englishWordForImage
                 updateMediaAvailability(
                     englishWord: imageWord,
                     clarification: clarificationForImage,
+                    style: activeFlashcardStyle
+                )
+            }
+        }
+        .onChange(of: videoCardDemoMode) { _, _ in
+            activeFlashcardStyle = FlashcardStyle.randomStyle(from: effectiveEnabledFlashcardStyles)
+
+            if showWord {
+                let imageWord = englishWordForImage.isEmpty ? word : englishWordForImage
+                let imageClarification = videoCardDemoMode ? nil : clarificationForImage
+                updateMediaAvailability(
+                    englishWord: resolvedEnglishWordForDisplay(incomingWord: imageWord),
+                    clarification: imageClarification,
                     style: activeFlashcardStyle
                 )
             }
@@ -334,9 +355,9 @@ struct WordDisplayView: View {
             return
         }
 
+        let wordID = WordDataCatalog.makeWordID(spelling: englishWord, meaningKey: clarification)
         let stillSelection = RandomWordList.shared.getCustomImageSelection(
-            for: englishWord,
-            clarification: clarification,
+            wordID: wordID,
             preferVideo: false
         )
         if let stillSelection, !stillSelection.url.isFlashcardVideoFile {
@@ -348,8 +369,7 @@ struct WordDisplayView: View {
         }
 
         let customVideoSelection = RandomWordList.shared.getCustomImageSelection(
-            for: englishWord,
-            clarification: clarification,
+            wordID: wordID,
             preferVideo: true
         )
         if let customVideoSelection, customVideoSelection.url.isFlashcardVideoFile {

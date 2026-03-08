@@ -25,3 +25,8 @@ rules to write down when user gives issues/ideas
 - name format `MM-DD-title.md` (example `02-07-image-rotation.md`)
 - after the raw line: prd + repo research + proposal + plan/tests
 - copy these rules to other repos' `LLM_RULES.md` when asked
+
+changelog upkeep
+- keep `CHANGELOG.md` updated when user-facing features are introduced
+- include brief housekeeping notes with shallow description + one keyword pointer
+- do not backfill old versions unless explicitly requested

@@ -12,6 +12,7 @@ let AnimationWindowID = "animationTransparentWindow"
 let WordDisplayWindowID = "wordDisplayTransparentWindow"
 let VisualEffectsWindowID = "visualEffectsTransparentWindow"
 let MainWindowID = "main"
+let SettingsWindowID = "settings"
 let LearningPoolWindowID = "learningPoolWindow"
 let FeaturedWordsWindowID = "featuredWordsWindow"
 
@@ -46,6 +47,7 @@ struct BabyKeyboardLockApp: App {
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem!
     private var mainWindow: NSWindow?
+    private var settingsWindow: NSWindow?
     private var cancellables = Set<AnyCancellable>()
     private var screenObserver: Any?
     
@@ -85,10 +87,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 }
             }
             .store(in: &cancellables)
-        
+
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) {
             self.showMainWindow()
             EventHandler.shared.run()
+            self.validateCatalogTranslations()
             
             // Create the animation window for confetti animations
             let animationWindow = NSWindow(
@@ -176,6 +179,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     func hideMainWindow() {
         mainWindow?.orderOut(nil)
     }
+
+    func showSettingsWindow() {
+        if let window = settingsWindow {
+            window.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            return
+        }
+
+        let controller = NSHostingController(rootView: AdvancedSettingsView())
+        let window = NSWindow(contentViewController: controller)
+        window.title = "Settings"
+        window.identifier = NSUserInterfaceItemIdentifier(SettingsWindowID)
+        window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
+        window.setFrameAutosaveName("Settings Window")
+        window.minSize = NSSize(width: 720, height: 560)
+        window.setContentSize(NSSize(width: 720, height: 560))
+        window.isReleasedWhenClosed = false
+        window.center()
+        window.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+        settingsWindow = window
+    }
     
     @discardableResult
     func hidePopover() -> Bool {
@@ -222,4 +247,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         )
         window.setFrameOrigin(origin)
     }
+
+    private func validateCatalogTranslations() {
+        let requiredLanguages = ["ru", "de", "fr", "es", "it", "ja", "zh"]
+        let missingCounts = WordRepository.shared.missingTranslationCounts(languageCodes: requiredLanguages)
+        let missingSummary = requiredLanguages.compactMap { language -> String? in
+            guard let count = missingCounts[language], count > 0 else { return nil }
+            return "\(language): \(count)"
+        }
+
+        guard !missingSummary.isEmpty else { return }
+        let message = "Catalog has missing translations (\(missingSummary.joined(separator: ", ")))."
+        NSLog("%@", "WARNING: \(message)")
+    }
+}
+
+func openAppSettingsWindow() {
+    guard let appDelegate = NSApp.delegate as? AppDelegate else { return }
+    appDelegate.showSettingsWindow()
 }

@@ -32,37 +32,17 @@ struct ContentView: View {
     @State private var animationWindow: NSWindow?
     @ObservedObject var eventHandler: EventHandler = EventHandler.shared
     @State private var selectedCategory: EffectCategory = .none
-    @AppStorage("showFlashcards") private var showFlashcards: Bool = false
-    @AppStorage("showVideoCards") private var showVideoCards: Bool = false
     @AppStorage("videoCardDemoMode") private var videoCardDemoMode: Bool = false
-    @AppStorage("videoCardDemoWord") private var videoCardDemoWord: String = "cat"
     @AppStorage("flashcardStyle") private var flashcardStyleStorage: String = FlashcardStyle.noImageToken
 
     @AppStorage("selectedLockEffect") var selectedLockEffect: LockEffect = .speakRandomWord
     @AppStorage("selectedWordSetType") var savedWordSetType: String = WordSetType.randomShortWords.rawValue
-    @AppStorage("wordDisplayDuration") var wordDisplayDuration: Double = DEFAULT_WORD_DISPLAY_DURATION
     @AppStorage("throttleInterval") private var savedThrottleInterval: Double = 1.0
     @AppStorage("confettiFadeTime") private var savedConfettiFadeTime: Double = 5.0
-    @AppStorage("wordTranslationDelay") private var savedWordTranslationDelay: Double = 0.8
-    @AppStorage("flashcardImageSize") private var flashcardImageSize: Double = 150.0
 
-    @State private var showWordSetEditor = false
-    @State private var showRandomWordEditor = false
     @StateObject private var randomWordList = RandomWordList.shared
 
     @State var hoveringMoreButton: Bool = false
-    private var enabledFlashcardStyles: Set<FlashcardStyle> {
-        FlashcardStyle.pool(from: flashcardStyleStorage)
-    }
-    private var hasEnabledFlashcardStyles: Bool {
-        !enabledFlashcardStyles.isEmpty
-    }
-    private var flashcardStylesBinding: Binding<Set<FlashcardStyle>> {
-        Binding(
-            get: { enabledFlashcardStyles },
-            set: { flashcardStyleStorage = FlashcardStyle.serializedPool($0) }
-        )
-    }
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             // Top bar with lock toggle and quit button
@@ -181,59 +161,6 @@ struct ContentView: View {
                 
                 // Words mode settings
                 if selectedCategory == .words {
-                    Toggle(isOn: $showFlashcards) {
-                        Text("Show Flashcards")
-                    }
-                    .toggleStyle(CheckboxToggleStyle())
-                    
-                    if showFlashcards {
-                        Text("Flashcard Style")
-                            .foregroundColor(.secondary)
-                            .font(.subheadline)
-
-                        FlashcardStylePicker(enabledStyles: flashcardStylesBinding)
-
-                        if hasEnabledFlashcardStyles {
-                            Toggle(isOn: $showVideoCards) {
-                                Text("Show Video Cards")
-                            }
-                            .toggleStyle(CheckboxToggleStyle())
-
-                            if showVideoCards {
-                                Toggle(isOn: $videoCardDemoMode) {
-                                    Text("Video Demo: Force Single Word")
-                                }
-                                .toggleStyle(CheckboxToggleStyle())
-
-                                if videoCardDemoMode {
-                                    HStack {
-                                        Text("Demo Word")
-                                            .font(.caption)
-                                            .foregroundColor(.secondary)
-                                        TextField("cat", text: $videoCardDemoWord)
-                                            .textFieldStyle(.roundedBorder)
-                                            .frame(maxWidth: 220)
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    HStack(alignment: .top, spacing: 8) {
-                        Image(systemName: "person.crop.square")
-                            .foregroundColor(.secondary)
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("Baby profile and image sync controls moved to Settings.")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            SettingsLink {
-                                Text("Open Profile Settings")
-                            }
-                            .buttonStyle(.plain)
-                            .foregroundColor(.secondary)
-                        }
-                    }
-
                     if eventHandler.selectedLockEffect == .speakRandomWord {
                         Toggle(isOn: Binding(
                             get: { eventHandler.gamifyRandomWordEnabled },
@@ -244,90 +171,36 @@ struct ContentView: View {
                         .toggleStyle(CheckboxToggleStyle())
                     }
 
-                    // Word display duration settings
                     VStack(alignment: .leading, spacing: 5) {
-                        Text("Word Display Duration: \(String(format: "%.1f", wordDisplayDuration))s")
+                        Text("Word source mode: \(randomWordList.wordSourceMode.title)")
                             .font(.caption)
                             .foregroundColor(.secondary)
-                        
-                        HStack {
-                            Text("1s")
+                        if randomWordList.wordSourceMode == .legacySets {
+                            Text("Legacy sets: \(randomWordList.enabledWordSetNames)")
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
-                            
-                            Slider(value: $wordDisplayDuration, in: 1...10, step: 0.5)
-                            
-                            Text("10s")
+                        } else {
+                            Text("Featured topics: \(randomWordList.featuredTopicSummary)")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                            Text("Extra words: \(randomWordList.getFeaturedWords().count)")
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
                         }
                     }
-                    .padding(.top, 5)
-                    
-                    // Random words editor button
-                    if eventHandler.selectedLockEffect == .speakRandomWord {
-                        HStack {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Word Sets")
-                                    .foregroundColor(.secondary)
-                                    .font(.subheadline)
-                                Text("\(randomWordList.enabledSetIndices.count) enabled (\(randomWordList.words.count) words)")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                if !randomWordList.enabledWordSetNames.isEmpty && randomWordList.enabledWordSetNames != "None" {
-                                    Text(randomWordList.enabledWordSetNames)
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                        .lineLimit(2)
-                                }
-                            }
+                    .padding(.top, 6)
 
-                            Spacer()
-
-                            Button(action: {
-                                showRandomWordEditor = true
-                            }) {
-                                Image(systemName: "pencil")
-                            }
-                            .buttonStyle(PlainButtonStyle())
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Word, speech, and media controls moved to Settings.")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Button(action: {
+                            openAppSettingsWindow()
+                        }) {
+                            Text("Open Settings")
                         }
-
-                        HStack(alignment: .top, spacing: 8) {
-                            Image(systemName: "slider.horizontal.3")
-                                .foregroundColor(.secondary)
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Learning pool controls moved to Settings.")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                SettingsLink {
-                                    Text("Open Learning Pool Settings")
-                                }
-                                .buttonStyle(.plain)
-                                .foregroundColor(.secondary)
-                            }
-                        }
-                        
-                        // Image size slider for random word mode
-                        if showFlashcards && hasEnabledFlashcardStyles {
-                            VStack(alignment: .leading, spacing: 5) {
-                                Text("Card Size: \(Int(flashcardImageSize))px")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                
-                                HStack {
-                                    Text("50px")
-                                        .font(.caption2)
-                                        .foregroundColor(.secondary)
-                                    
-                                    Slider(value: $flashcardImageSize, in: 50...1000, step: 50)
-                                    
-                                    Text("1000px")
-                                        .font(.caption2)
-                                        .foregroundColor(.secondary)
-                                }
-                            }
-                            .padding(.top, 8)
-                        }
+                        .buttonStyle(.plain)
+                        .foregroundColor(.secondary)
                     }
                 }
 
@@ -340,75 +213,15 @@ struct ContentView: View {
                         Text("Reset on error")
                     }
                     .toggleStyle(CheckboxToggleStyle())
-
-                    Text("Typing Languages")
+                    Text("Typing languages, set mode, and flashcards are in Settings.")
+                        .font(.caption)
                         .foregroundColor(.secondary)
-                        .font(.subheadline)
-
-                    let typingLanguages = TranslationLanguage.allCases.filter { $0 != .none }
-                    ForEach(typingLanguages) { language in
-                        Toggle(isOn: Binding(
-                            get: { TypingGameState.shared.selectedTypingLanguages.contains(language) },
-                            set: { TypingGameState.shared.setTypingLanguage(language, enabled: $0) }
-                        )) {
-                            Text(language.localizedString)
-                        }
-                        .toggleStyle(CheckboxToggleStyle())
+                    Button(action: {
+                        openAppSettingsWindow()
+                    }) {
+                        Text("Open Settings")
                     }
-
-                    // Word set selection
-                    Picker("Word Set", selection: $eventHandler.selectedWordSetType) {
-                        ForEach(WordSetType.allCases) { type in
-                            Text(type.localizedString).tag(type)
-                        }
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .onChange(of: eventHandler.selectedWordSetType) { _, newValue in
-                        savedWordSetType = newValue.rawValue
-                    }
-
-                    // Show flashcards toggle
-                    Toggle(isOn: $showFlashcards) {
-                        Text("Show Flashcards")
-                    }
-                    .toggleStyle(CheckboxToggleStyle())
-
-                    if showFlashcards {
-                        Text("Flashcard Style")
-                            .foregroundColor(.secondary)
-                            .font(.subheadline)
-
-                        FlashcardStylePicker(enabledStyles: flashcardStylesBinding)
-
-                        if hasEnabledFlashcardStyles {
-                            Toggle(isOn: $showVideoCards) {
-                                Text("Show Video Cards")
-                            }
-                            .toggleStyle(CheckboxToggleStyle())
-                        }
-
-                        // Image size slider
-                        if hasEnabledFlashcardStyles {
-                            VStack(alignment: .leading, spacing: 5) {
-                                Text("Card Size: \(Int(flashcardImageSize))px")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-
-                                HStack {
-                                    Text("50px")
-                                        .font(.caption2)
-                                        .foregroundColor(.secondary)
-
-                                    Slider(value: $flashcardImageSize, in: 50...1000, step: 50)
-
-                                    Text("1000px")
-                                        .font(.caption2)
-                                        .foregroundColor(.secondary)
-                                }
-                            }
-                            .padding(.top, 8)
-                        }
-                    }
+                    .buttonStyle(.plain)
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
@@ -418,7 +231,9 @@ struct ContentView: View {
                         .foregroundColor(.secondary)
 
                     HStack(spacing: 16) {
-                        SettingsLink {
+                        Button(action: {
+                            openAppSettingsWindow()
+                        }) {
                             Text("Settings")
                         }
                         .buttonStyle(.plain)
@@ -451,6 +266,8 @@ struct ContentView: View {
                 eventHandler.selectedLockEffect = .speakRandomWord
             }
 
+            enforceDemoFlashcardStyleIfNeeded()
+
             // Request accessibility permissions if needed
             if !eventHandler.accessibilityPermissionGranted {
                 NSApp.activate(ignoringOtherApps: true)
@@ -465,6 +282,12 @@ struct ContentView: View {
         }
         .onChange(of: eventHandler.selectedLockEffect) { oldVal, newVal in
             selectedLockEffect = newVal
+        }
+        .onChange(of: videoCardDemoMode) { _, _ in
+            enforceDemoFlashcardStyleIfNeeded()
+        }
+        .onChange(of: flashcardStyleStorage) { _, _ in
+            enforceDemoFlashcardStyleIfNeeded()
         }
         .onChange(of: selectedCategory) { oldValue, newValue in
             // When changing category, only switch if current effect is incompatible
@@ -484,16 +307,6 @@ struct ContentView: View {
             }
             // If current effect is compatible with new category, keep it unchanged
         }
-        .sheet(isPresented: $showWordSetEditor) {
-            WordSetEditorView()
-        }
-        .sheet(isPresented: $showRandomWordEditor) {
-            RandomWordEditorView()
-        }
-        .onReceive(NotificationCenter.default.publisher(for: .closeMenusRequested)) { _ in
-            showWordSetEditor = false
-            showRandomWordEditor = false
-        }
     }
 
     private func playLockSound(isLocked: Bool) {
@@ -503,6 +316,14 @@ struct ContentView: View {
             guard let nsSound = NSSound(named: "light-switch-off") else { return }
 
             nsSound.play()
+        }
+    }
+
+    private func enforceDemoFlashcardStyleIfNeeded() {
+        guard videoCardDemoMode else { return }
+        let simpleOnly = FlashcardStyle.serializedPool(Set([.simple]))
+        if flashcardStyleStorage != simpleOnly {
+            flashcardStyleStorage = simpleOnly
         }
     }
     

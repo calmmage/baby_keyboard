@@ -75,7 +75,16 @@
           "text": "名词：“妈妈”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.24,
+        "rank": 106,
+        "sourceWord": "mama",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "papa|father",
@@ -150,7 +159,16 @@
           "text": "名词：“爸爸”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 3.91,
+        "rank": 132,
+        "sourceWord": "papa",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "grandma|grandmother",
@@ -225,7 +243,16 @@
           "text": "名词：“奶奶”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.11,
+        "rank": 117,
+        "sourceWord": "grandma",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "grandpa|grandfather",
@@ -300,7 +327,16 @@
           "text": "名词：“爷爷”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 3.8,
+        "rank": 138,
+        "sourceWord": "grandpa",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "arm|body_part",
@@ -375,7 +411,16 @@
           "text": "名词：“手臂”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.73,
+        "rank": 54,
+        "sourceWord": "arm",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "leg|body_part",
@@ -450,7 +495,16 @@
           "text": "名词：“腿”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.66,
+        "rank": 65,
+        "sourceWord": "leg",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "nose|body_part",
@@ -525,7 +579,16 @@
           "text": "名词：“鼻子”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.51,
+        "rank": 84,
+        "sourceWord": "nose",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "eye|body_part",
@@ -600,7 +663,16 @@
           "text": "名词：“眼睛”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.02,
+        "rank": 33,
+        "sourceWord": "eye",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "family|kinship_group",
@@ -675,7 +747,16 @@
           "text": "名词：“家人”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.66,
+        "rank": 5,
+        "sourceWord": "family",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "dog|animal",
@@ -750,7 +831,16 @@
           "text": "名词：“狗”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.1,
+        "rank": 27,
+        "sourceWord": "dog",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "cat|animal",
@@ -825,7 +915,16 @@
           "text": "名词：“猫”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.78,
+        "rank": 51,
+        "sourceWord": "cat",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "baby|infant",
@@ -900,7 +999,16 @@
           "text": "名词：“宝宝”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.26,
+        "rank": 20,
+        "sourceWord": "baby",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "milk|drink",
@@ -975,7 +1083,16 @@
           "text": "名词：“牛奶”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.66,
+        "rank": 66,
+        "sourceWord": "milk",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "water|liquid",
@@ -1050,7 +1167,16 @@
           "text": "名词：“水”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.52,
+        "rank": 8,
+        "sourceWord": "water",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "yes|affirmation",
@@ -1125,7 +1251,16 @@
           "text": "短语：“是”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.5,
+        "rank": 11,
+        "sourceWord": "yes",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "no|negation",
@@ -1200,7 +1335,16 @@
           "text": "短语：“不”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 6.35,
+        "rank": 1,
+        "sourceWord": "no",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "bye|farewell",
@@ -1275,7 +1419,16 @@
           "text": "短语：“再见”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.39,
+        "rank": 96,
+        "sourceWord": "bye",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "hi|greeting",
@@ -1350,7 +1503,16 @@
           "text": "短语：“你好”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.0,
+        "rank": 35,
+        "sourceWord": "hi",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "love|affection",
@@ -1425,7 +1587,16 @@
           "text": "名词：“爱”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.82,
+        "rank": 2,
+        "sourceWord": "love",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "bird|animal",
@@ -1500,7 +1671,16 @@
           "text": "名词：“鸟”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.63,
+        "rank": 70,
+        "sourceWord": "bird",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "fish|animal",
@@ -1575,7 +1755,16 @@
           "text": "名词：“鱼”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.9,
+        "rank": 42,
+        "sourceWord": "fish",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "cow|animal",
@@ -1650,7 +1839,16 @@
           "text": "名词：“牛”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.14,
+        "rank": 112,
+        "sourceWord": "cow",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "duck|animal",
@@ -1725,7 +1923,16 @@
           "text": "名词：“鸭子”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.21,
+        "rank": 108,
+        "sourceWord": "duck",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "pig|animal",
@@ -1800,7 +2007,16 @@
           "text": "名词：“猪”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.14,
+        "rank": 113,
+        "sourceWord": "pig",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "rabbit|animal",
@@ -1875,7 +2091,16 @@
           "text": "名词：“兔子”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.05,
+        "rank": 126,
+        "sourceWord": "rabbit",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "mouse|animal",
@@ -1950,7 +2175,16 @@
           "text": "名词：“老鼠”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.31,
+        "rank": 101,
+        "sourceWord": "mouse",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "bear|animal",
@@ -2025,7 +2259,16 @@
           "text": "名词：“熊”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.71,
+        "rank": 58,
+        "sourceWord": "bear",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "apple|fruit",
@@ -2100,7 +2343,16 @@
           "text": "名词：“苹果”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.76,
+        "rank": 52,
+        "sourceWord": "apple",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "banana|fruit",
@@ -2175,7 +2427,16 @@
           "text": "名词：“香蕉”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.0,
+        "rank": 127,
+        "sourceWord": "banana",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "bread|food",
@@ -2250,7 +2511,16 @@
           "text": "名词：“面包”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.5,
+        "rank": 85,
+        "sourceWord": "bread",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "cookie|dessert",
@@ -2325,7 +2595,16 @@
           "text": "名词：“饼干”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.07,
+        "rank": 123,
+        "sourceWord": "cookie",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "juice|drink",
@@ -2400,7 +2679,16 @@
           "text": "名词：“果汁”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.36,
+        "rank": 98,
+        "sourceWord": "juice",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "egg|food",
@@ -2475,7 +2763,16 @@
           "text": "名词：“蛋”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.46,
+        "rank": 89,
+        "sourceWord": "egg",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "cheese|food",
@@ -2550,7 +2847,16 @@
           "text": "名词：“奶酪”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.57,
+        "rank": 78,
+        "sourceWord": "cheese",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "cake|dessert",
@@ -2625,7 +2931,16 @@
           "text": "名词：“蛋糕”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.53,
+        "rank": 82,
+        "sourceWord": "cake",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "soup|food",
@@ -2700,7 +3015,16 @@
           "text": "名词：“汤”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.15,
+        "rank": 111,
+        "sourceWord": "soup",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "tea|drink",
@@ -2775,7 +3099,16 @@
           "text": "名词：“茶”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.73,
+        "rank": 55,
+        "sourceWord": "tea",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "head|body_part",
@@ -2850,7 +3183,16 @@
           "text": "名词：“头”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.51,
+        "rank": 9,
+        "sourceWord": "head",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "mouth|body_part",
@@ -2925,7 +3267,16 @@
           "text": "名词：“嘴”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.83,
+        "rank": 49,
+        "sourceWord": "mouth",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "ear|body_part",
@@ -3000,7 +3351,16 @@
           "text": "名词：“耳朵”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.43,
+        "rank": 92,
+        "sourceWord": "ear",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "hand|body_part",
@@ -3075,7 +3435,16 @@
           "text": "名词：“手”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.41,
+        "rank": 17,
+        "sourceWord": "hand",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "finger|body_part",
@@ -3150,7 +3519,16 @@
           "text": "名词：“手指”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.48,
+        "rank": 86,
+        "sourceWord": "finger",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "foot|body_part",
@@ -3225,7 +3603,16 @@
           "text": "名词：“脚”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.87,
+        "rank": 45,
+        "sourceWord": "foot",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "belly|body_part",
@@ -3300,7 +3687,16 @@
           "text": "名词：“肚子”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.1,
+        "rank": 119,
+        "sourceWord": "belly",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "hair|body_part",
@@ -3375,7 +3771,16 @@
           "text": "名词：“头发”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.08,
+        "rank": 28,
+        "sourceWord": "hair",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "tooth|body_part",
@@ -3450,7 +3855,16 @@
           "text": "名词：“牙齿”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.08,
+        "rank": 122,
+        "sourceWord": "tooth",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "red|color",
@@ -3525,7 +3939,16 @@
           "text": "形容词：“红色”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.32,
+        "rank": 19,
+        "sourceWord": "red",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "blue|color",
@@ -3600,7 +4023,16 @@
           "text": "形容词：“蓝色”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.13,
+        "rank": 23,
+        "sourceWord": "blue",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "green|color",
@@ -3675,7 +4107,16 @@
           "text": "形容词：“绿色”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.13,
+        "rank": 25,
+        "sourceWord": "green",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "yellow|color",
@@ -3750,7 +4191,16 @@
           "text": "形容词：“黄色”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.69,
+        "rank": 63,
+        "sourceWord": "yellow",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "orange|color",
@@ -3825,7 +4275,16 @@
           "text": "形容词：“橙色”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.62,
+        "rank": 73,
+        "sourceWord": "orange",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": true
+      }
     },
     {
       "id": "purple|color",
@@ -3900,7 +4359,16 @@
           "text": "形容词：“紫色”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.32,
+        "rank": 100,
+        "sourceWord": "purple",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "pink|color",
@@ -3975,7 +4443,16 @@
           "text": "形容词：“粉色”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.52,
+        "rank": 83,
+        "sourceWord": "pink",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "brown|color",
@@ -4050,7 +4527,16 @@
           "text": "形容词：“棕色”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.01,
+        "rank": 34,
+        "sourceWord": "brown",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "black|color",
@@ -4125,7 +4611,16 @@
           "text": "形容词：“黑色”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.46,
+        "rank": 13,
+        "sourceWord": "black",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "white|color",
@@ -4200,7 +4695,16 @@
           "text": "形容词：“白色”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.51,
+        "rank": 10,
+        "sourceWord": "white",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "gray|color",
@@ -4275,7 +4779,16 @@
           "text": "形容词：“灰色”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.45,
+        "rank": 90,
+        "sourceWord": "gray",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "eat|consume",
@@ -4350,7 +4863,16 @@
           "text": "动词：“吃”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.13,
+        "rank": 24,
+        "sourceWord": "eat",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "drink|consume_liquid",
@@ -4425,7 +4947,16 @@
           "text": "动词：“喝”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.9,
+        "rank": 41,
+        "sourceWord": "drink",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "sleep|rest",
@@ -4500,7 +5031,16 @@
           "text": "动词：“睡觉”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.05,
+        "rank": 30,
+        "sourceWord": "sleep",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "walk|walk",
@@ -4575,7 +5115,16 @@
           "text": "动词：“走路”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.08,
+        "rank": 29,
+        "sourceWord": "walk",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "run|run",
@@ -4650,7 +5199,16 @@
           "text": "动词：“跑”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.49,
+        "rank": 12,
+        "sourceWord": "run",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "jump|jump",
@@ -4725,7 +5283,16 @@
           "text": "动词：“跳”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.69,
+        "rank": 62,
+        "sourceWord": "jump",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "play|play",
@@ -4800,7 +5367,16 @@
           "text": "动词：“玩”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.61,
+        "rank": 6,
+        "sourceWord": "play",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "sit|sit",
@@ -4875,7 +5451,16 @@
           "text": "动词：“坐”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.9,
+        "rank": 43,
+        "sourceWord": "sit",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "stand|stand",
@@ -4950,7 +5535,16 @@
           "text": "动词：“站”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.14,
+        "rank": 22,
+        "sourceWord": "stand",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "look|look",
@@ -5025,7 +5619,16 @@
           "text": "动词：“看”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.81,
+        "rank": 4,
+        "sourceWord": "look",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "horse|animal",
@@ -5100,7 +5703,16 @@
           "text": "名词：“马”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.76,
+        "rank": 53,
+        "sourceWord": "horse",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "sheep|animal",
@@ -5175,7 +5787,16 @@
           "text": "名词：“羊”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.19,
+        "rank": 109,
+        "sourceWord": "sheep",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "chicken|animal",
@@ -5250,7 +5871,16 @@
           "text": "名词：“鸡”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.63,
+        "rank": 71,
+        "sourceWord": "chicken",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "lion|animal",
@@ -5325,7 +5955,16 @@
           "text": "名词：“狮子”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.25,
+        "rank": 105,
+        "sourceWord": "lion",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "tiger|animal",
@@ -5400,7 +6039,16 @@
           "text": "名词：“老虎”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.3,
+        "rank": 104,
+        "sourceWord": "tiger",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "elephant|animal",
@@ -5475,7 +6123,16 @@
           "text": "名词：“大象”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.08,
+        "rank": 121,
+        "sourceWord": "elephant",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "giraffe|animal",
@@ -5550,7 +6207,16 @@
           "text": "名词：“长颈鹿”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 3.32,
+        "rank": 147,
+        "sourceWord": "giraffe",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "monkey|animal",
@@ -5625,7 +6291,16 @@
           "text": "名词：“猴子”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.07,
+        "rank": 124,
+        "sourceWord": "monkey",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "zebra|animal",
@@ -5700,7 +6375,16 @@
           "text": "名词：“斑马”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 3.4,
+        "rank": 145,
+        "sourceWord": "zebra",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "frog|animal",
@@ -5775,7 +6459,16 @@
           "text": "名词：“青蛙”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 3.89,
+        "rank": 134,
+        "sourceWord": "frog",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "butterfly|animal",
@@ -5850,7 +6543,16 @@
           "text": "名词：“蝴蝶”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 3.93,
+        "rank": 130,
+        "sourceWord": "butterfly",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "snake|animal",
@@ -5925,7 +6627,16 @@
           "text": "名词：“蛇”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.23,
+        "rank": 107,
+        "sourceWord": "snake",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "turtle|animal",
@@ -6000,7 +6711,16 @@
           "text": "名词：“乌龟”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 3.91,
+        "rank": 133,
+        "sourceWord": "turtle",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "penguin|animal",
@@ -6075,7 +6795,16 @@
           "text": "名词：“企鹅”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 3.78,
+        "rank": 139,
+        "sourceWord": "penguin",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "owl|animal",
@@ -6150,7 +6879,16 @@
           "text": "名词：“猫头鹰”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 3.87,
+        "rank": 135,
+        "sourceWord": "owl",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "orange|fruit",
@@ -6225,7 +6963,16 @@
           "text": "名词：“橙子”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.62,
+        "rank": 74,
+        "sourceWord": "orange",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": true
+      }
     },
     {
       "id": "grape|fruit",
@@ -6300,7 +7047,16 @@
           "text": "名词：“葡萄”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 3.7,
+        "rank": 141,
+        "sourceWord": "grape",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "strawberry|fruit",
@@ -6375,7 +7131,16 @@
           "text": "名词：“草莓”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 3.72,
+        "rank": 140,
+        "sourceWord": "strawberry",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "watermelon|fruit",
@@ -6450,7 +7215,16 @@
           "text": "名词：“西瓜”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 3.35,
+        "rank": 146,
+        "sourceWord": "watermelon",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "carrot|vegetable",
@@ -6525,7 +7299,16 @@
           "text": "名词：“胡萝卜”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 3.62,
+        "rank": 142,
+        "sourceWord": "carrot",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "potato|vegetable",
@@ -6600,7 +7383,16 @@
           "text": "名词：“土豆”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.11,
+        "rank": 118,
+        "sourceWord": "potato",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "tomato|vegetable",
@@ -6675,7 +7467,16 @@
           "text": "名词：“番茄”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 3.85,
+        "rank": 136,
+        "sourceWord": "tomato",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "cucumber|vegetable",
@@ -6750,7 +7551,16 @@
           "text": "名词：“黄瓜”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 3.41,
+        "rank": 144,
+        "sourceWord": "cucumber",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "ice cream|dessert",
@@ -6825,7 +7635,16 @@
           "text": "名词：“冰淇淋”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.47,
+        "rank": 87,
+        "sourceWord": "ice cream",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "pizza|food",
@@ -6900,7 +7719,16 @@
           "text": "名词：“披萨”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.43,
+        "rank": 93,
+        "sourceWord": "pizza",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "pasta|food",
@@ -6975,7 +7803,16 @@
           "text": "名词：“意大利面”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 3.92,
+        "rank": 131,
+        "sourceWord": "pasta",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "rice|food",
@@ -7050,7 +7887,16 @@
           "text": "名词：“米饭”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.55,
+        "rank": 79,
+        "sourceWord": "rice",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "meat|food",
@@ -7125,7 +7971,16 @@
           "text": "名词：“肉”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.63,
+        "rank": 72,
+        "sourceWord": "meat",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "sandwich|food",
@@ -7200,7 +8055,16 @@
           "text": "名词：“三明治”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.13,
+        "rank": 115,
+        "sourceWord": "sandwich",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "ball|toy",
@@ -7275,7 +8139,16 @@
           "text": "名词：“球”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.04,
+        "rank": 31,
+        "sourceWord": "ball",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "doll|toy",
@@ -7350,7 +8223,16 @@
           "text": "名词：“娃娃”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.06,
+        "rank": 125,
+        "sourceWord": "doll",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "teddy bear|toy",
@@ -7425,7 +8307,16 @@
           "text": "名词：“泰迪熊”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 3.82,
+        "rank": 137,
+        "sourceWord": "teddy bear",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "car|toy_car",
@@ -7500,7 +8391,16 @@
           "text": "名词：“玩具车”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.45,
+        "rank": 15,
+        "sourceWord": "car",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": true
+      }
     },
     {
       "id": "train|vehicle",
@@ -7575,7 +8475,16 @@
           "text": "名词：“火车”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.96,
+        "rank": 37,
+        "sourceWord": "train",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "bike|bicycle",
@@ -7650,7 +8559,16 @@
           "text": "名词：“自行车”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.53,
+        "rank": 81,
+        "sourceWord": "bike",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "block|toy_block",
@@ -7725,7 +8643,16 @@
           "text": "名词：“积木”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.88,
+        "rank": 44,
+        "sourceWord": "block",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "puzzle|toy",
@@ -7800,7 +8727,16 @@
           "text": "名词：“拼图”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 3.96,
+        "rank": 129,
+        "sourceWord": "puzzle",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "book|object",
@@ -7875,7 +8811,16 @@
           "text": "名词：“书”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.43,
+        "rank": 16,
+        "sourceWord": "book",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "swing|playground",
@@ -7950,7 +8895,16 @@
           "text": "名词：“秋千”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.34,
+        "rank": 99,
+        "sourceWord": "swing",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "slide|playground",
@@ -8025,7 +8979,16 @@
           "text": "名词：“滑梯”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.3,
+        "rank": 103,
+        "sourceWord": "slide",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "drum|instrument",
@@ -8100,7 +9063,16 @@
           "text": "名词：“鼓”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.11,
+        "rank": 116,
+        "sourceWord": "drum",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "sun|celestial_object",
@@ -8175,7 +9147,16 @@
           "text": "名词：“太阳”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.97,
+        "rank": 36,
+        "sourceWord": "sun",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "moon|celestial_object",
@@ -8250,7 +9231,16 @@
           "text": "名词：“月亮”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.7,
+        "rank": 61,
+        "sourceWord": "moon",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "star|celestial_object",
@@ -8325,7 +9315,16 @@
           "text": "名词：“星星”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.19,
+        "rank": 21,
+        "sourceWord": "star",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "cloud|weather",
@@ -8400,7 +9399,16 @@
           "text": "名词：“云”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.46,
+        "rank": 88,
+        "sourceWord": "cloud",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "rain|weather",
@@ -8475,7 +9483,16 @@
           "text": "名词：“雨”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.71,
+        "rank": 60,
+        "sourceWord": "rain",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "snow|weather",
@@ -8550,7 +9567,16 @@
           "text": "名词：“雪”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.66,
+        "rank": 67,
+        "sourceWord": "snow",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "tree|plant",
@@ -8625,7 +9651,16 @@
           "text": "名词：“树”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.85,
+        "rank": 46,
+        "sourceWord": "tree",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "flower|plant",
@@ -8700,7 +9735,16 @@
           "text": "名词：“花”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.42,
+        "rank": 94,
+        "sourceWord": "flower",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "grass|plant",
@@ -8775,7 +9819,16 @@
           "text": "名词：“草”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.38,
+        "rank": 97,
+        "sourceWord": "grass",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "sky|weather",
@@ -8850,7 +9903,16 @@
           "text": "名词：“天空”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.72,
+        "rank": 57,
+        "sourceWord": "sky",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "wind|weather",
@@ -8925,7 +9987,16 @@
           "text": "名词：“风”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.84,
+        "rank": 47,
+        "sourceWord": "wind",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "dance|dance",
@@ -9000,7 +10071,16 @@
           "text": "动词：“跳舞”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.93,
+        "rank": 39,
+        "sourceWord": "dance",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "sing|sing",
@@ -9075,7 +10155,16 @@
           "text": "动词：“唱歌”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.54,
+        "rank": 80,
+        "sourceWord": "sing",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "read|read",
@@ -9150,7 +10239,16 @@
           "text": "动词：“读”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.54,
+        "rank": 7,
+        "sourceWord": "read",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "draw|draw",
@@ -9225,7 +10323,16 @@
           "text": "动词：“画画”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.81,
+        "rank": 50,
+        "sourceWord": "draw",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "write|write",
@@ -9300,7 +10407,16 @@
           "text": "动词：“写”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.03,
+        "rank": 32,
+        "sourceWord": "write",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "clap|clap",
@@ -9375,7 +10491,16 @@
           "text": "动词：“拍手”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 3.54,
+        "rank": 143,
+        "sourceWord": "clap",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "wave|wave_hand",
@@ -9450,7 +10575,16 @@
           "text": "动词：“挥手”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.62,
+        "rank": 75,
+        "sourceWord": "wave",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "hug|embrace",
@@ -9525,7 +10659,16 @@
           "text": "动词：“拥抱”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.09,
+        "rank": 120,
+        "sourceWord": "hug",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "kiss|kiss",
@@ -9600,7 +10743,16 @@
           "text": "动词：“亲亲”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.58,
+        "rank": 77,
+        "sourceWord": "kiss",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "laugh|laugh",
@@ -9644,38 +10796,47 @@
       "definitions": [
         {
           "language": "en",
-          "text": "A verb meaning \"to laugh\"."
+          "text": "To laugh is to make happy sounds when something is funny."
         },
         {
           "language": "ru",
-          "text": "Глагол: «смеяться»."
+          "text": "Смеяться — это издавать радостные звуки, когда что-то смешно."
         },
         {
           "language": "de",
-          "text": "Verb: „lachen“."
+          "text": "Lachen bedeutet, fröhliche Laute zu machen, wenn etwas lustig ist."
         },
         {
           "language": "fr",
-          "text": "Verbe : « rire »."
+          "text": "Rire, c’est émettre des sons joyeux quand quelque chose est drôle."
         },
         {
           "language": "es",
-          "text": "Verbo: «reír»."
+          "text": "Reír es hacer sonidos de alegría cuando algo causa gracia."
         },
         {
           "language": "it",
-          "text": "Verbo: «ridere»."
+          "text": "Ridere significa fare suoni di gioia quando qualcosa è divertente."
         },
         {
           "language": "ja",
-          "text": "動詞：「わらう」。"
+          "text": "「わらう」は、おもしろいときにうれしい声や音を出すことです。"
         },
         {
           "language": "zh",
-          "text": "动词：“笑”。"
+          "text": "“笑”是指在觉得有趣时发出开心的声音。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.66,
+        "rank": 64,
+        "sourceWord": "laugh",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "cry|cry",
@@ -9750,7 +10911,16 @@
           "text": "动词：“哭”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.59,
+        "rank": 76,
+        "sourceWord": "cry",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "smile|smile",
@@ -9825,7 +10995,16 @@
           "text": "动词：“微笑”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.64,
+        "rank": 68,
+        "sourceWord": "smile",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "car|automobile",
@@ -9900,7 +11079,16 @@
           "text": "名词：“汽车”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.45,
+        "rank": 14,
+        "sourceWord": "car",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": true
+      }
     },
     {
       "id": "bus|vehicle",
@@ -9975,7 +11163,16 @@
           "text": "名词：“公交车”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.83,
+        "rank": 48,
+        "sourceWord": "bus",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "truck|vehicle",
@@ -10050,7 +11247,16 @@
           "text": "名词：“卡车”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.64,
+        "rank": 69,
+        "sourceWord": "truck",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "plane|aircraft",
@@ -10125,7 +11331,16 @@
           "text": "名词：“飞机”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.72,
+        "rank": 56,
+        "sourceWord": "plane",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "helicopter|aircraft",
@@ -10200,7 +11415,16 @@
           "text": "名词：“直升机”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.13,
+        "rank": 114,
+        "sourceWord": "helicopter",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "boat|watercraft",
@@ -10275,7 +11499,16 @@
           "text": "名词：“船”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.71,
+        "rank": 59,
+        "sourceWord": "boat",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "ship|watercraft",
@@ -10350,7 +11583,16 @@
           "text": "名词：“大船”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.93,
+        "rank": 40,
+        "sourceWord": "ship",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "rocket|spacecraft",
@@ -10425,7 +11667,16 @@
           "text": "名词：“火箭”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.31,
+        "rank": 102,
+        "sourceWord": "rocket",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "bicycle|bicycle",
@@ -10500,7 +11751,16 @@
           "text": "名词：“自行车”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 3.98,
+        "rank": 128,
+        "sourceWord": "bicycle",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "grandgrandma|great_grandmother",
@@ -10575,7 +11835,16 @@
           "text": "名词：“曾祖母”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": null,
+        "rank": null,
+        "sourceWord": "grandgrandma",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "grandgrandpa|great_grandfather",
@@ -10650,7 +11919,16 @@
           "text": "名词：“曾祖父”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": null,
+        "rank": null,
+        "sourceWord": "grandgrandpa",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "brother|brother",
@@ -10725,7 +12003,16 @@
           "text": "名词：“哥哥”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.11,
+        "rank": 26,
+        "sourceWord": "brother",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "sister|sister",
@@ -10800,7 +12087,16 @@
           "text": "名词：“姐姐”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.95,
+        "rank": 38,
+        "sourceWord": "sister",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "aunt|aunt",
@@ -10875,7 +12171,16 @@
           "text": "名词：“阿姨”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.16,
+        "rank": 110,
+        "sourceWord": "aunt",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "uncle|uncle",
@@ -10950,7 +12255,16 @@
           "text": "名词：“叔叔”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.45,
+        "rank": 91,
+        "sourceWord": "uncle",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "cousin|cousin",
@@ -11025,7 +12339,16 @@
           "text": "名词：“表兄弟”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 4.41,
+        "rank": 95,
+        "sourceWord": "cousin",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "friend|friend",
@@ -11100,7 +12423,16 @@
           "text": "名词：“朋友”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.37,
+        "rank": 18,
+        "sourceWord": "friend",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     },
     {
       "id": "home|home_place",
@@ -11175,7 +12507,16 @@
           "text": "名词：“家”。"
         }
       ],
-      "assets": []
+      "assets": [],
+      "frequency": {
+        "zipf": 5.81,
+        "rank": 3,
+        "sourceWord": "home",
+        "sourceLanguage": "en",
+        "resolvedFrom": "translations[en]",
+        "matchMode": "spelling",
+        "ambiguousSpelling": false
+      }
     }
   ],
   "sets": [

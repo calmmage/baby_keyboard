@@ -171,11 +171,14 @@ struct TypingGameView: View {
         let word = typingGameState.currentEnglishWord.isEmpty
             ? typingGameState.currentWord.lowercased()
             : typingGameState.currentEnglishWord.lowercased()
+        let wordID = WordDataCatalog.makeWordID(
+            spelling: word,
+            meaningKey: typingGameState.currentWordClarification
+        )
 
         if showVideoCards {
             if let customVideoSelection = RandomWordList.shared.getCustomImageSelection(
-                for: word,
-                clarification: typingGameState.currentWordClarification,
+                wordID: wordID,
                 preferVideo: true
             ), customVideoSelection.url.isFlashcardVideoFile {
                 return (customVideoSelection.url, 0.0)
@@ -192,8 +195,7 @@ struct TypingGameView: View {
         }
 
         if let customImageSelection = RandomWordList.shared.getCustomImageSelection(
-            for: word,
-            clarification: typingGameState.currentWordClarification,
+            wordID: wordID,
             preferVideo: false
         ), !customImageSelection.url.isFlashcardVideoFile {
             return (customImageSelection.url, customImageSelection.rotationDegrees)

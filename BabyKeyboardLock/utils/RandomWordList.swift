@@ -8,7 +8,7 @@ struct RandomWord: Codable, Hashable, Identifiable {
     let translation: String
     let clarification: String?
 
-    init(english: String, translation: String, clarification: String? = nil) {
+    init(id: String? = nil, english: String, translation: String, clarification: String? = nil) {
         let normalizedClarification: String?
         if let clarification,
            !clarification.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
@@ -16,7 +16,15 @@ struct RandomWord: Codable, Hashable, Identifiable {
         } else {
             normalizedClarification = nil
         }
-        self.id = WordDataCatalog.makeWordID(spelling: english, meaningKey: normalizedClarification)
+        if let id, !id.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            let split = WordDataCatalog.splitWordID(id)
+            self.id = WordDataCatalog.makeWordID(
+                spelling: split.spelling,
+                meaningKey: split.meaningKey
+            )
+        } else {
+            self.id = WordDataCatalog.makeWordID(spelling: english, meaningKey: normalizedClarification)
+        }
         self.english = english
         self.translation = translation
         self.clarification = normalizedClarification
@@ -31,11 +39,11 @@ struct RandomWord: Codable, Hashable, Identifiable {
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        english = try container.decode(String.self, forKey: .english)
-        translation = try container.decode(String.self, forKey: .translation)
-        clarification = try container.decodeIfPresent(String.self, forKey: .clarification)
-        id = try container.decodeIfPresent(String.self, forKey: .id)
-            ?? WordDataCatalog.makeWordID(spelling: english, meaningKey: clarification)
+        let english = try container.decode(String.self, forKey: .english)
+        let translation = try container.decode(String.self, forKey: .translation)
+        let clarification = try container.decodeIfPresent(String.self, forKey: .clarification)
+        let id = try container.decodeIfPresent(String.self, forKey: .id)
+        self.init(id: id, english: english, translation: translation, clarification: clarification)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -157,6 +165,22 @@ struct FeaturedWordSuggestion: Identifiable, Hashable {
     let hasImage: Bool
 }
 
+enum WordSourceMode: String, CaseIterable, Identifiable {
+    case poolFeatured
+    case legacySets
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .poolFeatured:
+            return "Pool + Featured"
+        case .legacySets:
+            return "Legacy Sets"
+        }
+    }
+}
+
 class RandomWordList: ObservableObject {
     static let shared = RandomWordList()
 
@@ -180,9 +204,13 @@ class RandomWordList: ObservableObject {
     private let learningPoolKeysKey = "learningPoolKeys"
     private let featuredWordsKey = "featuredWordsBatch"
     private let featuredWordsUpdatedAtKey = "featuredWordsUpdatedAt"
+    private let wordSourceModeKey = "wordSourceMode"
+    private let featuredTopicSetNamesKey = "featuredTopicSetNames"
 
     @Published var wordSets: [RandomWordSet] = []
     @Published var enabledSetIndices: Set<Int> = []
+    @Published var wordSourceMode: WordSourceMode = .poolFeatured
+    @Published private(set) var featuredTopicSetNames: Set<String> = []
     private(set) var babyName: String = ""
     private(set) var babyNameTranslation: String = ""
     @Published var babyNameProbability: Double = 0.125 // Default 12.5% (1 in 8)
@@ -218,19 +246,14 @@ class RandomWordList: ObservableObject {
     @Published private(set) var featuredWordsUpdatedAt: Date? = nil
 
     var words: [RandomWord] {
-        var allWords: [RandomWord] = featuredWords
-        for index in enabledSetIndices.sorted() {
-            guard index < wordSets.count else { continue }
-            allWords.append(contentsOf: wordSets[index].words)
+        switch wordSourceMode {
+        case .poolFeatured:
+            return dedupeWords(
+                featuredWords + featuredTopicWords() + allSetWords()
+            )
+        case .legacySets:
+            return dedupeWords(enabledSetWords())
         }
-        var deduped: [RandomWord] = []
-        var seen = Set<String>()
-        for word in allWords {
-            if seen.insert(word.id).inserted {
-                deduped.append(word)
-            }
-        }
-        return deduped
     }
 
     var enabledWordSetNames: String {
@@ -239,6 +262,53 @@ class RandomWordList: ObservableObject {
             return wordSets[index].name
         }
         return names.isEmpty ? "None" : names.joined(separator: ", ")
+    }
+
+    var featuredTopicSummary: String {
+        if featuredTopicSetNames.isEmpty {
+            return "None"
+        }
+        return featuredTopicSetNames.sorted().joined(separator: ", ")
+    }
+
+    var allWordSetNamesSorted: [String] {
+        wordSets.map(\.name).sorted()
+    }
+
+    func setWordSourceMode(_ mode: WordSourceMode) {
+        guard wordSourceMode != mode else { return }
+        wordSourceMode = mode
+        saveWordSourceMode()
+        syncLearningWordsIfNeeded(force: true)
+        objectWillChange.send()
+        NotificationCenter.default.post(name: .init("RandomWordSetChanged"), object: nil)
+    }
+
+    func isTopicFeatured(setName: String) -> Bool {
+        featuredTopicSetNames.contains(setName)
+    }
+
+    func setTopicFeatured(_ featured: Bool, setName: String) {
+        if featured {
+            featuredTopicSetNames.insert(setName)
+        } else {
+            featuredTopicSetNames.remove(setName)
+        }
+        sanitizeFeaturedTopics()
+        saveFeaturedTopicSetNames()
+        syncLearningWordsIfNeeded(force: true)
+        objectWillChange.send()
+    }
+
+    func clearFeaturedTopics() {
+        featuredTopicSetNames = []
+        saveFeaturedTopicSetNames()
+        syncLearningWordsIfNeeded(force: true)
+        objectWillChange.send()
+    }
+
+    func wordCountForSet(named setName: String) -> Int {
+        wordSets.first(where: { $0.name == setName })?.words.count ?? 0
     }
 
     func isSetEnabled(at index: Int) -> Bool {
@@ -260,6 +330,8 @@ class RandomWordList: ObservableObject {
     init() {
         purgeLegacyWordStorageKeys()
         loadCatalogAndWordSets()
+        loadWordSourceMode()
+        loadFeaturedTopicSetNames()
         loadBabyName()
         loadBabyNameTranslation()
         loadBabyNameProbability()
@@ -274,6 +346,7 @@ class RandomWordList: ObservableObject {
         loadFeaturedWords()
         syncCustomImagesFromFolder()
         ensureEnabledSetDefaultsIfNeeded()
+        sanitizeFeaturedTopics()
     }
 
     private func purgeLegacyWordStorageKeys() {
@@ -303,6 +376,7 @@ class RandomWordList: ObservableObject {
             }
         }
         wordSets = createDefaultWordSets()
+        sanitizeFeaturedTopics()
     }
 
     private func normalizeFamilyWordAliases(in catalog: inout WordDataCatalog) -> Bool {
@@ -350,6 +424,7 @@ class RandomWordList: ObservableObject {
             enabledSetIndices = [0]
             saveEnabledSets()
         }
+        sanitizeFeaturedTopics()
     }
 
     private func loadBundledWordSets() -> [RandomWordSet] {
@@ -367,14 +442,19 @@ class RandomWordList: ObservableObject {
             var wordIDs: [String] = []
             wordIDs.reserveCapacity(set.words.count)
             for word in set.words {
-                let meaningKey = normalizedMeaningKey(word.clarification)
-                let wordID = WordDataCatalog.makeWordID(spelling: word.english, meaningKey: meaningKey)
+                let normalizedWordID = word.id.trimmingCharacters(in: .whitespacesAndNewlines)
+                let idSplit = WordDataCatalog.splitWordID(normalizedWordID)
+                let wordSpelling = word.english.trimmingCharacters(in: .whitespacesAndNewlines)
+                let meaningKey = normalizedMeaningKey(word.clarification) ?? idSplit.meaningKey
+                let wordID = normalizedWordID.isEmpty
+                    ? WordDataCatalog.makeWordID(spelling: wordSpelling, meaningKey: meaningKey)
+                    : WordDataCatalog.makeWordID(spelling: idSplit.spelling, meaningKey: idSplit.meaningKey)
                 wordIDs.append(wordID)
 
                 var entry = entriesByID[wordID]
                     ?? WordDataEntry(
                         id: wordID,
-                        spelling: word.english,
+                        spelling: wordSpelling.isEmpty ? idSplit.spelling : wordSpelling,
                         meaningKey: meaningKey,
                         partOfSpeech: nil,
                         category: nil,
@@ -385,7 +465,7 @@ class RandomWordList: ObservableObject {
                     )
 
                 entry.id = wordID
-                entry.spelling = word.english.trimmingCharacters(in: .whitespacesAndNewlines)
+                entry.spelling = wordSpelling.isEmpty ? idSplit.spelling : wordSpelling
                 entry.meaningKey = meaningKey
                 mergeTranslation(text: word.translation, into: &entry)
                 entriesByID[wordID] = entry
@@ -453,7 +533,7 @@ class RandomWordList: ObservableObject {
     func getRandomWord(useLearningRotation: Bool = true) -> RandomWord? {
         refreshLearningPoolIfStale()
 
-        if useLearningRotation && learningRotationEnabled {
+        if wordSourceMode == .poolFeatured {
             if let learningWord = getLearningRandomWord() {
                 return learningWord
             }
@@ -466,9 +546,10 @@ class RandomWordList: ObservableObject {
             return word
         }
 
-        guard !words.isEmpty else { return nil }
+        let candidates = words
+        guard !candidates.isEmpty else { return nil }
         refreshRecentHistoryIfNeeded()
-        if let chosen = selectWeightedWord(from: words) {
+        if let chosen = selectWeightedWord(from: candidates) {
             lastSelectedRandomWord = chosen
             return chosen
         }
@@ -494,6 +575,7 @@ class RandomWordList: ObservableObject {
         let currentSetName = wordSets[index].name
         wordSets[index] = RandomWordSet(name: currentSetName, words: newWords)
         persistCatalogFromWordSets()
+        sanitizeFeaturedTopics()
         objectWillChange.send()
         NotificationCenter.default.post(name: .init("RandomWordsUpdated"), object: nil)
     }
@@ -502,12 +584,15 @@ class RandomWordList: ObservableObject {
         let newSet = RandomWordSet(name: name, words: words)
         wordSets.append(newSet)
         persistCatalogFromWordSets()
+        sanitizeFeaturedTopics()
         objectWillChange.send()
     }
 
     func deleteWordSet(at index: Int) {
         guard index >= 0 && index < wordSets.count else { return }
+        let removedSetName = wordSets[index].name
         wordSets.remove(at: index)
+        featuredTopicSetNames.remove(removedSetName)
         // Remove from enabled sets if it was enabled
         enabledSetIndices.remove(index)
         // Adjust indices for sets that were after the deleted one
@@ -522,15 +607,23 @@ class RandomWordList: ObservableObject {
         }
         enabledSetIndices = Set(adjustedIndices)
         persistCatalogFromWordSets()
+        sanitizeFeaturedTopics()
+        saveFeaturedTopicSetNames()
         saveEnabledSets()
         objectWillChange.send()
     }
 
     func renameWordSet(at index: Int, to newName: String) {
         guard index >= 0 && index < wordSets.count else { return }
+        let oldName = wordSets[index].name
         let currentWords = wordSets[index].words
         wordSets[index] = RandomWordSet(name: newName, words: currentWords)
+        if featuredTopicSetNames.remove(oldName) != nil {
+            featuredTopicSetNames.insert(newName)
+            saveFeaturedTopicSetNames()
+        }
         persistCatalogFromWordSets()
+        sanitizeFeaturedTopics()
         objectWillChange.send()
     }
 
@@ -624,8 +717,32 @@ class RandomWordList: ObservableObject {
         wordSets = createDefaultWordSets()
         enabledSetIndices = wordSets.isEmpty ? [] : [0]
         saveEnabledSets()
+        featuredTopicSetNames = []
+        saveFeaturedTopicSetNames()
+
+        featuredWords = []
+        featuredWordsUpdatedAt = nil
+        saveFeaturedWords()
+
+        learningWords = [:]
+        saveLearningWords()
+        learningPoolKeys = []
+        saveLearningPoolKeys()
+        learningLastSync = nil
+        UserDefaults.standard.removeObject(forKey: learningLastSyncKey)
+
+        syncLearningWordsIfNeeded(force: true)
         objectWillChange.send()
         NotificationCenter.default.post(name: .init("RandomWordSetChanged"), object: nil)
+    }
+
+    func exportCatalogSnapshot(to url: URL) throws {
+        let catalog = WordRepository.shared.catalogSnapshot()
+            ?? WordDataCatalog(version: 2, source: "user", entries: [], sets: [])
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
+        let data = try encoder.encode(catalog)
+        try data.write(to: url, options: .atomic)
     }
 
     private func saveEnabledSets() {
@@ -645,6 +762,83 @@ class RandomWordList: ObservableObject {
             enabledSetIndices = [0]
             saveEnabledSets()
         }
+    }
+
+    private func saveWordSourceMode() {
+        UserDefaults.standard.set(wordSourceMode.rawValue, forKey: wordSourceModeKey)
+    }
+
+    private func loadWordSourceMode() {
+        if let raw = UserDefaults.standard.string(forKey: wordSourceModeKey),
+           let parsed = WordSourceMode(rawValue: raw) {
+            wordSourceMode = parsed
+        } else {
+            wordSourceMode = .poolFeatured
+            saveWordSourceMode()
+        }
+    }
+
+    private func saveFeaturedTopicSetNames() {
+        if let encoded = try? JSONEncoder().encode(Array(featuredTopicSetNames)) {
+            UserDefaults.standard.set(encoded, forKey: featuredTopicSetNamesKey)
+        }
+    }
+
+    private func loadFeaturedTopicSetNames() {
+        if let data = UserDefaults.standard.data(forKey: featuredTopicSetNamesKey),
+           let decoded = try? JSONDecoder().decode([String].self, from: data) {
+            featuredTopicSetNames = Set(decoded)
+        }
+    }
+
+    private func sanitizeFeaturedTopics() {
+        let validSetNames = Set(wordSets.map(\.name))
+        let filtered = featuredTopicSetNames.intersection(validSetNames)
+        if filtered != featuredTopicSetNames {
+            featuredTopicSetNames = filtered
+            saveFeaturedTopicSetNames()
+        }
+    }
+
+    private func activeWordSetsForLearning() -> [RandomWordSet] {
+        switch wordSourceMode {
+        case .poolFeatured:
+            return wordSets
+        case .legacySets:
+            return enabledSetWordsByIndex()
+        }
+    }
+
+    private func enabledSetWordsByIndex() -> [RandomWordSet] {
+        enabledSetIndices.sorted().compactMap { index -> RandomWordSet? in
+            guard index < wordSets.count else { return nil }
+            return wordSets[index]
+        }
+    }
+
+    private func enabledSetWords() -> [RandomWord] {
+        enabledSetWordsByIndex().flatMap(\.words)
+    }
+
+    private func allSetWords() -> [RandomWord] {
+        wordSets.flatMap(\.words)
+    }
+
+    private func featuredTopicWords() -> [RandomWord] {
+        wordSets
+            .filter { featuredTopicSetNames.contains($0.name) }
+            .flatMap(\.words)
+    }
+
+    private func dedupeWords(_ source: [RandomWord]) -> [RandomWord] {
+        var deduped: [RandomWord] = []
+        var seen = Set<String>()
+        for word in source {
+            if seen.insert(word.id).inserted {
+                deduped.append(word)
+            }
+        }
+        return deduped
     }
 
     private func saveBabyName() {
@@ -854,6 +1048,7 @@ class RandomWordList: ObservableObject {
         ensureEnabledSetDefaultsIfNeeded()
 
         let randomWord = RandomWord(
+            id: entry.id,
             english: entry.spelling,
             translation: WordRepository.shared.translation(
                 english: entry.spelling,
@@ -889,16 +1084,14 @@ class RandomWordList: ObservableObject {
                 languageCode: "ru"
             ) ?? entry.translations.first?.text ?? entry.spelling
             let randomWord = RandomWord(
+                id: entry.id,
                 english: entry.spelling,
                 translation: translation,
                 clarification: entry.meaningKey
             )
             let definition = entry.definitions.first?.text
             let hasAssetImage = entry.assets.contains { $0.kind == .image && !$0.uri.isEmpty }
-            let hasCustomImage = getCustomImageURL(
-                for: entry.spelling,
-                clarification: entry.meaningKey
-            ) != nil
+            let hasCustomImage = getCustomImageURL(wordID: entry.id) != nil
             return FeaturedWordSuggestion(
                 id: randomWord.id,
                 word: randomWord,
@@ -1012,28 +1205,32 @@ class RandomWordList: ObservableObject {
             saveLearningPoolKeys()
             return
         }
-        let featuredKeys = featuredWords
-            .map { wordKey(word: $0.english, clarification: $0.clarification) }
+        let featuredWordKeys = featuredWords
+            .map { $0.id }
             .filter { eligibleKeys.contains($0) }
+        let featuredTopicKeys = featuredTopicWords()
+            .map { $0.id }
+            .filter { eligibleKeys.contains($0) }
+        let priorityKeys = Array(NSOrderedSet(array: featuredWordKeys + featuredTopicKeys)) as? [String] ?? []
         let targetSize = min(learningPoolSize, allWords.count)
         if allWords.count <= targetSize {
             var merged = allWords.map { $0.id }
-            for featuredKey in featuredKeys where !merged.contains(featuredKey) {
+            for featuredKey in priorityKeys where !merged.contains(featuredKey) {
                 merged.append(featuredKey)
             }
             learningPoolKeys = merged
             saveLearningPoolKeys()
             return
         }
-        if featuredKeys.count >= targetSize {
-            learningPoolKeys = featuredKeys
+        if priorityKeys.count >= targetSize {
+            learningPoolKeys = Array(priorityKeys.prefix(targetSize))
             saveLearningPoolKeys()
             return
         }
         var rng = SystemRandomNumberGenerator()
-        let nonFeatured = allWords.filter { !featuredKeys.contains($0.id) }.shuffled(using: &rng)
-        let fillCount = max(0, targetSize - featuredKeys.count)
-        learningPoolKeys = featuredKeys + nonFeatured.prefix(fillCount).map { $0.id }
+        let nonFeatured = allWords.filter { !priorityKeys.contains($0.id) }.shuffled(using: &rng)
+        let fillCount = max(0, targetSize - priorityKeys.count)
+        learningPoolKeys = priorityKeys + nonFeatured.prefix(fillCount).map { $0.id }
         saveLearningPoolKeys()
     }
 
@@ -1049,12 +1246,9 @@ class RandomWordList: ObservableObject {
 
     private func eligibleLearningWordKeys() -> Set<String> {
         var keys: Set<String> = []
-        let enabledSets = enabledSetIndices.sorted().compactMap { index -> RandomWordSet? in
-            guard index < wordSets.count else { return nil }
-            return wordSets[index]
-        }
+        let activeSets = activeWordSetsForLearning()
 
-        for set in enabledSets {
+        for set in activeSets {
             for word in set.words {
                 let repositoryEntry = WordRepository.shared.entry(
                     english: word.english,
@@ -1068,7 +1262,10 @@ class RandomWordList: ObservableObject {
                         translations: [],
                         translation: word.translation
                     )
-                keys.insert(wordKey(word: word.english, clarification: clarification))
+                let canonicalWordID = word.id.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                    ? wordKey(word: word.english, clarification: clarification)
+                    : word.id
+                keys.insert(canonicalWordID)
             }
         }
 
@@ -1078,7 +1275,7 @@ class RandomWordList: ObservableObject {
         }
 
         for featuredWord in featuredWords {
-            keys.insert(wordKey(word: featuredWord.english, clarification: featuredWord.clarification))
+            keys.insert(featuredWord.id)
         }
 
         if !babyName.isEmpty {
@@ -1089,13 +1286,11 @@ class RandomWordList: ObservableObject {
     }
 
     private func syncLearningWordsWithCurrentWords() {
-        var updated = learningWords
-        let enabledSets = enabledSetIndices.sorted().compactMap { index -> RandomWordSet? in
-            guard index < wordSets.count else { return nil }
-            return wordSets[index]
-        }
+        let previous = learningWords
+        var updated: [String: LearningWord] = [:]
+        let activeSets = activeWordSetsForLearning()
 
-        for set in enabledSets {
+        for set in activeSets {
             for word in set.words {
                 let repositoryEntry = WordRepository.shared.entry(
                     english: word.english,
@@ -1109,74 +1304,74 @@ class RandomWordList: ObservableObject {
                         translations: [],
                         translation: word.translation
                     )
-                let key = wordKey(word: word.english, clarification: clarification)
-                if updated[key] == nil {
-                    updated[key] = LearningWord(
-                        id: key,
-                        word: word.english,
-                        clarification: clarification ?? "",
-                        translation: word.translation,
-                        tags: tagsForLearningWord(setName: set.name, repositoryEntry: repositoryEntry),
-                        known: false,
-                        favorite: defaultFavorite(for: key, word: word.english),
-                        seenCount: 0,
-                        lastSeen: nil
-                    )
-                }
+                let key = word.id.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                    ? wordKey(word: word.english, clarification: clarification)
+                    : word.id
+                let existing = previous[key]
+                updated[key] = LearningWord(
+                    id: key,
+                    word: word.english,
+                    clarification: clarification ?? "",
+                    translation: word.translation,
+                    tags: tagsForLearningWord(setName: set.name, repositoryEntry: repositoryEntry),
+                    known: existing?.known ?? false,
+                    favorite: (existing?.favorite ?? false) || defaultFavorite(for: key, word: word.english),
+                    seenCount: existing?.seenCount ?? 0,
+                    lastSeen: existing?.lastSeen
+                )
             }
         }
 
         for featuredWord in featuredWords {
-            let key = wordKey(word: featuredWord.english, clarification: featuredWord.clarification)
-            if updated[key] == nil {
-                updated[key] = LearningWord(
-                    id: key,
-                    word: featuredWord.english,
-                    clarification: featuredWord.clarification ?? "",
-                    translation: featuredWord.translation,
-                    tags: ["featured", "basic"],
-                    known: false,
-                    favorite: true,
-                    seenCount: 0,
-                    lastSeen: nil
-                )
-            }
+            let key = featuredWord.id
+            let existing = previous[key]
+            updated[key] = LearningWord(
+                id: key,
+                word: featuredWord.english,
+                clarification: featuredWord.clarification ?? "",
+                translation: featuredWord.translation,
+                tags: ["featured", "basic"],
+                known: existing?.known ?? false,
+                favorite: true,
+                seenCount: existing?.seenCount ?? 0,
+                lastSeen: existing?.lastSeen
+            )
         }
 
         for customImage in customWordImages {
             let parts = splitWordKey(customImage.word)
             let key = wordKey(word: parts.0, clarification: parts.1)
-        if updated[key] == nil {
+            let existing = previous[key]
             updated[key] = LearningWord(
                 id: key,
                 word: parts.0,
                 clarification: parts.1,
-                translation: "",
+                translation: existing?.translation ?? "",
                 tags: ["family"],
-                known: true,
+                known: existing?.known ?? true,
                 favorite: true,
-                seenCount: 0,
-                lastSeen: nil
+                seenCount: existing?.seenCount ?? 0,
+                lastSeen: existing?.lastSeen
             )
         }
-        }
+
         if !babyName.isEmpty {
             let key = wordKey(word: babyName, clarification: nil)
-            if updated[key] == nil {
-                let translation = babyNameTranslation.isEmpty ? babyName : babyNameTranslation
-                updated[key] = LearningWord(
-                    id: key,
-                    word: babyName,
-                    clarification: "",
-                    translation: translation,
-                    tags: ["family"],
-                    known: true,
-                    favorite: true,
-                    seenCount: 0,
-                    lastSeen: nil
-                )
-            }
+            let translation = babyNameTranslation.isEmpty ? babyName : babyNameTranslation
+            let existing = previous[key]
+            updated[key] = LearningWord(
+                id: key,
+                word: babyName,
+                clarification: "",
+                translation: translation,
+                tags: ["family"],
+                known: existing?.known ?? true,
+                favorite: true,
+                seenCount: existing?.seenCount ?? 0,
+                lastSeen: existing?.lastSeen
+            )
         }
+
         learningWords = updated
     }
 
@@ -1282,7 +1477,7 @@ class RandomWordList: ObservableObject {
             if !customWordImages[index].imagePaths.contains(url.path) {
                 customWordImages[index].imagePaths.append(url.path)
                 if customWordImages[index].imageRotations.count < customWordImages[index].imagePaths.count - 1 {
-                    normalizeCustomImageRotations(&customWordImages[index])
+                    _ = normalizeCustomImageRotations(&customWordImages[index])
                 }
                 customWordImages[index].imageRotations.append(0)
                 didAppendPath = true
@@ -1435,8 +1630,21 @@ class RandomWordList: ObservableObject {
         return nil
     }
 
+    func getCustomImageSelection(
+        wordID: String,
+        preferVideo: Bool? = nil
+    ) -> CustomImageSelection? {
+        let split = splitWordKey(wordID)
+        let clarification = split.1.isEmpty ? nil : split.1
+        return getCustomImageSelection(for: split.0, clarification: clarification, preferVideo: preferVideo)
+    }
+
     func getCustomImageURL(for word: String, clarification: String? = nil) -> URL? {
         getCustomImageSelection(for: word, clarification: clarification)?.url
+    }
+
+    func getCustomImageURL(wordID: String) -> URL? {
+        getCustomImageSelection(wordID: wordID)?.url
     }
 
     func getCustomImageRotation(for word: String, clarification: String?, imagePath: String) -> Double {
@@ -1473,7 +1681,7 @@ class RandomWordList: ObservableObject {
         if pathIndex < customImage.imageRotations.count {
             customImage.imageRotations[pathIndex] = next
         } else {
-            normalizeCustomImageRotations(&customImage)
+            _ = normalizeCustomImageRotations(&customImage)
             if pathIndex < customImage.imageRotations.count {
                 customImage.imageRotations[pathIndex] = next
             }
@@ -1651,12 +1859,7 @@ class RandomWordList: ObservableObject {
             return nil
         }
 
-        if let range = raw.range(of: "__", options: .backwards) {
-            let suffix = raw[range.upperBound...]
-            if !suffix.isEmpty && suffix.allSatisfy({ $0.isNumber }) {
-                raw = String(raw[..<range.lowerBound])
-            }
-        }
+        raw = stripNumericImageSuffix(raw)
 
         let parts = splitWordKey(raw)
         let normalizedWord = parts.0.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -1665,6 +1868,27 @@ class RandomWordList: ObservableObject {
             return nil
         }
         return (normalizedWord, normalizedClarification.isEmpty ? nil : normalizedClarification)
+    }
+
+    private func stripNumericImageSuffix(_ raw: String) -> String {
+        if let stripped = stripNumericSuffix(raw, marker: "__") {
+            return stripped
+        }
+        if let stripped = stripNumericSuffix(raw, marker: "_") {
+            return stripped
+        }
+        return raw
+    }
+
+    private func stripNumericSuffix(_ raw: String, marker: String) -> String? {
+        guard let range = raw.range(of: marker, options: .backwards) else {
+            return nil
+        }
+        let suffix = raw[range.upperBound...]
+        guard !suffix.isEmpty && suffix.allSatisfy({ $0.isNumber }) else {
+            return nil
+        }
+        return String(raw[..<range.lowerBound])
     }
 
     private func saveCustomWordImageBookmarks() {
@@ -1808,7 +2032,7 @@ class RandomWordList: ObservableObject {
             running += weight
             if running >= target {
                 let chosen = words[index]
-                let chosenKey = wordKey(word: chosen.english, clarification: chosen.clarification)
+                let chosenKey = chosen.id
                 recordRecentWord(chosenKey)
                 return chosen
             }
@@ -1816,7 +2040,7 @@ class RandomWordList: ObservableObject {
 
         let fallback = words.randomElement()
         if let fallbackWord = fallback {
-            let key = wordKey(word: fallbackWord.english, clarification: fallbackWord.clarification)
+            let key = fallbackWord.id
             recordRecentWord(key)
         }
         return fallback
@@ -1857,7 +2081,12 @@ class RandomWordList: ObservableObject {
         saveLearningWords()
 
         let clarification = chosen.clarification.isEmpty ? nil : chosen.clarification
-        let result = RandomWord(english: chosen.word, translation: chosen.translation, clarification: clarification)
+        let result = RandomWord(
+            id: chosen.id,
+            english: chosen.word,
+            translation: chosen.translation,
+            clarification: clarification
+        )
         lastSelectedRandomWord = result
         return result
     }
