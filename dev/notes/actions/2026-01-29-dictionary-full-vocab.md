@@ -1,0 +1,4 @@
+- full vocab script (en/ru; de/fr later)
+- filters: lang(s), pos(s), complexity (zipf), min/max zipf, limit
+- annotations: pos + definition (if source available)
+- report missing sources (wordnet corpus / pymorphy / wordfreq)

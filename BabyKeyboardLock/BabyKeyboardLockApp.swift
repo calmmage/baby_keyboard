@@ -12,6 +12,8 @@ let AnimationWindowID = "animationTransparentWindow"
 let WordDisplayWindowID = "wordDisplayTransparentWindow"
 let VisualEffectsWindowID = "visualEffectsTransparentWindow"
 let MainWindowID = "main"
+let LearningPoolWindowID = "learningPoolWindow"
+let FeaturedWordsWindowID = "featuredWordsWindow"
 
 @main
 struct BabyKeyboardLockApp: App {
@@ -19,7 +21,7 @@ struct BabyKeyboardLockApp: App {
     @State private var isLaunched: Bool = false
     
     @AppStorage("lockKeyboardOnLaunch") var lockKeyboardOnLaunch = false
-    @AppStorage("selectedLockEffect") var selectedLockEffect: LockEffect = .none
+    @AppStorage("selectedLockEffect") var selectedLockEffect: LockEffect = .speakRandomWord
     @AppStorage("selectedPrimaryLanguage") var selectedPrimaryLanguage: TranslationLanguage = .english
     @AppStorage("selectedTranslationLanguage") var selectedTranslationLanguage: TranslationLanguage = .none
     @ObservedObject var eventHandler: EventHandler = EventHandler.shared
@@ -83,10 +85,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 }
             }
             .store(in: &cancellables)
-        
+
         DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) {
             self.showMainWindow()
             EventHandler.shared.run()
+            self.validateCatalogTranslations()
             
             // Create the animation window for confetti animations
             let animationWindow = NSWindow(
@@ -152,7 +155,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func showMainWindow() {
         if let window = mainWindow {
-            window.center()
+            positionMainWindowTopRight(window)
             window.makeKeyAndOrderFront(nil)
             NSApp.activate(ignoringOtherApps: true)
             return
@@ -165,7 +168,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         window.identifier = NSUserInterfaceItemIdentifier(MainWindowID)
         window.setFrameAutosaveName("Main Window")
         window.isReleasedWhenClosed = false
-        window.center()
+        positionMainWindowTopRight(window)
         window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
         mainWindow = window
@@ -208,5 +211,29 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 window.setFrame(frame, display: true)
             }
         }
+    }
+
+    private func positionMainWindowTopRight(_ window: NSWindow) {
+        guard let screen = NSScreen.main else { return }
+        let visibleFrame = screen.visibleFrame
+        let inset: CGFloat = 20
+        let origin = NSPoint(
+            x: visibleFrame.maxX - window.frame.width - inset,
+            y: visibleFrame.maxY - window.frame.height - inset
+        )
+        window.setFrameOrigin(origin)
+    }
+
+    private func validateCatalogTranslations() {
+        let requiredLanguages = ["ru", "de", "fr", "es", "it", "ja", "zh"]
+        let missingCounts = WordRepository.shared.missingTranslationCounts(languageCodes: requiredLanguages)
+        let missingSummary = requiredLanguages.compactMap { language -> String? in
+            guard let count = missingCounts[language], count > 0 else { return nil }
+            return "\(language): \(count)"
+        }
+
+        guard !missingSummary.isEmpty else { return }
+        let message = "Catalog has missing translations (\(missingSummary.joined(separator: ", ")))."
+        NSLog("%@", "WARNING: \(message)")
     }
 }

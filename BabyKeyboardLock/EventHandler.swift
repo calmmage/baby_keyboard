@@ -9,6 +9,7 @@ import AVFoundation
 
 extension Notification.Name {
     static let closeMenusRequested = Notification.Name("CloseMenusRequested")
+    static let criticalDataWarning = Notification.Name("CriticalDataWarning")
 }
 
 enum KeyCode: CGKeyCode, CaseIterable, Identifiable {
@@ -133,6 +134,12 @@ class EventHandler: ObservableObject {
             self.selectedPrimaryLanguage = savedPrimary
         }
         eventEffectHandler.primaryLanguage = self.selectedPrimaryLanguage
+
+        if let savedSecondaryRaw = UserDefaults.standard.string(forKey: "selectedTranslationLanguage"),
+           let savedSecondary = TranslationLanguage(rawValue: savedSecondaryRaw) {
+            self.selectedTranslationLanguage = savedSecondary
+        }
+        eventEffectHandler.translationLanguage = self.selectedTranslationLanguage
 
         self.gamifyRandomWordEnabled = UserDefaults.standard.bool(forKey: "gamifyRandomWordEnabled")
         eventEffectHandler.setGamifyRandomWordEnabled(self.gamifyRandomWordEnabled)

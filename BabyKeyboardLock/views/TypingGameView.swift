@@ -10,10 +10,19 @@ struct TypingGameView: View {
     @ObservedObject var eventHandler = EventHandler.shared
     @ObservedObject var typingGameState = TypingGameState.shared
     @AppStorage("showFlashcards") private var showFlashcards: Bool = false
-    @AppStorage("flashcardStyle") private var flashcardStyle: FlashcardStyle = .none
+    @AppStorage("showVideoCards") private var showVideoCards: Bool = false
+    @AppStorage("flashcardStyle") private var flashcardStyleStorage: String = FlashcardStyle.noImageToken
     @AppStorage("flashcardImageSize") private var flashcardImageSize: Double = 150.0
     @State private var showCelebration: Bool = false
     @State private var celebrationOpacity: Double = 0.0
+    @State private var currentImageURL: URL? = nil
+    @State private var currentImageRotation: Double = 0.0
+    @State private var currentVideoURL: URL? = nil
+    @State private var activeFlashcardStyle: FlashcardStyle? = nil
+
+    private var enabledFlashcardStyles: Set<FlashcardStyle> {
+        FlashcardStyle.pool(from: flashcardStyleStorage)
+    }
 
     var body: some View {
         GeometryReader { geometry in
@@ -37,15 +46,8 @@ struct TypingGameView: View {
                     }
 
                     // Flashcard image if enabled
-                    if showFlashcards && flashcardStyle != .none {
-                        if let imageURL = getImageURL(),
-                           let nsImage = loadImage(from: imageURL) {
-                            Image(nsImage: nsImage)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: CGFloat(flashcardImageSize), height: CGFloat(flashcardImageSize))
-                                .shadow(radius: 10)
-                        }
+                    if showFlashcards && activeFlashcardStyle != nil {
+                        flashcardMediaView(size: CGFloat(flashcardImageSize))
                     }
 
                     Spacer()
@@ -56,13 +58,8 @@ struct TypingGameView: View {
                 if showCelebration {
                     VStack {
                         VStack(spacing: 16) {
-                            if let imageURL = getImageURL(),
-                               let nsImage = loadImage(from: imageURL) {
-                                Image(nsImage: nsImage)
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: CGFloat(flashcardImageSize), height: CGFloat(flashcardImageSize))
-                                    .shadow(radius: 10)
+                            if showFlashcards && activeFlashcardStyle != nil {
+                                flashcardMediaView(size: CGFloat(flashcardImageSize))
                             }
 
                             Text(typingGameState.currentWord)
@@ -105,33 +102,133 @@ struct TypingGameView: View {
                     }
                 }
             }
+            .onAppear {
+                refreshMediaSelection()
+            }
+            .onChange(of: typingGameState.currentWord) { _, _ in
+                refreshMediaSelection()
+            }
+            .onChange(of: typingGameState.currentEnglishWord) { _, _ in
+                refreshMediaSelection()
+            }
+            .onChange(of: typingGameState.currentWordClarification) { _, _ in
+                refreshMediaSelection()
+            }
+            .onChange(of: showVideoCards) { _, _ in
+                refreshMediaSelection()
+            }
+            .onChange(of: flashcardStyleStorage) { _, _ in
+                refreshMediaSelection()
+            }
         }
     }
 
-    private func getImageURL() -> URL? {
+    @ViewBuilder
+    private func flashcardMediaView(size: CGFloat) -> some View {
+        if showVideoCards, let videoURL = currentVideoURL {
+            LoopingVideoView(url: videoURL)
+                .frame(width: size, height: size)
+                .shadow(radius: 10)
+        } else if let imageURL = currentImageURL,
+                  let nsImage = loadImage(from: imageURL) {
+            Image(nsImage: nsImage)
+                .resizable()
+                .scaledToFit()
+                .frame(width: size, height: size)
+                .shadow(radius: 10)
+                .rotationEffect(.degrees(currentImageRotation))
+        }
+    }
+
+    private func refreshMediaSelection() {
+        activeFlashcardStyle = FlashcardStyle.randomStyle(from: enabledFlashcardStyles)
+
+        guard let activeFlashcardStyle else {
+            currentVideoURL = nil
+            currentImageURL = nil
+            currentImageRotation = 0.0
+            return
+        }
+
+        if let selection = getMediaSelection(style: activeFlashcardStyle) {
+            if selection.url.isFlashcardVideoFile {
+                currentVideoURL = selection.url
+                currentImageURL = nil
+                currentImageRotation = 0.0
+            } else {
+                currentVideoURL = nil
+                currentImageURL = selection.url
+                currentImageRotation = selection.rotation
+            }
+        } else {
+            currentVideoURL = nil
+            currentImageURL = nil
+            currentImageRotation = 0.0
+        }
+    }
+
+    private func getMediaSelection(style: FlashcardStyle) -> (url: URL, rotation: Double)? {
         let word = typingGameState.currentEnglishWord.isEmpty
             ? typingGameState.currentWord.lowercased()
             : typingGameState.currentEnglishWord.lowercased()
+        let wordID = WordDataCatalog.makeWordID(
+            spelling: word,
+            meaningKey: typingGameState.currentWordClarification
+        )
 
-        // Check for custom word image first
-        if let customImageURL = RandomWordList.shared.getCustomImageURL(
-            for: word,
-            clarification: typingGameState.currentWordClarification
-        ) {
-            return customImageURL
+        if showVideoCards {
+            if let customVideoSelection = RandomWordList.shared.getCustomImageSelection(
+                wordID: wordID,
+                preferVideo: true
+            ), customVideoSelection.url.isFlashcardVideoFile {
+                return (customVideoSelection.url, 0.0)
+            }
+
+            let randomWord = RandomWord(
+                english: word,
+                translation: typingGameState.currentWordTranslation,
+                clarification: typingGameState.currentWordClarification
+            )
+            if let bundledVideoURL = randomWord.flashcardVideoURL(style: style) {
+                return (bundledVideoURL, 0.0)
+            }
+        }
+
+        if let customImageSelection = RandomWordList.shared.getCustomImageSelection(
+            wordID: wordID,
+            preferVideo: false
+        ), !customImageSelection.url.isFlashcardVideoFile {
+            return (customImageSelection.url, customImageSelection.rotationDegrees)
         }
 
         // Check for baby image if word matches baby name
         if word == RandomWordList.shared.babyName.lowercased(),
            let babyImageURL = RandomWordList.shared.getBabyImageURL() {
-            return babyImageURL
+            return (babyImageURL, 0.0)
+        }
+
+        let sanitizedWord = word.replacingOccurrences(of: " ", with: "_")
+        let styledBaseName = "\(style.rawValue)_\(sanitizedWord)"
+
+        if let bundledImageURL = Bundle.main.url(forResource: styledBaseName, withExtension: "png") {
+            return (bundledImageURL, 0.0)
         }
 
         // Try to find image in Resources
         if let resourcePath = Bundle.main.resourcePath {
+            let styledImagePath = "\(resourcePath)/Resources/FlashcardImages/\(style.rawValue)/\(styledBaseName).png"
+            if FileManager.default.fileExists(atPath: styledImagePath) {
+                return (URL(fileURLWithPath: styledImagePath), 0.0)
+            }
+
+            let prefixedPath = "\(resourcePath)/Resources/\(styledBaseName).png"
+            if FileManager.default.fileExists(atPath: prefixedPath) {
+                return (URL(fileURLWithPath: prefixedPath), 0.0)
+            }
+
             let imagePath = "\(resourcePath)/Resources/\(word).png"
             if FileManager.default.fileExists(atPath: imagePath) {
-                return URL(fileURLWithPath: imagePath)
+                return (URL(fileURLWithPath: imagePath), 0.0)
             }
         }
 

@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		20D3EC8E2D17EDB70096279E /* ConfettiSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 20D3EC8D2D17EDB70096279E /* ConfettiSwiftUI */; };
 		20F6F4C22D154FCE006FEC81 /* Sauce in Frameworks */ = {isa = PBXBuildFile; productRef = 20F6F4C12D154FCE006FEC81 /* Sauce */; };
+		9A0F8C412F4122A900C28D48 /* BabyKeyboardLock/Resources/FlashcardVideos/demo/simple_cat.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 9A0F8C402F4122A900C28D48 /* BabyKeyboardLock/Resources/FlashcardVideos/demo/simple_cat.mp4 */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -32,6 +33,7 @@
 		20141CA82D0F52E500D0ED5D /* BabyKeyboardLock Debug.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "BabyKeyboardLock Debug.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		20141CB92D0F52E700D0ED5D /* BabyKeyboardLockTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BabyKeyboardLockTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		20141CC32D0F52E700D0ED5D /* BabyKeyboardLockUITests Debug.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "BabyKeyboardLockUITests Debug.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9A0F8C402F4122A900C28D48 /* BabyKeyboardLock/Resources/FlashcardVideos/demo/simple_cat.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = BabyKeyboardLock/Resources/FlashcardVideos/demo/simple_cat.mp4; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -86,6 +88,7 @@
 				20141CBC2D0F52E700D0ED5D /* BabyKeyboardLockTests */,
 				20141CC62D0F52E700D0ED5D /* BabyKeyboardLockUITests */,
 				20141CA92D0F52E500D0ED5D /* Products */,
+				9A0F8C402F4122A900C28D48 /* BabyKeyboardLock/Resources/FlashcardVideos/demo/simple_cat.mp4 */,
 			);
 			sourceTree = "<group>";
 		};
@@ -228,6 +231,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9A0F8C412F4122A900C28D48 /* BabyKeyboardLock/Resources/FlashcardVideos/demo/simple_cat.mp4 in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

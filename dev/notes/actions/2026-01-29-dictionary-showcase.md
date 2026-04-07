@@ -1,0 +1,4 @@
+- fix showcase import error (run as module)
+- add pool size parameter (default 25)
+- add make dictionary-showcase
+- add images review guidance + manifest
