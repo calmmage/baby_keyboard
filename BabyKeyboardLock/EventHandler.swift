@@ -10,6 +10,7 @@ import AVFoundation
 extension Notification.Name {
     static let closeMenusRequested = Notification.Name("CloseMenusRequested")
     static let criticalDataWarning = Notification.Name("CriticalDataWarning")
+    static let learningRewardEarned = Notification.Name("LearningRewardEarned")
 }
 
 enum KeyCode: CGKeyCode, CaseIterable, Identifiable {
@@ -332,6 +333,26 @@ class EventHandler: ObservableObject {
             }
             if selectedLockEffect == .speakRandomWord && gamifyRandomWordEnabled {
                 self.gamifyRandomWordTarget = eventEffectHandler.getGamifyTargetLetter()
+            }
+            let earnedReward: String?
+            if selectedLockEffect == .speakRandomWord,
+               gamifyRandomWordEnabled,
+               !lastKeyString.isEmpty {
+                earnedReward = lastKeyString
+            } else if selectedLockEffect == .typingGame,
+                      TypingGameState.shared.isWordComplete {
+                earnedReward = TypingGameState.shared.currentEnglishWord
+            } else {
+                earnedReward = nil
+            }
+            if let earnedReward {
+                DispatchQueue.main.async {
+                    NotificationCenter.default.post(
+                        name: .learningRewardEarned,
+                        object: nil,
+                        userInfo: ["word": earnedReward]
+                    )
+                }
             }
             debugPrint("keyup------- \(lastKeyString)")
             return nil

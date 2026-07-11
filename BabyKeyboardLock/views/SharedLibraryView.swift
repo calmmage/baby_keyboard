@@ -42,7 +42,11 @@ final class SharedLibraryViewModel: ObservableObject {
 
 struct SharedLibraryView: View {
     @AppStorage("sharedLibraryBaseURL") private var baseURL = "http://localhost:3848"
+    @AppStorage("sharedLibraryRewardMode") private var rewardMode = false
+    @AppStorage("wordDisplayDuration") private var rewardDuration = DEFAULT_WORD_DISPLAY_DURATION
     @State private var pin = ""
+    @State private var rewardVisible = false
+    @State private var rewardSequence = 0
     @StateObject private var model = SharedLibraryViewModel()
     @ObservedObject private var eventHandler = EventHandler.shared
 
@@ -65,6 +69,9 @@ struct SharedLibraryView: View {
                 SecureField("PIN (optional)", text: $pin)
                     .textFieldStyle(.roundedBorder)
                     .frame(width: 125)
+                Toggle("Reward mode", isOn: $rewardMode)
+                    .toggleStyle(.switch)
+                    .help("Reveal a creation only after a correct learning answer")
                 Button("Reload") {
                     Task { await model.load(baseURL: baseURL, pin: pin) }
                 }
@@ -89,6 +96,18 @@ struct SharedLibraryView: View {
                         }
                     }
                     .padding(30)
+                } else if rewardMode && !rewardVisible {
+                    VStack(spacing: 14) {
+                        Image(systemName: "sparkles")
+                            .font(.system(size: 54))
+                            .foregroundStyle(.yellow)
+                        Text("Complete a word to reveal a creation")
+                            .font(.title2.bold())
+                        Text("A correct gamified letter or a completed typing word unlocks the next shared story.")
+                            .multilineTextAlignment(.center)
+                            .foregroundStyle(.secondary)
+                    }
+                    .padding(32)
                 } else if let item = model.currentItem {
                     ZStack(alignment: .bottom) {
                         SharedLibraryMediaView(item: item)
@@ -124,14 +143,35 @@ struct SharedLibraryView: View {
             await model.load(baseURL: baseURL, pin: pin)
         }
         .onReceive(eventHandler.$lastKeyString.dropFirst()) { _ in
-            guard eventHandler.isLocked else { return }
+            guard !rewardMode, eventHandler.isLocked else { return }
             model.advance()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .learningRewardEarned)) { _ in
+            guard rewardMode else { return }
+            model.advance()
+            rewardVisible = true
+            rewardSequence += 1
+        }
+        .onChange(of: rewardMode) { _, _ in
+            rewardVisible = false
+        }
+        .task(id: rewardSequence) {
+            guard rewardMode, rewardVisible else { return }
+            let seconds = max(rewardDuration, 2)
+            try? await Task.sleep(nanoseconds: UInt64(seconds * 1_000_000_000))
+            guard !Task.isCancelled else { return }
+            rewardVisible = false
         }
     }
 
     private var statusLine: String {
         let source = model.feed?.source == "demo" ? "demo feed" : "shared creation feed"
-        let keyHint = eventHandler.isLocked ? "any blocked key advances" : "lock keyboard to use any key"
+        let keyHint: String
+        if rewardMode {
+            keyHint = rewardVisible ? "learning reward unlocked" : "waiting for a correct answer"
+        } else {
+            keyHint = eventHandler.isLocked ? "any blocked key advances" : "lock keyboard to use any key"
+        }
         return "\(source) · contract v\(model.feed?.schemaVersion ?? 0) · \(keyHint)"
     }
 
