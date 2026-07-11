@@ -3,6 +3,7 @@
 ## Unreleased
 
 ### Features
+- Added a native shared-library player that streams the web generator's versioned creation feed; when the keyboard is locked, any intercepted key advances to the next creation.
 - Resetting word sets now also clears featured words and learning-pool state before rebuilding from bundled defaults, so reset behaves like an actual state reset for word-mode data.
 - Added explicit word-source modes:
   - Mode 1 (`Pool + Featured`) uses pool rotation with featured topics and extra featured words.

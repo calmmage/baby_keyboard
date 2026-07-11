@@ -233,6 +233,17 @@ struct ContentView: View {
                         .buttonStyle(.plain)
                         .padding(.top, 8)
 
+                        Button("Shared library") {
+                            SharedLibraryView().openInWindow(
+                                title: "Daria Shared Library",
+                                id: SharedLibraryWindowID,
+                                sender: self,
+                                focus: true
+                            )
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.top, 8)
+
                         Button("About") {
                             AboutView().openInWindow(id: "About", sender: self, focus: true)
                         }
