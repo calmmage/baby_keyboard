@@ -120,6 +120,9 @@ struct TypingGameView: View {
             .onChange(of: flashcardStyleStorage) { _, _ in
                 refreshMediaSelection()
             }
+            .onReceive(NotificationCenter.default.publisher(for: .flashcardAssetCacheDidUpdate)) { _ in
+                refreshMediaSelection(preserveCurrentStyle: true)
+            }
         }
     }
 
@@ -140,8 +143,14 @@ struct TypingGameView: View {
         }
     }
 
-    private func refreshMediaSelection() {
-        activeFlashcardStyle = FlashcardStyle.randomStyle(from: enabledFlashcardStyles)
+    private func refreshMediaSelection(preserveCurrentStyle: Bool = false) {
+        if preserveCurrentStyle,
+           let activeFlashcardStyle,
+           enabledFlashcardStyles.contains(activeFlashcardStyle) {
+            self.activeFlashcardStyle = activeFlashcardStyle
+        } else {
+            activeFlashcardStyle = FlashcardStyle.randomStyle(from: enabledFlashcardStyles)
+        }
 
         guard let activeFlashcardStyle else {
             currentVideoURL = nil
@@ -207,29 +216,13 @@ struct TypingGameView: View {
             return (babyImageURL, 0.0)
         }
 
-        let sanitizedWord = word.replacingOccurrences(of: " ", with: "_")
-        let styledBaseName = "\(style.rawValue)_\(sanitizedWord)"
-
-        if let bundledImageURL = Bundle.main.url(forResource: styledBaseName, withExtension: "png") {
-            return (bundledImageURL, 0.0)
-        }
-
-        // Try to find image in Resources
-        if let resourcePath = Bundle.main.resourcePath {
-            let styledImagePath = "\(resourcePath)/Resources/FlashcardImages/\(style.rawValue)/\(styledBaseName).png"
-            if FileManager.default.fileExists(atPath: styledImagePath) {
-                return (URL(fileURLWithPath: styledImagePath), 0.0)
-            }
-
-            let prefixedPath = "\(resourcePath)/Resources/\(styledBaseName).png"
-            if FileManager.default.fileExists(atPath: prefixedPath) {
-                return (URL(fileURLWithPath: prefixedPath), 0.0)
-            }
-
-            let imagePath = "\(resourcePath)/Resources/\(word).png"
-            if FileManager.default.fileExists(atPath: imagePath) {
-                return (URL(fileURLWithPath: imagePath), 0.0)
-            }
+        let randomWord = RandomWord(
+            english: word,
+            translation: typingGameState.currentWordTranslation,
+            clarification: typingGameState.currentWordClarification
+        )
+        if let imageSelection = FlashcardAssetStore.shared.imageSelection(for: randomWord, style: style) {
+            return (imageSelection.url, imageSelection.rotationDegrees)
         }
 
         return nil

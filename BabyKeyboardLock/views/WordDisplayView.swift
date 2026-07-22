@@ -23,6 +23,7 @@ struct WordDisplayView: View {
     @State private var availableVideoURL: URL? = nil
     @State private var activeFlashcardStyle: FlashcardStyle? = nil
     @State private var isCurrentCardVideoActivated: Bool = false
+    @State private var mediaRefreshToken: Int = 0
     
     // For more reliable timeout handling
     @State private var hideWorkItem: DispatchWorkItem? = nil
@@ -285,6 +286,9 @@ struct WordDisplayView: View {
                     style: activeFlashcardStyle
                 )
             }
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .flashcardAssetCacheDidUpdate)) { _ in
+            mediaRefreshToken += 1
         }
         .onDisappear {
             // Clean up when view disappears

@@ -88,15 +88,8 @@ extension RandomWord {
             return colorImage
         }
 
-        // Handle spaces in filenames and add style prefix
-        let sanitizedEnglish = english.lowercased().replacingOccurrences(of: " ", with: "_")
-        let filename = "\(style.rawValue)_\(sanitizedEnglish).png"
-
-        // For debugging
-        print("Looking for image: \(filename)")
-
-        // Return nil if image doesn't exist - no error, just no image
-        if let nsImage = NSImage(named: filename) {
+        if let selection = FlashcardAssetStore.shared.imageSelection(for: self, style: style),
+           let nsImage = NSImage(contentsOf: selection.url) {
             return Image(nsImage: nsImage)
         }
         return nil

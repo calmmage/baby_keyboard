@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "assets:upload": "node scripts/upload-flashcard-assets.js",
     "build": "next build",
     "dev": "next dev",
     "lint": "eslint .",

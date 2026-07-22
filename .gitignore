@@ -34,8 +34,9 @@ DerivedData/
 
 .idea
 .specstory
-dev/*
-!dev/notes/
+/dev/**
+!/dev/notes/
+!/dev/notes/**
 
 archives
 build
