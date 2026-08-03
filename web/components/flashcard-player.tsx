@@ -650,7 +650,7 @@ export default function FlashcardPlayer() {
                   onChange={(e) => {
                     const val = parseInt(e.target.value);
                     if (!isNaN(val) && val > 0) {
-                      saveSettings(val, secondaryLang, activeWordLimit, enabledTopics, reviewProbability, enableReview);
+                      saveSettings(primaryLang, secondaryLang, val, enabledTopics, reviewProbability, enableReview);
                     }
                   }}
                   className="w-12 h-6 text-sm text-center rounded border border-slate-200 dark:border-slate-700 bg-transparent"
