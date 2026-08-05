@@ -58,6 +58,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     /// <#Description#>
     /// - Parameter notification: <#notification description#>
     @MainActor func applicationDidFinishLaunching(_ notification: Notification) {
+        // Agent app (LSUIElement): stay out of the Dock, but keep a real main window.
+        // Do not switch to .regular — that would add a Dock icon and change activation semantics.
+        NSApp.setActivationPolicy(.accessory)
+
         // Add screen configuration change observer
         screenObserver = NotificationCenter.default.addObserver(
             forName: NSApplication.didChangeScreenParametersNotification,
@@ -86,62 +90,71 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
             .store(in: &cancellables)
 
-        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.5) {
+        // Show the real settings window first so AX prompt / System Settings handoff
+        // has a visible owner window, then start the event-tap foundation.
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.35) {
             self.showMainWindow()
             EventHandler.shared.run()
             self.validateCatalogTranslations()
-            
-            // Create the animation window for confetti animations
-            let animationWindow = NSWindow(
-                contentRect: NSRect(x: 0, y: 0, width: NSScreen.main?.frame.width ?? 1200, height: NSScreen.main?.frame.height ?? 800),
-                styleMask: [.borderless, .fullSizeContentView],
-                backing: .buffered,
-                defer: false
-            )
-            animationWindow.identifier = NSUserInterfaceItemIdentifier(AnimationWindowID)
-            animationWindow.backgroundColor = .clear
-            animationWindow.isReleasedWhenClosed = false
-            animationWindow.center()
-            animationWindow.setFrameAutosaveName("Animation Window")
-            animationWindow.contentView = NSHostingView(rootView: AnimationView())
-            animationWindow.orderFrontRegardless()
-            
-            // Create the word display window for showing words and translations
-            let wordDisplayWindow = NSWindow(
-                contentRect: NSRect(x: 0, y: 0, width: NSScreen.main?.frame.width ?? 1200, height: NSScreen.main?.frame.height ?? 800),
-                styleMask: [.borderless, .fullSizeContentView],
-                backing: .buffered,
-                defer: false
-            )
-            wordDisplayWindow.identifier = NSUserInterfaceItemIdentifier(WordDisplayWindowID)
-            wordDisplayWindow.backgroundColor = .clear
-            wordDisplayWindow.isReleasedWhenClosed = false
-            wordDisplayWindow.center()
-            wordDisplayWindow.setFrameAutosaveName("Word Display Window")
-            wordDisplayWindow.contentView = NSHostingView(rootView: WordDisplayView())
-            wordDisplayWindow.level = .floating // Ensure it appears above other windows
-            wordDisplayWindow.ignoresMouseEvents = true // Prevent mouse interaction
-            wordDisplayWindow.titlebarAppearsTransparent = true
-            wordDisplayWindow.orderFrontRegardless()
-            
-            // Create the visual effects window for additional animations
-            let visualEffectsWindow = NSWindow(
-                contentRect: NSRect(x: 0, y: 0, width: NSScreen.main?.frame.width ?? 1200, height: NSScreen.main?.frame.height ?? 800),
-                styleMask: [.borderless, .fullSizeContentView],
-                backing: .buffered,
-                defer: false
-            )
-            visualEffectsWindow.identifier = NSUserInterfaceItemIdentifier(VisualEffectsWindowID)
-            visualEffectsWindow.backgroundColor = .clear
-            visualEffectsWindow.isReleasedWhenClosed = false
-            visualEffectsWindow.center()
-            visualEffectsWindow.setFrameAutosaveName("Visual Effects Window")
-            visualEffectsWindow.contentView = NSHostingView(rootView: VisualEffectsView())
-            visualEffectsWindow.level = .floating 
-            visualEffectsWindow.ignoresMouseEvents = true
-            visualEffectsWindow.titlebarAppearsTransparent = true
-            visualEffectsWindow.orderFrontRegardless()
+            self.installOverlayWindows()
         }
+    }
+
+    /// Transparent effect overlays — never become the only "app window".
+    private func installOverlayWindows() {
+        // Create the animation window for confetti animations
+        let animationWindow = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: NSScreen.main?.frame.width ?? 1200, height: NSScreen.main?.frame.height ?? 800),
+            styleMask: [.borderless, .fullSizeContentView],
+            backing: .buffered,
+            defer: false
+        )
+        animationWindow.identifier = NSUserInterfaceItemIdentifier(AnimationWindowID)
+        animationWindow.backgroundColor = .clear
+        animationWindow.isReleasedWhenClosed = false
+        animationWindow.center()
+        animationWindow.setFrameAutosaveName("Animation Window")
+        animationWindow.contentView = NSHostingView(rootView: AnimationView())
+        animationWindow.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
+        animationWindow.orderFrontRegardless()
+
+        // Create the word display window for showing words and translations
+        let wordDisplayWindow = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: NSScreen.main?.frame.width ?? 1200, height: NSScreen.main?.frame.height ?? 800),
+            styleMask: [.borderless, .fullSizeContentView],
+            backing: .buffered,
+            defer: false
+        )
+        wordDisplayWindow.identifier = NSUserInterfaceItemIdentifier(WordDisplayWindowID)
+        wordDisplayWindow.backgroundColor = .clear
+        wordDisplayWindow.isReleasedWhenClosed = false
+        wordDisplayWindow.center()
+        wordDisplayWindow.setFrameAutosaveName("Word Display Window")
+        wordDisplayWindow.contentView = NSHostingView(rootView: WordDisplayView())
+        wordDisplayWindow.level = .floating // Ensure it appears above other windows
+        wordDisplayWindow.ignoresMouseEvents = true // Prevent mouse interaction
+        wordDisplayWindow.titlebarAppearsTransparent = true
+        wordDisplayWindow.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
+        wordDisplayWindow.orderFrontRegardless()
+
+        // Create the visual effects window for additional animations
+        let visualEffectsWindow = NSWindow(
+            contentRect: NSRect(x: 0, y: 0, width: NSScreen.main?.frame.width ?? 1200, height: NSScreen.main?.frame.height ?? 800),
+            styleMask: [.borderless, .fullSizeContentView],
+            backing: .buffered,
+            defer: false
+        )
+        visualEffectsWindow.identifier = NSUserInterfaceItemIdentifier(VisualEffectsWindowID)
+        visualEffectsWindow.backgroundColor = .clear
+        visualEffectsWindow.isReleasedWhenClosed = false
+        visualEffectsWindow.center()
+        visualEffectsWindow.setFrameAutosaveName("Visual Effects Window")
+        visualEffectsWindow.contentView = NSHostingView(rootView: VisualEffectsView())
+        visualEffectsWindow.level = .floating
+        visualEffectsWindow.ignoresMouseEvents = true
+        visualEffectsWindow.titlebarAppearsTransparent = true
+        visualEffectsWindow.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
+        visualEffectsWindow.orderFrontRegardless()
     }
     
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
@@ -155,6 +168,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func showMainWindow() {
         if let window = mainWindow {
+            configureMainWindow(window)
             positionMainWindowTopRight(window)
             window.makeKeyAndOrderFront(nil)
             NSApp.activate(ignoringOtherApps: true)
@@ -164,14 +178,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let rootView = ContentView(eventHandler: EventHandler.shared)
         let controller = NSHostingController(rootView: rootView)
         let window = NSWindow(contentViewController: controller)
-        window.title = "BabyKeyboardLock"
+        window.title = Bundle.applicationName
         window.identifier = NSUserInterfaceItemIdentifier(MainWindowID)
         window.setFrameAutosaveName("Main Window")
         window.isReleasedWhenClosed = false
+        window.styleMask = [.titled, .closable, .miniaturizable, .resizable]
+        configureMainWindow(window)
+        // Sensible default so first launch is not a tiny empty chrome.
+        if window.frame.width < 480 || window.frame.height < 520 {
+            window.setContentSize(NSSize(width: 520, height: 640))
+        }
         positionMainWindowTopRight(window)
         window.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
         mainWindow = window
+    }
+
+    private func configureMainWindow(_ window: NSWindow) {
+        window.collectionBehavior = [.moveToActiveSpace, .fullScreenAuxiliary]
+        window.level = .normal
+        window.isOpaque = true
+        // Closing the main window must not kill the menu-bar blocker.
+        window.isReleasedWhenClosed = false
     }
 
     func hideMainWindow() {

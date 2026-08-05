@@ -21,8 +21,8 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>Privacy - Accessibility API Enabled</key>
-	<string>YES</string>
+	<!-- Accessibility is granted via AXIsProcessTrustedWithOptions + System Settings;
+	     there is no Info.plist usage-description key that replaces the TCC toggle. -->
 	<key>UTImportedTypeDeclarations</key>
 	<array>
 		<dict/>

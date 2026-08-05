@@ -17,4 +17,5 @@
   - `scripts.generate_llm_definitions` to fill meaningful definitions via `calmlib.llm` (Haiku default model)
 
 ### Housekeeping
+- Accessibility foundation: reliable AX prompt, in-app permission/event-tap status, non-fatal tap setup, no quit on permission loss. Keyword: `accessibility-foundation`.
 - Catalog model decode/normalize was hardened for mixed schema shapes while preserving `id` as canonical key. Keyword: `catalog-normalization`.

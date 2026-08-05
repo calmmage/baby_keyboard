@@ -8,6 +8,7 @@ PYTHON := .venv/bin/python3
 .PHONY: deploy update clean archive export install
 .PHONY: s3-bucket-setup s3-media-sync
 .PHONY: web-install web-dev web-build web-start
+.PHONY: verify-ax
 
 AWS_REGION ?= us-east-1
 S3_BUCKET ?=
@@ -116,6 +117,10 @@ s3-media-sync:
 	@aws s3 sync web/public/generated-audio/presynth "s3://$(S3_BUCKET)/$(S3_PREFIX)/generated-audio/presynth" --delete
 	@echo "Synced generated-media + generated-audio/presynth to s3://$(S3_BUCKET)/$(S3_PREFIX)"
 
+# Accessibility / event-tap foundation checks (no TCC mutation)
+verify-ax:
+	@./scripts/verify_accessibility_foundation.sh
+
 # Main target - build and deploy the app
 deploy: archive export install
 	@echo "✅ BabyKeyboardLock deployed successfully to /Applications/"
@@ -143,6 +148,7 @@ install:
 help:
 	@printf "make deploy\n"
 	@printf "make update\n"
+	@printf "make verify-ax\n"
 	@printf "make generate-images\n"
 	@printf "make download-openimages\n"
 	@printf "make dictionary-showcase\n"

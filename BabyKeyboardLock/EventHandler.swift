@@ -33,7 +33,9 @@ class EventHandler: ObservableObject {
     private let lock = NSLock()
     let eventEffectHandler = EventEffectHandler()
     private var eventLoopStarted = false
-    private var eventTap : CFMachPort?
+    private var eventTap: CFMachPort?
+    private var eventTapRunLoopSource: CFRunLoopSource?
+    private var accessibilityPollWorkItem: DispatchWorkItem?
     private var cancellables = Set<AnyCancellable>()
     
     @Published var selectedLockEffect: LockEffect = .none
@@ -64,6 +66,10 @@ class EventHandler: ObservableObject {
     }
     @Published var isLocked = true
     @Published var accessibilityPermissionGranted = false
+    /// Event-tap lifecycle for UI + diagnostics (never fatal-errors the process).
+    @Published var eventTapState: EventTapLifecycleState = .notStarted
+    /// Last human-readable permission / tap status line for the main window.
+    @Published var permissionStatusMessage: String = "Checking Accessibility permission…"
     @Published var personalVoiceAvailable: Bool = false
     @Published var lastKeyString: String = "a" // fix onReceive won't work as expected for first key press
 
@@ -93,9 +99,13 @@ class EventHandler: ObservableObject {
     
     init(isLocked: Bool = true) {
         self.isLocked = isLocked
-        self.accessibilityPermissionGranted = requestAccessibilityPermissions()
+        // Silent check only — never prompt from init (avoids dialog spam / behind-window prompts).
+        self.accessibilityPermissionGranted = AccessibilityPermission.isTrusted()
         if !self.accessibilityPermissionGranted {
             self.isLocked = false
+            self.permissionStatusMessage = "Accessibility permission required to lock the keyboard."
+        } else {
+            self.permissionStatusMessage = "Accessibility permission granted."
         }
         self.lastKeyString = lastKeyString
         
@@ -172,109 +182,254 @@ class EventHandler: ObservableObject {
             .store(in: &cancellables)
     }
     
+    /// Lock only when Accessibility is granted AND the event tap is ready (or can start).
+    /// Published fields are only written when the value actually changes (avoids SwiftUI thrash/cycles).
     func setLocked(isLocked: Bool) {
-        if (isLocked && accessibilityPermissionGranted) {
-            self.isLocked = true
+        if isLocked {
+            guard accessibilityPermissionGranted else {
+                assignIsLocked(false)
+                assignPermissionStatusMessage("Cannot lock: grant Accessibility permission first.")
+                return
+            }
+            if !eventLoopStarted {
+                startEventLoop()
+            }
+            guard eventTapState.isBlockingReady else {
+                assignIsLocked(false)
+                assignPermissionStatusMessage("Cannot lock: event tap is \(eventTapState.statusLabel).")
+                return
+            }
+            assignIsLocked(true)
+            assignPermissionStatusMessage("Keyboard locked. Unlock via toggle, menu bar, or Ctrl+Option+U.")
         } else {
-            self.isLocked = false
+            assignIsLocked(false)
+            if accessibilityPermissionGranted {
+                assignPermissionStatusMessage("Keyboard unlocked.")
+            }
         }
     }
 
-    func checkAccessibilityPermission(){
+    /// Whether the blocker can safely intercept keys right now.
+    var isBlockerReady: Bool {
+        accessibilityPermissionGranted && eventTapState.isBlockingReady
+    }
+
+    func refreshPermissionStatus() {
+        let trusted = AccessibilityPermission.isTrusted()
+        applyTrustState(trusted: trusted, source: "refresh")
+    }
+
+    func currentDiagnostics() -> AccessibilityRuntimeDiagnostics {
+        AccessibilityPermission.diagnostics(eventTapState: eventTapState, isLocked: isLocked)
+    }
+
+    func checkAccessibilityPermission() {
         debugPrint("------ Checking Accessibility Permission ------")
-        if eventTap != nil && !CGEvent.tapIsEnabled(tap: eventTap!) {
-            print("Event tap disabled, attempting restart...")
-            setupEventTap()
+        // Heal a system-disabled tap without tearing everything down.
+        if let tap = eventTap, !CGEvent.tapIsEnabled(tap: tap) {
+            debugPrint("Event tap disabled by system, re-enabling…")
+            CGEvent.tapEnable(tap: tap, enable: true)
+            if CGEvent.tapIsEnabled(tap: tap) {
+                assignEventTapState(.active)
+            } else {
+                // Recreate once if re-enable failed.
+                teardownEventTap(keepLockPreference: isLocked)
+                _ = setupEventTap()
+            }
         }
-        let processTrusted = AXIsProcessTrusted()
+
+        let processTrusted = AccessibilityPermission.isTrusted()
         if !processTrusted && self.accessibilityPermissionGranted {
-            self.stop()
-            // Handle permission loss (display alert, disable features, etc.)
-            self.accessibilityPermissionGranted = false
-            NSApplication.shared.terminate(self)
+            // Permission revoked in System Settings — unlock safely, keep app alive.
+            debugPrint("Accessibility permission lost; unlocking and stopping event tap.")
+            handlePermissionRevoked()
+            scheduleAccessibilityPoll()
+            return
         }
         if processTrusted {
-            self.accessibilityPermissionGranted = true
-            // Ensure the event loop starts after permission is granted
+            applyTrustState(trusted: true, source: "poll")
             if !self.eventLoopStarted {
                 self.startEventLoop()
             }
-            return // Stop checking once permission is granted
+            // Keep a light poll so we notice revocation / tap disable without terminating.
+            scheduleAccessibilityPoll(intervalSeconds: 5)
+            return
         }
-        
-        // Only continue checking if permission hasn't been granted yet
-        if !self.accessibilityPermissionGranted {
-            DispatchQueue.global(qos: .background).async {
-                // Schedule the next check
-                let delay = DispatchTimeInterval.seconds(3)
-                DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-                    self.checkAccessibilityPermission()
-                }
-            }
-        }
+
+        applyTrustState(trusted: false, source: "poll")
+        scheduleAccessibilityPoll(intervalSeconds: 2)
     }
     
     func run() {
+        // One controlled prompt on launch if still denied, after the main window is up.
+        if !AccessibilityPermission.isTrusted() {
+            _ = requestAccessibilityPermissions(prompt: true)
+        } else {
+            assignAccessibilityPermissionGranted(true)
+        }
+
         checkAccessibilityPermission()
-        
-        if requestAccessibilityPermissions() {
+
+        if accessibilityPermissionGranted {
             startEventLoop()
         } else {
-            self.accessibilityPermissionGranted = false
-            self.isLocked = false
-            debugPrint("Please grant accessibility permissions in System Preferences")
-            // exit(EXIT_SUCCESS)
+            assignIsLocked(false)
+            assignPermissionStatusMessage("Please grant Accessibility permission in System Settings.")
+            debugPrint("Please grant accessibility permissions in System Settings")
         }
     }
     
-    func stop(){
-        isLocked = false
-        if let tap = eventTap {
-            CGEvent.tapEnable(tap: tap, enable: false)
-            eventTap = nil
-        }
-        // Do not stop the main run loop; just mark our loop as stopped
+    func stop() {
+        assignIsLocked(false)
+        teardownEventTap(keepLockPreference: false)
+        accessibilityPollWorkItem?.cancel()
+        accessibilityPollWorkItem = nil
         eventLoopStarted = false
+        assignPermissionStatusMessage("Event monitoring stopped.")
     }
     
     func startEventLoop() {
-        if(eventLoopStarted) { return }
-        if(!accessibilityPermissionGranted) { return }
+        if eventLoopStarted { return }
+        if !accessibilityPermissionGranted { return }
         lock.lock()
         defer { lock.unlock() }
 
-        setupEventTap() // Setup event tap to capture key events on the current (main) run loop
-        self.eventLoopStarted = true
+        if setupEventTap() {
+            eventLoopStarted = true
+        } else {
+            eventLoopStarted = false
+            assignIsLocked(false)
+        }
     }
-    
-    private func setupEventTap() {
-        // Combine all event types we want to monitor
+
+    /// Creates the HID event tap. Returns false on failure (no crash).
+    @discardableResult
+    private func setupEventTap() -> Bool {
+        // Replace any previous tap cleanly.
+        if eventTap != nil {
+            teardownEventTap(keepLockPreference: isLocked)
+        }
+
         let eventMask = CGEventMask(
             (1 << CGEventType.keyDown.rawValue) |
             (1 << CGEventType.keyUp.rawValue) |
-            (1 << 14) // seacrh and voice key
+            (1 << 14) // search / dictation key
         )
-        
-        eventTap = CGEvent.tapCreate(
+
+        guard let newTap = CGEvent.tapCreate(
             tap: .cghidEventTap,
             place: .headInsertEventTap,
             options: .defaultTap,
             eventsOfInterest: eventMask,
             callback: globalKeyEventHandler,
             userInfo: UnsafeMutableRawPointer(Unmanaged.passUnretained(self).toOpaque())
-        )
-        
-        guard let eventTap = eventTap else {
-            fatalError("Failed to create event tap")
+        ) else {
+            let reason = AccessibilityPermission.isTrusted()
+                ? "CGEvent.tapCreate returned nil (check code signing / sandbox / re-grant Accessibility for this exact binary)."
+                : "CGEvent.tapCreate returned nil because Accessibility is not granted."
+            assignEventTapState(.failed(reason))
+            assignPermissionStatusMessage("Event tap failed: \(reason)")
+            debugPrint("Failed to create event tap: \(reason)")
+            return false
         }
-        
+
         let runLoopSource = CFMachPortCreateRunLoopSource(
             kCFAllocatorDefault,
-            eventTap,
+            newTap,
             0
         )
         CFRunLoopAddSource(CFRunLoopGetCurrent(), runLoopSource, .commonModes)
-        CGEvent.tapEnable(tap: eventTap, enable: true)
+        CGEvent.tapEnable(tap: newTap, enable: true)
+
+        eventTap = newTap
+        eventTapRunLoopSource = runLoopSource
+
+        if CGEvent.tapIsEnabled(tap: newTap) {
+            assignEventTapState(.active)
+            assignPermissionStatusMessage("Event tap active. Toggle Lock Keyboard to block input.")
+            return true
+        } else {
+            assignEventTapState(.disabled)
+            assignPermissionStatusMessage("Event tap created but disabled by the system.")
+            return false
+        }
+    }
+
+    private func teardownEventTap(keepLockPreference: Bool) {
+        if let tap = eventTap {
+            CGEvent.tapEnable(tap: tap, enable: false)
+        }
+        if let source = eventTapRunLoopSource {
+            CFRunLoopRemoveSource(CFRunLoopGetCurrent(), source, .commonModes)
+            eventTapRunLoopSource = nil
+        }
+        eventTap = nil
+        eventLoopStarted = false
+        assignEventTapState(.notStarted)
+        // Cannot block without a live tap regardless of preference.
+        assignIsLocked(false)
+        _ = keepLockPreference
+    }
+
+    private func handlePermissionRevoked() {
+        assignAccessibilityPermissionGranted(false)
+        assignIsLocked(false)
+        teardownEventTap(keepLockPreference: false)
+        assignPermissionStatusMessage("Accessibility permission was revoked. Keyboard unlocked.")
+        assignEventTapState(.notStarted)
+    }
+
+    private func applyTrustState(trusted: Bool, source: String) {
+        let previous = accessibilityPermissionGranted
+        // Only publish when the value changes — poll used to re-assign `true` every few
+        // seconds and thrash every @ObservedObject view (AttributeGraph pressure / cycles).
+        assignAccessibilityPermissionGranted(trusted)
+        if trusted {
+            if !previous {
+                assignPermissionStatusMessage("Accessibility permission granted.")
+                debugPrint("Accessibility granted (\(source))")
+            }
+        } else {
+            assignIsLocked(false)
+            if previous {
+                assignPermissionStatusMessage("Accessibility permission not granted.")
+            }
+        }
+    }
+
+    private func scheduleAccessibilityPoll(intervalSeconds: Int = 2) {
+        accessibilityPollWorkItem?.cancel()
+        let work = DispatchWorkItem { [weak self] in
+            self?.checkAccessibilityPermission()
+        }
+        accessibilityPollWorkItem = work
+        DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(intervalSeconds), execute: work)
+    }
+
+    // MARK: - Idempotent published setters (SwiftUI-safe)
+
+    private func assignIsLocked(_ value: Bool) {
+        if isLocked != value {
+            isLocked = value
+        }
+    }
+
+    private func assignAccessibilityPermissionGranted(_ value: Bool) {
+        if accessibilityPermissionGranted != value {
+            accessibilityPermissionGranted = value
+        }
+    }
+
+    private func assignEventTapState(_ value: EventTapLifecycleState) {
+        if eventTapState != value {
+            eventTapState = value
+        }
+    }
+
+    private func assignPermissionStatusMessage(_ value: String) {
+        if permissionStatusMessage != value {
+            permissionStatusMessage = value
+        }
     }
     
     func handleKeyEvent(
@@ -282,11 +437,19 @@ class EventHandler: ObservableObject {
         type: CGEventType,
         event: CGEvent
     ) -> Unmanaged<CGEvent>? {
-        // Handle tap disable events first
+        // Handle tap disable events first — re-enable without dropping the process.
         if type == .tapDisabledByTimeout || type == .tapDisabledByUserInput {
-            debugPrint("Event tap disabled, attempting to re-enable...")
+            debugPrint("Event tap disabled (\(type.rawValue)), attempting to re-enable…")
             if let tap = eventTap {
                 CGEvent.tapEnable(tap: tap, enable: true)
+                let enabled = CGEvent.tapIsEnabled(tap: tap)
+                DispatchQueue.main.async {
+                    self.assignEventTapState(enabled ? .active : .disabled)
+                    if !enabled {
+                        self.assignIsLocked(false)
+                        self.assignPermissionStatusMessage("Event tap was disabled by the system; keyboard unlocked.")
+                    }
+                }
             }
             return Unmanaged.passRetained(event)
         }
@@ -377,13 +540,18 @@ class EventHandler: ObservableObject {
         return closed
     }
     
-    func requestAccessibilityPermissions() -> Bool {
-        let trusted = AXIsProcessTrusted()
-        if !trusted {
-            DispatchQueue.main.async {
-                let options: NSDictionary = [kAXTrustedCheckOptionPrompt.takeRetainedValue() as String: true]
-                AXIsProcessTrustedWithOptions(options)
-            }
+    /// Check Accessibility trust. When `prompt` is true, show the system dialog if still denied.
+    @discardableResult
+    func requestAccessibilityPermissions(prompt: Bool = true) -> Bool {
+        let trusted: Bool
+        if prompt {
+            trusted = AccessibilityPermission.requestTrustPromptingIfNeeded(activateApp: true)
+        } else {
+            trusted = AccessibilityPermission.isTrusted()
+        }
+        applyTrustState(trusted: trusted, source: prompt ? "prompt" : "silent")
+        if trusted && !eventLoopStarted {
+            startEventLoop()
         }
         return trusted
     }

@@ -8,7 +8,7 @@ if [[ "${1:-}" == "--include-optional" ]]; then
   shift
 fi
 
-ROOT="${1:-/Users/petrlavrov/work/archive/baby_keyboard}"
+ROOT="${1:-/Users/petrlavrov/archive/baby_keyboard}"
 
 if [[ ! -d "$ROOT" ]]; then
   echo "Archive path does not exist: $ROOT" >&2

@@ -47,24 +47,19 @@ struct ContentView: View {
         VStack(alignment: .leading, spacing: 0) {
             // Top bar with lock toggle and quit button
             HStack {
-                Toggle(isOn: $eventHandler.isLocked)
-                {
+                Toggle(isOn: lockKeyboardBinding) {
                     Label(
                         "Lock Keyboard",
                         image: eventHandler.isLocked ? "keyboard.locked" : "keyboard.unlocked"
                     )
                     .font(.title)
-                    .foregroundColor(eventHandler.accessibilityPermissionGranted ? .primary : .gray)
+                    .foregroundColor(eventHandler.isBlockerReady ? .primary : .gray)
                 }
                 .toggleStyle(SwitchToggleStyle(tint: .red))
-                .disabled(!eventHandler.accessibilityPermissionGranted)
-                .onChange(of: eventHandler.isLocked) { oldVal, newVal in
-                    playLockSound(isLocked: newVal)
-
-                    if eventHandler.isLocked {
-                        playLockSound(isLocked: true)
-                    }
-                }
+                // Unlock always allowed when locked; lock only when foundation is ready.
+                // Avoids Toggle set→reject→get loops that AttributeGraph reports as cycles.
+                .disabled(!eventHandler.isLocked && !eventHandler.isBlockerReady)
+                .help(eventHandler.permissionStatusMessage)
 
                 Spacer()
 
@@ -83,27 +78,7 @@ struct ContentView: View {
             // Scrollable content
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
-                if !eventHandler.accessibilityPermissionGranted {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("This app needs Accessibility access to work.")
-                            .font(.callout)
-                            .fixedSize(horizontal: false, vertical: true)
-
-                        HStack(spacing: 8) {
-                            Button("Grant Accessibility Access") {
-                                NSApp.activate(ignoringOtherApps: true)
-                                _ = eventHandler.requestAccessibilityPermissions()
-                            }
-
-                            Button("Open System Settings…") {
-                                NSApp.activate(ignoringOtherApps: true)
-                                if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility") {
-                                    NSWorkspace.shared.open(url)
-                                }
-                            }
-                        }
-                    }
-                }
+                AccessibilityStatusPanel(eventHandler: eventHandler)
                 
                 // Category selector
                 Picker("Category", selection: $selectedCategory) {
@@ -273,16 +248,12 @@ struct ContentView: View {
 
             enforceDemoFlashcardStyleIfNeeded()
 
-            // Request accessibility permissions if needed
-            if !eventHandler.accessibilityPermissionGranted {
-                NSApp.activate(ignoringOtherApps: true)
-                _ = eventHandler.requestAccessibilityPermissions()
-            }
+            // Refresh silent status only — launch prompt is owned by EventHandler.run()
+            // so we do not stack multiple system dialogs on appear.
+            eventHandler.refreshPermissionStatus()
         }
-        .onChange(of: eventHandler.isLocked) { oldVal, newVal in
-            playLockSound(isLocked: newVal)
-        }
-        .onReceive(eventHandler.$isLocked) { newVal in
+        // Single isLocked observer (was onChange + onReceive + Toggle onChange → triple fire).
+        .onChange(of: eventHandler.isLocked) { _, newVal in
             playLockSound(isLocked: newVal)
         }
         .onChange(of: eventHandler.selectedLockEffect) { oldVal, newVal in
@@ -312,6 +283,17 @@ struct ContentView: View {
             }
             // If current effect is compatible with new category, keep it unchanged
         }
+    }
+
+    /// Binding that never no-ops into a rejected Toggle write (setLocked is idempotent).
+    private var lockKeyboardBinding: Binding<Bool> {
+        Binding(
+            get: { eventHandler.isLocked },
+            set: { newValue in
+                guard newValue != eventHandler.isLocked else { return }
+                eventHandler.setLocked(isLocked: newValue)
+            }
+        )
     }
 
     private func playLockSound(isLocked: Bool) {
@@ -383,6 +365,168 @@ struct ContentView: View {
         }
     }
     
+}
+
+/// In-app Accessibility + event-tap status with actionable instructions.
+struct AccessibilityStatusPanel: View {
+    @ObservedObject var eventHandler: EventHandler
+    @State private var showDiagnostics = false
+    /// Cached so body evaluation never shells out to codesign / rebuild diagnostics mid-render.
+    @State private var instructionLines: [String] = []
+    @State private var diagnosticLines: [String] = []
+
+    private var needsAttention: Bool {
+        !eventHandler.accessibilityPermissionGranted || !eventHandler.eventTapState.isBlockingReady
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 8) {
+                Image(systemName: statusSymbol)
+                    .foregroundColor(statusColor)
+                Text(statusTitle)
+                    .font(.headline)
+                Spacer()
+            }
+
+            Text(eventHandler.permissionStatusMessage)
+                .font(.callout)
+                .foregroundColor(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+
+            HStack(spacing: 12) {
+                statusChip(
+                    title: "Accessibility",
+                    ok: eventHandler.accessibilityPermissionGranted
+                )
+                statusChip(
+                    title: "Event tap",
+                    ok: eventHandler.eventTapState.isBlockingReady,
+                    detail: eventHandler.eventTapState.statusLabel
+                )
+                statusChip(
+                    title: "Lock",
+                    ok: eventHandler.isLocked,
+                    detail: eventHandler.isLocked ? "on" : "off"
+                )
+            }
+
+            if needsAttention {
+                VStack(alignment: .leading, spacing: 6) {
+                    ForEach(Array(instructionLines.enumerated()), id: \.offset) { _, line in
+                        Text("• \(line)")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+
+                HStack(spacing: 8) {
+                    Button("Grant Accessibility Access") {
+                        NSApp.activate(ignoringOtherApps: true)
+                        _ = eventHandler.requestAccessibilityPermissions(prompt: true)
+                        refreshCachedDiagnostics()
+                    }
+                    .buttonStyle(.borderedProminent)
+
+                    Button("Open System Settings…") {
+                        AccessibilityPermission.openSystemSettingsAccessibilityPane()
+                    }
+
+                    Button("Recheck") {
+                        eventHandler.refreshPermissionStatus()
+                        if eventHandler.accessibilityPermissionGranted {
+                            eventHandler.startEventLoop()
+                        }
+                        refreshCachedDiagnostics()
+                    }
+                }
+            }
+
+            DisclosureGroup("Diagnostics (signing / path / bundle)", isExpanded: $showDiagnostics) {
+                VStack(alignment: .leading, spacing: 4) {
+                    ForEach(diagnosticLines, id: \.self) { line in
+                        Text(line)
+                            .font(.system(.caption, design: .monospaced))
+                            .textSelection(.enabled)
+                    }
+                    Text("Note: Debug and Release are different bundle IDs in System Settings.")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                        .padding(.top, 4)
+                }
+                .padding(.top, 4)
+            }
+            .font(.caption)
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: 10)
+                .fill(needsAttention ? Color.orange.opacity(0.12) : Color.green.opacity(0.10))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(needsAttention ? Color.orange.opacity(0.35) : Color.green.opacity(0.25), lineWidth: 1)
+        )
+        .onAppear { refreshCachedDiagnostics() }
+        .onChange(of: eventHandler.accessibilityPermissionGranted) { _, _ in refreshCachedDiagnostics() }
+        .onChange(of: eventHandler.eventTapState) { _, _ in refreshCachedDiagnostics() }
+        .onChange(of: eventHandler.isLocked) { _, _ in refreshCachedDiagnostics() }
+        .onChange(of: eventHandler.permissionStatusMessage) { _, _ in
+            // Status line can change without trust/tap transitions (e.g. lock messages).
+            // Instructions/summary usually stable; only refresh when attention surface needs it.
+            if needsAttention || showDiagnostics {
+                refreshCachedDiagnostics()
+            }
+        }
+    }
+
+    private func refreshCachedDiagnostics() {
+        let diag = eventHandler.currentDiagnostics()
+        instructionLines = diag.instructions
+        diagnosticLines = diag.summaryLines
+    }
+
+    private var statusTitle: String {
+        if !eventHandler.accessibilityPermissionGranted {
+            return "Accessibility required"
+        }
+        if !eventHandler.eventTapState.isBlockingReady {
+            return "Event tap not ready"
+        }
+        return "Blocker foundation ready"
+    }
+
+    private var statusSymbol: String {
+        if eventHandler.isBlockerReady {
+            return "checkmark.shield.fill"
+        }
+        if eventHandler.accessibilityPermissionGranted {
+            return "exclamationmark.shield.fill"
+        }
+        return "lock.shield.fill"
+    }
+
+    private var statusColor: Color {
+        if eventHandler.isBlockerReady { return .green }
+        if eventHandler.accessibilityPermissionGranted { return .orange }
+        return .red
+    }
+
+    private func statusChip(title: String, ok: Bool, detail: String? = nil) -> some View {
+        HStack(spacing: 4) {
+            Circle()
+                .fill(ok ? Color.green : Color.red.opacity(0.85))
+                .frame(width: 7, height: 7)
+            Text(detail.map { "\(title): \($0)" } ?? "\(title): \(ok ? "ok" : "no")")
+                .font(.caption2)
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(Color.primary.opacity(0.06))
+        .clipShape(Capsule())
+    }
 }
 
 struct ActivePoolPreviewView: View {
