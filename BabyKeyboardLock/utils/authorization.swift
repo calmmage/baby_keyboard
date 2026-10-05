@@ -2,47 +2,39 @@
 //  authorization.swift
 //  BabyKeyboardLock
 //
-//  Created by Fangxing Xiong on 19.12.2024.
+//  Thin compatibility wrapper. Prefer AccessibilityPermission for new code.
+//  The old Main.storyboard-based window path was removed (storyboard is gone).
 //
-//
-import Foundation
-import Cocoa
 
-class AccessibilityAuthorization {
-    
-    private var accessibilityWindowController: NSWindowController?
-    
-    public func checkAccessibility(completion: @escaping () -> Void) -> Bool {
-        if !AXIsProcessTrusted() {
-            
-            accessibilityWindowController = NSStoryboard(name: "Main", bundle: nil).instantiateController(withIdentifier: "AccessibilityWindowController") as? NSWindowController
-            
-            NSApp.activate(ignoringOtherApps: true)
-            accessibilityWindowController?.showWindow(self)
-            pollAccessibility(completion: completion)
-            return false
-        } else {
+import AppKit
+import Foundation
+
+/// Legacy type kept so older call sites/docs stay meaningful.
+/// New code should use `AccessibilityPermission`.
+final class AccessibilityAuthorization {
+    /// Silent check only. Use `AccessibilityPermission.requestTrustPromptingIfNeeded()` to prompt.
+    func checkAccessibility(completion: @escaping () -> Void) -> Bool {
+        if AccessibilityPermission.isTrusted() {
+            completion()
             return true
         }
+        pollAccessibility(completion: completion)
+        return false
     }
-    
+
     private func pollAccessibility(completion: @escaping () -> Void) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            if AXIsProcessTrusted() {
-                self.accessibilityWindowController?.close()
-                self.accessibilityWindowController = nil
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            if AccessibilityPermission.isTrusted() {
                 completion()
             } else {
                 self.pollAccessibility(completion: completion)
             }
         }
     }
-    
+
     func showAuthorizationWindow() {
-        if accessibilityWindowController?.window?.isMiniaturized == true {
-            accessibilityWindowController?.window?.deminiaturize(self)
-        }
+        // No dedicated storyboard window anymore; main ContentView owns the UI.
         NSApp.activate(ignoringOtherApps: true)
+        AccessibilityPermission.openSystemSettingsAccessibilityPane()
     }
-    
 }

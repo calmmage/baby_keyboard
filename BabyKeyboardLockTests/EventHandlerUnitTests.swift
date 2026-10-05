@@ -11,7 +11,12 @@ struct EventHandlerUnitTests {
     @Test func testEventHandlerInitialState() async throws {
         setUp()
         let handler = EventHandler()
-        #expect(!handler.isLocked)
+        // Default init is isLocked=true, but lock is forced off without Accessibility.
+        if handler.accessibilityPermissionGranted {
+            #expect(handler.isLocked)
+        } else {
+            #expect(!handler.isLocked)
+        }
         #expect(handler.selectedLockEffect == .none)
     }
     

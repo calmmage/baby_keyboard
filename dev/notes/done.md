@@ -1,3 +1,37 @@
+## 2025-11-02
+- [x] ag
+    - `key: 8edc4e86`
+    - Rework style selector to be multi-line to fit on screen better
+## 2026-02-08
+- [x] ah
+    - `key: c1f0a9be`
+    - Capture reusable LLM rules in-repo (`LLM_RULES.md`)
+    - PRD: `dev/notes/actions/02-07-llm-rules.md`
+- [x] ai
+    - `key: e3b45d72`
+    - Add custom image preview + 90-degree rotation support
+    - PRD: `dev/notes/actions/02-07-image-rotation.md`
+## 2025-11-01
+- [x] y
+    - `key: b394d43b`
+    - Use simple color images if the word selected is a color
+- [x] w
+    - `key: c0e2f3af`
+    generate images with nano-banana using script
+- [x] af
+    - `key: bd515a4e`
+    - Simplify our window resize logic as much as possible because it's causing issues
+    - Allow macOS to handle window sizes, scrolling and positions automatically
+    - Experiment in a separate branch
+    - I've made updates in task 8edc4e86 - about style picker menu - and now the app spams windows resizes and relocations and goes off screen
+        "Content height changed to: 121.0"
+        "Updating window to height: 693.0"
+        "Updating window to height: 281.0"
+        "Content height changed to: 533.0"
+        "Content height changed to: 121.0"
+        "Updating window to height: 693.0"
+        "Updating window to height: 281.0"
+        "Content height changed to: 533.0"
 ## 2025-10-26
 - [x] o
     - `key: d803f29f`
@@ -12,6 +46,11 @@
         - use that
         - else
             - raise notimpelented
+- [x] z
+    - `key: 8884e924`
+    - `cue: The settings don't fit the screen on Anna's monitor, and can't be scrolled. Also, I'm adding new settings`
+    - How do I rework settings menu to contain less items
+    - Move additional settings to a separate window
 ## 2025-10-20
 - [x] q
     - `key: f9b55897`

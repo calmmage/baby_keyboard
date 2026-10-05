@@ -285,6 +285,31 @@ class EventEffectHandler {
     var primaryLanguage: TranslationLanguage = .english
     var translationLanguage: TranslationLanguage = .none
     var usePersonalVoice: Bool = false
+    private static var emittedCriticalWarnings: Set<String> = []
+
+    private func emitCriticalWarningOnce(key: String, message: String) {
+        if Self.emittedCriticalWarnings.contains(key) {
+            return
+        }
+        Self.emittedCriticalWarnings.insert(key)
+        NSLog("%@", "WARNING: \(message)")
+    }
+
+    private func warnMissingTranslation(wordID: String, language: TranslationLanguage) {
+        guard language != .none && language != .english else { return }
+        emitCriticalWarningOnce(
+            key: "missing-translation::\(wordID)::\(language.rawValue)",
+            message: "Missing translation for wordID='\(wordID)' language='\(language.languageCode)'. No empty items allowed."
+        )
+    }
+
+    private func warnFallbackUsed(wordID: String, language: TranslationLanguage, source: String) {
+        guard language != .none && language != .english else { return }
+        emitCriticalWarningOnce(
+            key: "fallback-used::\(wordID)::\(language.rawValue)::\(source)",
+            message: "Fallback translation source used (\(source)) for wordID='\(wordID)' language='\(language.languageCode)'."
+        )
+    }
     
     func handle(event: CGEvent, eventType: CGEventType, selectedLockEffect: LockEffect) -> String {
         // Get the key string
@@ -301,7 +326,7 @@ class EventEffectHandler {
         case .speakTheKey:
             // Speak the letter
             synth.stopSpeaking(at: .immediate)
-            let utterance = createUtterance(for: keyStr, language: utteranceLanguage(for: primaryLanguage, allowPersonalVoice: true))
+            let utterance = createUtterance(for: keyStr, language: utteranceLanguage(for: primaryLanguage))
             synth.speak(utterance)
             
             return keyStr
@@ -309,19 +334,30 @@ class EventEffectHandler {
             // Speak a word that starts with the letter
             
             // This is a random word that begins with the letter
-            let randomWord = getRandomWord(forKey: keyStr)
+            let randomWord = demoWordOverride() ?? getRandomWord(forKey: keyStr)
             synth.stopSpeaking(at: .immediate)
+            let meaningKey = WordRepository.shared.entry(english: randomWord, meaningKey: nil)?.meaningKey
             
-            let primaryWord = resolveWordForLanguage(english: randomWord, fallbackTranslation: nil, language: primaryLanguage) ?? randomWord
-            let secondaryWord = resolveWordForLanguage(english: randomWord, fallbackTranslation: nil, language: translationLanguage)
-            let primaryUtterance = createUtterance(for: primaryWord, language: utteranceLanguage(for: primaryLanguage, allowPersonalVoice: true))
+            let primaryWord = resolveWordForLanguage(
+                english: randomWord,
+                fallbackTranslation: nil,
+                language: primaryLanguage,
+                meaningKey: meaningKey
+            ) ?? randomWord
+            let secondaryWord = resolveWordForLanguage(
+                english: randomWord,
+                fallbackTranslation: nil,
+                language: translationLanguage,
+                meaningKey: meaningKey
+            )
+            let primaryUtterance = createUtterance(for: primaryWord, language: utteranceLanguage(for: primaryLanguage))
             synth.speak(primaryUtterance)
 
             if let secondaryWord = secondaryWord {
                 DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + EventHandler.shared.wordTranslationDelay) {
                     let translationUtterance = self.createUtterance(
                         for: secondaryWord,
-                        language: self.utteranceLanguage(for: self.translationLanguage, allowPersonalVoice: false)
+                        language: self.utteranceLanguage(for: self.translationLanguage)
                     )
                     self.synth.speak(translationUtterance)
                 }
@@ -330,6 +366,7 @@ class EventEffectHandler {
             return randomWord
         case .speakRandomWord:
             synth.stopSpeaking(at: .immediate)
+            let forcedDemoWord = demoWordOverride()
             if gamifyRandomWordEnabled {
                 let keyLower = keyStr.lowercased()
                 if gamifyTargetLetter.isEmpty {
@@ -340,10 +377,10 @@ class EventEffectHandler {
                     return ""
                 }
                 gamifyTargetLetter = ""
-                return speakRandomWord() ?? ""
+                return speakRandomWord(forcedEnglishWord: forcedDemoWord) ?? ""
             }
 
-            return speakRandomWord() ?? keyStr
+            return speakRandomWord(forcedEnglishWord: forcedDemoWord) ?? keyStr
         case .typingGame:
             // Typing game mode - validate key press and provide feedback
             let typingGameState = TypingGameState.shared
@@ -352,7 +389,7 @@ class EventEffectHandler {
             if typingGameState.currentWord.isEmpty || typingGameState.isWordComplete {
                 typingGameState.selectNewWord(wordSetType: wordSetType, secondaryLanguage: translationLanguage)
             }
-
+ 
             // Validate the key press
             let validationResult = typingGameState.validateKeyPress(keyStr)
 
@@ -362,9 +399,9 @@ class EventEffectHandler {
                 NSSound(named: "bottle")?.play()
                 
                 synth.stopSpeaking(at: .immediate)
-                let utterance = createUtterance(for: keyStr, language: utteranceLanguage(for: primaryLanguage, allowPersonalVoice: true))
+                let utterance = createUtterance(for: keyStr, language: utteranceLanguage(for: primaryLanguage))
                 synth.speak(utterance)
-                
+  
                 return typingGameState.typedSoFar
                 
             case .incorrect:
@@ -379,35 +416,16 @@ class EventEffectHandler {
                 NSSound(named: "Glass")?.play()
                 
                 synth.stopSpeaking(at: .immediate)
-                let wordUtterance = createUtterance(for: typingGameState.currentWord, language: utteranceLanguage(for: primaryLanguage, allowPersonalVoice: true))
+                let wordUtterance = createUtterance(for: typingGameState.currentWord, language: utteranceLanguage(for: primaryLanguage))
                 synth.speak(wordUtterance)
                 
                 // If translation is available, speak it after a delay
                 if translationLanguage != .none && !typingGameState.currentWordTranslation.isEmpty {
                     DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + EventHandler.shared.wordTranslationDelay) {
-                        let translationUtterance: AVSpeechUtterance
-                        
-                        switch self.translationLanguage {
-                        case .english:
-                            translationUtterance = self.createUtterance(for: typingGameState.currentWordTranslation, language: "en-US")
-                        case .french:
-                            translationUtterance = self.createUtterance(for: typingGameState.currentWordTranslation, language: "fr-FR")
-                        case .russian:
-                            translationUtterance = self.createUtterance(for: typingGameState.currentWordTranslation, language: "ru-RU")
-                        case .german:
-                            translationUtterance = self.createUtterance(for: typingGameState.currentWordTranslation, language: "de-DE")
-                        case .spanish:
-                            translationUtterance = self.createUtterance(for: typingGameState.currentWordTranslation, language: "es-ES")
-                        case .italian:
-                            translationUtterance = self.createUtterance(for: typingGameState.currentWordTranslation, language: "it-IT")
-                        case .japanese:
-                            translationUtterance = self.createUtterance(for: typingGameState.currentWordTranslation, language: "ja-JP")
-                        case .chinese:
-                            translationUtterance = self.createUtterance(for: typingGameState.currentWordTranslation, language: "zh-CN")
-                        case .none:
-                            return
-                        }
-                        
+                        let translationUtterance = self.createUtterance(
+                            for: typingGameState.currentWordTranslation,
+                            language: self.utteranceLanguage(for: self.translationLanguage)
+                        )
                         self.synth.speak(translationUtterance)
                     }
                 }
@@ -486,44 +504,81 @@ class EventEffectHandler {
     
     private func createUtterance(for str: String, language: String? = nil) -> AVSpeechUtterance {
         let utterance = AVSpeechUtterance(string: str)
-        
-        let languageCode = language ?? Locale.preferredLanguages[0]
-        
-        // Only attempt to use personal voice for English and when no specific language is requested
-        if usePersonalVoice && language == nil && (languageCode.hasPrefix("en") || Locale.preferredLanguages[0].hasPrefix("en")) {
+        let requestedLanguage = normalizedRequestedLanguage(language)
+        let requestedBaseLanguage = baseLanguageCode(for: requestedLanguage)
+        let availableVoices = AVSpeechSynthesisVoice.speechVoices()
+
+        // Personal Voice is only intended for primary English speech.
+        if usePersonalVoice && language == nil && requestedBaseLanguage == "en" {
             if #available(macOS 14.0, *) {
-                let personalVoices = AVSpeechSynthesisVoice.speechVoices().filter { voice in
-                    return voice.voiceTraits.contains(.isPersonalVoice) && voice.language.hasPrefix("en")
+                let personalVoices = availableVoices.filter { voice in
+                    voice.voiceTraits.contains(.isPersonalVoice) && baseLanguageCode(for: voice.language) == "en"
                 }
-                
-                if let personalVoice = personalVoices.first {
+                if let personalVoice = preferredVoice(from: personalVoices) {
                     utterance.voice = personalVoice
                     return utterance
                 }
             }
         }
-        
-        // Fall back to default voice selection if personal voice not available or not requested
-        let allVoices = AVSpeechSynthesisVoice.speechVoices().filter { voice in
-            return voice.language == languageCode
+
+        let exactLanguageVoices = availableVoices.filter { voice in
+            voice.language.caseInsensitiveCompare(requestedLanguage) == .orderedSame
         }
-        
-        // Prefer Siri voice if available, otherwise use first available voice
-        utterance.voice = allVoices.first { voice in 
-            voice.identifier.contains("siri") 
-        } ?? allVoices.first
-        
+        if let exactVoice = preferredVoice(from: exactLanguageVoices) {
+            utterance.voice = exactVoice
+            return utterance
+        }
+
+        let baseLanguageVoices = availableVoices.filter { voice in
+            baseLanguageCode(for: voice.language) == requestedBaseLanguage
+        }
+        if let baseVoice = preferredVoice(from: baseLanguageVoices) {
+            utterance.voice = baseVoice
+            return utterance
+        }
+
+        emitCriticalWarningOnce(
+            key: "missing-tts-voice::\(requestedLanguage)",
+            message: "No speech voice available for requested language '\(requestedLanguage)' while speaking '\(str)'."
+        )
         return utterance
     }
 
-    func resolveWordForLanguage(english: String, fallbackTranslation: String?, language: TranslationLanguage) -> String? {
+    private func normalizedRequestedLanguage(_ language: String?) -> String {
+        if let language {
+            let trimmed = language.trimmingCharacters(in: .whitespacesAndNewlines)
+            if !trimmed.isEmpty {
+                return trimmed
+            }
+        }
+        return Locale.preferredLanguages.first ?? "en-US"
+    }
+
+    private func baseLanguageCode(for language: String) -> String {
+        let normalized = language.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        if normalized.isEmpty {
+            return ""
+        }
+        return normalized.split(separator: "-").first.map(String.init) ?? normalized
+    }
+
+    private func preferredVoice(from voices: [AVSpeechSynthesisVoice]) -> AVSpeechSynthesisVoice? {
+        voices.first(where: { $0.identifier.lowercased().contains("siri") }) ?? voices.first
+    }
+
+    func resolveWordForLanguage(
+        english: String,
+        fallbackTranslation: String?,
+        language: TranslationLanguage,
+        meaningKey: String? = nil
+    ) -> String? {
         if language == .none {
             return nil
         }
         if language == .english {
             return english
         }
-        if let translation = getTranslation(word: english, language: language) {
+        if let translation = getTranslation(word: english, language: language, meaningKey: meaningKey) {
             return translation
         }
         if language == .russian, let fallbackTranslation = fallbackTranslation, !fallbackTranslation.isEmpty {
@@ -532,51 +587,164 @@ class EventEffectHandler {
         return nil
     }
 
-    private func utteranceLanguage(for language: TranslationLanguage, allowPersonalVoice: Bool) -> String? {
+    private func utteranceLanguage(for language: TranslationLanguage) -> String? {
         if language == .none {
             return nil
         }
-        if language == .english && allowPersonalVoice {
+        if language == .english && usePersonalVoice {
             return nil
         }
         return language.languageCode
     }
+
+    private func demoWordOverride() -> String? {
+        let defaults = UserDefaults.standard
+        guard defaults.bool(forKey: "videoCardDemoMode") else {
+            return nil
+        }
+        let configured = defaults.string(forKey: "videoCardDemoWord")?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        if let configured, !configured.isEmpty {
+            return configured.lowercased()
+        }
+        return "cat"
+    }
     
     // Get translation for a word based on the selected language
-    func getTranslation(word: String, language: TranslationLanguage) -> String? {
+    func getTranslation(word: String, language: TranslationLanguage, meaningKey: String? = nil) -> String? {
+        let normalizedWord = word.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !normalizedWord.isEmpty else {
+            return nil
+        }
+        let normalizedMeaningKey: String?
+        if let meaningKey {
+            let trimmedMeaning = meaningKey.trimmingCharacters(in: .whitespacesAndNewlines)
+            normalizedMeaningKey = trimmedMeaning.isEmpty ? nil : trimmedMeaning
+        } else {
+            normalizedMeaningKey = nil
+        }
+        let repositoryEntry = WordRepository.shared.entry(english: normalizedWord, meaningKey: normalizedMeaningKey)
+        let canonicalWordID = repositoryEntry?.id
+            ?? WordDataCatalog.makeWordID(spelling: normalizedWord, meaningKey: normalizedMeaningKey)
+        let canonicalEnglish = repositoryEntry?.spelling.trimmingCharacters(in: .whitespacesAndNewlines)
+            ?? normalizedWord
+        let canonicalMeaningKey = repositoryEntry?.meaningKey ?? normalizedMeaningKey
+        let loweredWord = canonicalEnglish.lowercased()
         let babyName = RandomWordList.shared.babyName
+        let babyNameTranslation = RandomWordList.shared.babyNameTranslation
+            .trimmingCharacters(in: .whitespacesAndNewlines)
         
-        // If the word is the baby's name, return it as its own translation
-        if !babyName.isEmpty && word.lowercased() == babyName.lowercased() {
-            return babyName
+        // Use the profile's second-language baby name when available.
+        if !babyName.isEmpty && loweredWord == babyName.lowercased() {
+            if language == .english {
+                return babyName
+            }
+            return babyNameTranslation.isEmpty ? babyName : babyNameTranslation
         }
         
         if wordSetType == .mainWords {
-            if let translation = customWordSetsManager.getTranslation(for: word) {
+            if let translation = customWordSetsManager.getTranslation(for: normalizedWord) {
+                if language != .russian {
+                    warnFallbackUsed(
+                        wordID: canonicalWordID,
+                        language: language,
+                        source: "custom main words single-translation store"
+                    )
+                }
                 return translation
             }
         }
-        
+
+        if language != .none && language != .english {
+            if let catalogTranslation = WordRepository.shared.translation(
+                wordID: canonicalWordID,
+                languageCode: language.languageCode
+            ) {
+                return catalogTranslation
+            }
+            // Compatibility fallback for catalogs where older entries may still miss exact IDs.
+            if let catalogTranslation = WordRepository.shared.translation(
+                english: canonicalEnglish,
+                meaningKey: canonicalMeaningKey,
+                languageCode: language.languageCode
+            ) {
+                warnFallbackUsed(
+                    wordID: canonicalWordID,
+                    language: language,
+                    source: "catalog spelling/meaning fallback"
+                )
+                return catalogTranslation
+            }
+        }
+
+        var randomWordFallbackTranslation: String? = nil
+        if wordSetType == .randomShortWords {
+            if let canonicalMeaningKey,
+               let match = RandomWordList.shared.findWord(english: canonicalEnglish, clarification: canonicalMeaningKey),
+               !match.translation.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                randomWordFallbackTranslation = match.translation
+            } else if let match = RandomWordList.shared.findWord(english: canonicalEnglish),
+                      !match.translation.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                randomWordFallbackTranslation = match.translation
+            }
+        }
+        if language == .russian, let randomWordFallbackTranslation {
+            warnFallbackUsed(
+                wordID: canonicalWordID,
+                language: language,
+                source: "random-word ru translation field"
+            )
+            return randomWordFallbackTranslation
+        }
+
         switch language {
         case .english:
-            return word
+            return normalizedWord
         case .french:
-            return frenchTranslations[word.lowercased()]
+            if let value = frenchTranslations[loweredWord] {
+                warnFallbackUsed(wordID: canonicalWordID, language: language, source: "legacy static dictionary")
+                return value
+            }
         case .russian: 
-            return russianTranslations[word.lowercased()]
+            if let value = russianTranslations[loweredWord] {
+                warnFallbackUsed(wordID: canonicalWordID, language: language, source: "legacy static dictionary")
+                return value
+            }
         case .german:
-            return germanTranslations[word.lowercased()]
+            if let value = germanTranslations[loweredWord] {
+                warnFallbackUsed(wordID: canonicalWordID, language: language, source: "legacy static dictionary")
+                return value
+            }
         case .spanish:
-            return spanishTranslations[word.lowercased()]
+            if let value = spanishTranslations[loweredWord] {
+                warnFallbackUsed(wordID: canonicalWordID, language: language, source: "legacy static dictionary")
+                return value
+            }
         case .italian:
-            return italianTranslations[word.lowercased()]
+            if let value = italianTranslations[loweredWord] {
+                warnFallbackUsed(wordID: canonicalWordID, language: language, source: "legacy static dictionary")
+                return value
+            }
         case .japanese:
-            return japaneseTranslations[word.lowercased()]
+            if let value = japaneseTranslations[loweredWord] {
+                warnFallbackUsed(wordID: canonicalWordID, language: language, source: "legacy static dictionary")
+                return value
+            }
         case .chinese:
-            return chineseTranslations[word.lowercased()]
+            if let value = chineseTranslations[loweredWord] {
+                warnFallbackUsed(wordID: canonicalWordID, language: language, source: "legacy static dictionary")
+                return value
+            }
         case .none:
             return nil
         }
+
+        warnFallbackUsed(
+            wordID: canonicalWordID,
+            language: language,
+            source: "identity fallback"
+        )
+        return canonicalEnglish
     }
     
     func setWordSetType(_ type: WordSetType) {
@@ -611,19 +779,43 @@ class EventEffectHandler {
         }
     }
 
-    private func speakRandomWord() -> String? {
-        guard let randomWord = RandomWordList.shared.getRandomWord() else {
-            return nil
+    private func speakRandomWord(forcedEnglishWord: String? = nil) -> String? {
+        let englishWord: String
+        let fallbackTranslation: String?
+        let meaningKey: String?
+        if let forcedEnglishWord {
+            let normalized = forcedEnglishWord.trimmingCharacters(in: .whitespacesAndNewlines)
+            guard !normalized.isEmpty else { return nil }
+            englishWord = normalized
+            let matchedWord = RandomWordList.shared.findWord(english: normalized)
+            let matchedTranslation = matchedWord?.translation.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+            fallbackTranslation = matchedTranslation.isEmpty ? nil : matchedTranslation
+            meaningKey = matchedWord?.clarification
+        } else {
+            guard let randomWord = RandomWordList.shared.getRandomWord() else {
+                return nil
+            }
+            englishWord = randomWord.english
+            fallbackTranslation = randomWord.translation.isEmpty ? nil : randomWord.translation
+            meaningKey = randomWord.clarification
         }
 
-        let englishWord = randomWord.english
-        let fallbackTranslation = randomWord.translation.isEmpty ? nil : randomWord.translation
-        let primaryWord = resolveWordForLanguage(english: englishWord, fallbackTranslation: fallbackTranslation, language: primaryLanguage) ?? englishWord
-        let secondaryWord = resolveWordForLanguage(english: englishWord, fallbackTranslation: fallbackTranslation, language: translationLanguage)
+        let primaryWord = resolveWordForLanguage(
+            english: englishWord,
+            fallbackTranslation: fallbackTranslation,
+            language: primaryLanguage,
+            meaningKey: meaningKey
+        ) ?? englishWord
+        let secondaryWord = resolveWordForLanguage(
+            english: englishWord,
+            fallbackTranslation: fallbackTranslation,
+            language: translationLanguage,
+            meaningKey: meaningKey
+        )
 
         let primaryUtterance = createUtterance(
             for: primaryWord,
-            language: utteranceLanguage(for: primaryLanguage, allowPersonalVoice: true)
+            language: utteranceLanguage(for: primaryLanguage)
         )
         synth.speak(primaryUtterance)
 
@@ -631,7 +823,7 @@ class EventEffectHandler {
             DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + EventHandler.shared.wordTranslationDelay) {
                 let translationUtterance = self.createUtterance(
                     for: secondaryWord,
-                    language: self.utteranceLanguage(for: self.translationLanguage, allowPersonalVoice: false)
+                    language: self.utteranceLanguage(for: self.translationLanguage)
                 )
                 self.synth.speak(translationUtterance)
             }

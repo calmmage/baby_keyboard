@@ -145,14 +145,16 @@ class TypingGameState: ObservableObject {
         currentWord = eventEffectHandler.resolveWordForLanguage(
             english: englishWord,
             fallbackTranslation: fallbackTranslation,
-            language: typingLanguage
+            language: typingLanguage,
+            meaningKey: currentWordClarification
         ) ?? englishWord
 
         if secondaryLanguage != .none && secondaryLanguage != typingLanguage {
             currentWordTranslation = eventEffectHandler.resolveWordForLanguage(
                 english: englishWord,
                 fallbackTranslation: fallbackTranslation,
-                language: secondaryLanguage
+                language: secondaryLanguage,
+                meaningKey: currentWordClarification
             ) ?? ""
         } else if typingLanguage != .english {
             currentWordTranslation = englishWord
@@ -175,7 +177,7 @@ class TypingGameState: ObservableObject {
         ) ?? englishWord
 
         if secondaryLanguage != .none && secondaryLanguage != typingLanguage,
-           let translation = eventEffectHandler.getTranslation(word: englishWord, language: secondaryLanguage) {
+           let translation = eventEffectHandler.getTranslation(word: englishWord, language: secondaryLanguage, meaningKey: nil) {
             currentWordTranslation = translation
         } else if typingLanguage != .english {
             currentWordTranslation = englishWord

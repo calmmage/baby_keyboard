@@ -1,4 +1,5 @@
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct RandomWordEditorView: View {
     @Environment(\.presentationMode) var presentationMode
@@ -7,12 +8,14 @@ struct RandomWordEditorView: View {
     @State private var words: [RandomWord] = []
     @State private var newEnglishWord: String = ""
     @State private var newTranslation: String = ""
+    @State private var newMeaningKey: String = ""
     @State private var showingNewSetDialog = false
     @State private var newSetName: String = ""
     @State private var showingRenameDialog = false
     @State private var renameSetIndex: Int? = nil
     @State private var renameSetName: String = ""
     @State private var showingResetConfirmation = false
+    @State private var exportStatusMessage: String = ""
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -37,9 +40,20 @@ struct RandomWordEditorView: View {
                 .buttonStyle(.plain)
                 .foregroundColor(.orange)
 
+                Button(action: exportCatalogJSON) {
+                    Label("Export JSON", systemImage: "square.and.arrow.up")
+                }
+                .buttonStyle(.plain)
+
                 Spacer()
 
                 Text("\(randomWordList.enabledSetIndices.count) of \(randomWordList.wordSets.count) enabled")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+
+            if !exportStatusMessage.isEmpty {
+                Text(exportStatusMessage)
                     .font(.caption)
                     .foregroundColor(.secondary)
             }
@@ -109,7 +123,14 @@ struct RandomWordEditorView: View {
             List {
                 ForEach(words) { word in
                     HStack {
-                        Text(word.english)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(word.english)
+                            if let clarification = word.clarification, !clarification.isEmpty {
+                                Text("meaning: \(clarification)")
+                                    .font(.caption2)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
                         Spacer()
                         Text(word.translation)
                             .foregroundColor(.secondary)
@@ -120,18 +141,45 @@ struct RandomWordEditorView: View {
             .listStyle(PlainListStyle())
             .frame(height: 200)
             
-            HStack {
-                TextField("English word", text: $newEnglishWord)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    TextField("English word", text: $newEnglishWord)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
 
                     TextField("Translation", text: $newTranslation)
+                        .textFieldStyle(RoundedBorderTextFieldStyle())
+
+                    TextField("Meaning key (optional)", text: $newMeaningKey)
                         .textFieldStyle(RoundedBorderTextFieldStyle())
 
                     Button(action: addWord) {
                         Image(systemName: "plus")
                     }
-                    .disabled(newEnglishWord.isEmpty || newTranslation.isEmpty)
+                    .disabled(!canAddWord)
                 }
+
+                if !meaningKeySuggestions.isEmpty {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 8) {
+                            Text("Meaning suggestions:")
+                                .font(.caption)
+                                .foregroundColor(.secondary)
+                            ForEach(meaningKeySuggestions, id: \.self) { suggestion in
+                                Button(suggestion) {
+                                    newMeaningKey = suggestion
+                                }
+                                .buttonStyle(.plain)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 4)
+                                .background(
+                                    RoundedRectangle(cornerRadius: 8)
+                                        .fill(Color.secondary.opacity(0.12))
+                                )
+                            }
+                        }
+                    }
+                }
+            }
 
                 HStack {
                     Button("Close") {
@@ -206,14 +254,26 @@ struct RandomWordEditorView: View {
     }
 
     private func addWord() {
-        guard !newEnglishWord.isEmpty && !newTranslation.isEmpty else { return }
+        let trimmedEnglish = newEnglishWord.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedTranslation = newTranslation.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedMeaning = newMeaningKey.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedEnglish.isEmpty && !trimmedTranslation.isEmpty else { return }
 
-        let newWord = RandomWord(english: newEnglishWord, translation: newTranslation)
-        words.append(newWord)
+        let newWord = RandomWord(
+            english: trimmedEnglish,
+            translation: trimmedTranslation,
+            clarification: trimmedMeaning.isEmpty ? nil : trimmedMeaning
+        )
+        if let existingIndex = words.firstIndex(where: { $0.id == newWord.id }) {
+            words[existingIndex] = newWord
+        } else {
+            words.append(newWord)
+        }
 
         // Clear the input fields
         newEnglishWord = ""
         newTranslation = ""
+        newMeaningKey = ""
     }
 
     private func deleteWord(at offsets: IndexSet) {
@@ -243,5 +303,70 @@ struct RandomWordEditorView: View {
         if let window = NSApp.windows.first(where: { $0.isSheet }) {
             window.center()
         }
+    }
+
+    private func exportCatalogJSON() {
+        let panel = NSSavePanel()
+        panel.canCreateDirectories = true
+        panel.allowedContentTypes = [UTType.json]
+        panel.nameFieldStringValue = "word_sets_export.json"
+        panel.message = "Export current canonical word catalog as JSON"
+
+        panel.begin { response in
+            guard response == .OK, let url = panel.url else { return }
+            do {
+                try randomWordList.exportCatalogSnapshot(to: url)
+                exportStatusMessage = "Exported: \(url.lastPathComponent)"
+            } catch {
+                exportStatusMessage = "Export failed: \(error.localizedDescription)"
+            }
+        }
+    }
+
+    private var canAddWord: Bool {
+        !newEnglishWord.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
+        !newTranslation.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    private var meaningKeySuggestions: [String] {
+        let trimmedEnglish = newEnglishWord.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        guard !trimmedEnglish.isEmpty else { return [] }
+
+        var suggestions: [String] = []
+        var seen = Set<String>()
+
+        for word in words where word.english.lowercased() == trimmedEnglish {
+            if let clarification = word.clarification {
+                appendSuggestion(clarification, suggestions: &suggestions, seen: &seen)
+            }
+        }
+
+        if let catalog = WordRepository.shared.catalogSnapshot() {
+            for entry in catalog.entries where entry.spelling.lowercased() == trimmedEnglish {
+                if let meaning = entry.meaningKey {
+                    appendSuggestion(meaning, suggestions: &suggestions, seen: &seen)
+                }
+            }
+            if suggestions.isEmpty {
+                for entry in catalog.entries where entry.spelling.lowercased().hasPrefix(trimmedEnglish) {
+                    if let meaning = entry.meaningKey {
+                        appendSuggestion(meaning, suggestions: &suggestions, seen: &seen)
+                    }
+                    if suggestions.count >= 8 {
+                        break
+                    }
+                }
+            }
+        }
+
+        return Array(suggestions.prefix(8))
+    }
+
+    private func appendSuggestion(_ raw: String, suggestions: inout [String], seen: inout Set<String>) {
+        let trimmed = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        let lowered = trimmed.lowercased()
+        guard seen.insert(lowered).inserted else { return }
+        suggestions.append(trimmed)
     }
 }

@@ -9,13 +9,18 @@ class LaunchAtStartup {
     
     func setEnabled(_ enabled: Bool) {
         do {
-            try SMAppService.mainApp.register()
+            if enabled {
+                try SMAppService.mainApp.register()
+            } else {
+                try SMAppService.mainApp.unregister()
+            }
         } catch {
-            debugPrint("Failed to register app for launch at startup: \(error)")
+            let action = enabled ? "register" : "unregister"
+            debugPrint("Failed to \(action) app for launch at startup: \(error)")
         }
     }
     
     func isEnabled() -> Bool {
         return SMAppService.mainApp.status == .enabled
     }
-} 
+}

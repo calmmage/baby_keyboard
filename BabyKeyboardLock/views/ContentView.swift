@@ -8,6 +8,7 @@
 import SwiftUI
 import AppKit
 import AVFoundation
+import UniformTypeIdentifiers
 
 struct HoverableMenuStyle: MenuStyle {
     @State private var isHovered = false
@@ -31,69 +32,34 @@ struct ContentView: View {
     @State private var animationWindow: NSWindow?
     @ObservedObject var eventHandler: EventHandler = EventHandler.shared
     @State private var selectedCategory: EffectCategory = .none
-    @AppStorage("showFlashcards") private var showFlashcards: Bool = false
-    @AppStorage("flashcardStyle") private var flashcardStyle: FlashcardStyle = .none
+    @AppStorage("videoCardDemoMode") private var videoCardDemoMode: Bool = false
+    @AppStorage("flashcardStyle") private var flashcardStyleStorage: String = FlashcardStyle.noImageToken
 
-    @AppStorage("lockKeyboardOnLaunch") private var lockKeyboardOnLaunch: Bool = false
-    @AppStorage("launchOnStartup") private var launchOnStartup: Bool = false {
-        didSet {
-            LaunchAtStartup.shared.setEnabled(launchOnStartup)
-        }
-    }
-    @AppStorage("selectedLockEffect") var selectedLockEffect: LockEffect = .none
-    @AppStorage("selectedPrimaryLanguage") var selectedPrimaryLanguage: TranslationLanguage = .english
-    @AppStorage("selectedTranslationLanguage") var selectedTranslationLanguage: TranslationLanguage = .none
+    @AppStorage("selectedLockEffect") var selectedLockEffect: LockEffect = .speakRandomWord
     @AppStorage("selectedWordSetType") var savedWordSetType: String = WordSetType.randomShortWords.rawValue
-    @AppStorage("wordDisplayDuration") var wordDisplayDuration: Double = DEFAULT_WORD_DISPLAY_DURATION
-    @AppStorage("usePersonalVoice") var usePersonalVoice: Bool = false
     @AppStorage("throttleInterval") private var savedThrottleInterval: Double = 1.0
-    @AppStorage("wordsThrottleInterval") private var savedWordsThrottleInterval: Double = 1.5
     @AppStorage("confettiFadeTime") private var savedConfettiFadeTime: Double = 5.0
-    @AppStorage("wordTranslationDelay") private var savedWordTranslationDelay: Double = 0.8
-    @AppStorage("flashcardImageSize") private var flashcardImageSize: Double = 150.0
 
-    @State private var showWordSetEditor = false
-    @State private var showRandomWordEditor = false
-    @State private var showCustomWordImageEditor = false
-    @State private var showLearningWordEditor = false
-    @StateObject private var customWordSetsManager = CustomWordSetsManager.shared
     @StateObject private var randomWordList = RandomWordList.shared
 
     @State var hoveringMoreButton: Bool = false
-    @State private var babyName: String = ""
-    @State private var babyNameTranslation: String = ""
-    @State private var babyNameProbability: Double = 0.125
-    @State private var babyImagePath: String = ""
-    private let learningPoolDateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .short
-        formatter.timeStyle = .short
-        return formatter
-    }()
-    
     var body: some View {
-        let primaryLanguages = TranslationLanguage.allCases.filter { $0 != .none }
         VStack(alignment: .leading, spacing: 0) {
             // Top bar with lock toggle and quit button
             HStack {
-                Toggle(isOn: $eventHandler.isLocked)
-                {
+                Toggle(isOn: lockKeyboardBinding) {
                     Label(
                         "Lock Keyboard",
                         image: eventHandler.isLocked ? "keyboard.locked" : "keyboard.unlocked"
                     )
                     .font(.title)
-                    .foregroundColor(eventHandler.accessibilityPermissionGranted ? .primary : .gray)
+                    .foregroundColor(eventHandler.isBlockerReady ? .primary : .gray)
                 }
                 .toggleStyle(SwitchToggleStyle(tint: .red))
-                .disabled(!eventHandler.accessibilityPermissionGranted)
-                .onChange(of: eventHandler.isLocked) { oldVal, newVal in
-                    playLockSound(isLocked: newVal)
-
-                    if eventHandler.isLocked {
-                        playLockSound(isLocked: true)
-                    }
-                }
+                // Unlock always allowed when locked; lock only when foundation is ready.
+                // Avoids Toggle set→reject→get loops that AttributeGraph reports as cycles.
+                .disabled(!eventHandler.isLocked && !eventHandler.isBlockerReady)
+                .help(eventHandler.permissionStatusMessage)
 
                 Spacer()
 
@@ -112,27 +78,7 @@ struct ContentView: View {
             // Scrollable content
             ScrollView {
                 VStack(alignment: .leading, spacing: 22) {
-                if !eventHandler.accessibilityPermissionGranted {
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("This app needs Accessibility access to work.")
-                            .font(.callout)
-                            .fixedSize(horizontal: false, vertical: true)
-
-                        HStack(spacing: 8) {
-                            Button("Grant Accessibility Access") {
-                                NSApp.activate(ignoringOtherApps: true)
-                                _ = eventHandler.requestAccessibilityPermissions()
-                            }
-
-                            Button("Open System Settings…") {
-                                NSApp.activate(ignoringOtherApps: true)
-                                if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility") {
-                                    NSWorkspace.shared.open(url)
-                                }
-                            }
-                        }
-                    }
-                }
+                AccessibilityStatusPanel(eventHandler: eventHandler)
                 
                 // Category selector
                 Picker("Category", selection: $selectedCategory) {
@@ -190,201 +136,6 @@ struct ContentView: View {
                 
                 // Words mode settings
                 if selectedCategory == .words {
-                    Toggle(isOn: $showFlashcards) {
-                        Text("Show Flashcards")
-                    }
-                    .toggleStyle(CheckboxToggleStyle())
-                    
-                    if showFlashcards {
-                        Text("Flashcard Style")
-                            .foregroundColor(.secondary)
-                            .font(.subheadline)
-
-                        FlashcardStylePicker(selectedStyle: $flashcardStyle)
-                    }
-
-                    Toggle(isOn: $eventHandler.usePersonalVoice) {
-                        HStack {
-                            Text("Use Personal Voice")
-                            
-                            Button(action: {
-                                let alert = NSAlert()
-                                alert.messageText = "About Personal Voice"
-                                alert.informativeText = "Personal Voice uses your own voice created in System Settings > Accessibility > Personal Voice. You need to create a Personal Voice before using this feature."
-                                alert.alertStyle = .informational
-                                alert.addButton(withTitle: "OK")
-                                alert.runModal()
-                            }) {
-                                Image(systemName: "info.circle")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                            }
-                            .buttonStyle(PlainButtonStyle())
-                        }
-                    }
-                    .toggleStyle(CheckboxToggleStyle())
-                    .onChange(of: eventHandler.usePersonalVoice) { oldVal, newVal in
-                        usePersonalVoice = newVal
-                    }
-                    
-                    // Words throttle setting
-                    Text("Delay between words (seconds)")
-                        .foregroundColor(.secondary)
-                        .font(.subheadline)
-                        .padding(.top, 8)
-                    
-                    HStack {
-                        Slider(value: $eventHandler.wordsThrottleInterval, in: 0.1...3.0, step: 0.1)
-                            .onChange(of: eventHandler.wordsThrottleInterval) { _, newValue in
-                                savedWordsThrottleInterval = newValue
-                            }
-                        Text(String(format: "%.1f", eventHandler.wordsThrottleInterval))
-                            .frame(width: 35)
-                    }
-                    
-                    // Language pickers
-                    Picker("Primary", selection: $eventHandler.selectedPrimaryLanguage) {
-                        ForEach(primaryLanguages) { language in
-                            Text(language.localizedString)
-                        }
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .onChange(of: eventHandler.selectedPrimaryLanguage) { oldVal, newVal in
-                        selectedPrimaryLanguage = newVal
-                    }
-
-                    Picker("Secondary", selection: $eventHandler.selectedTranslationLanguage) {
-                        ForEach(TranslationLanguage.allCases) { language in
-                            Text(language.localizedString)
-                        }
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .onChange(of: eventHandler.selectedTranslationLanguage) { oldVal, newVal in
-                        selectedTranslationLanguage = newVal
-                    }
-                    
-                    // Baby's name input fields
-                    VStack(alignment: .leading, spacing: 8) {
-                        HStack {
-                            Text("Baby's Name")
-                                .foregroundColor(.secondary)
-                                .font(.subheadline)
-
-                            Spacer()
-
-                            TextField("Enter name", text: $babyName, onCommit: {
-                                // Do nothing, prevents form submission behavior
-                            })
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                                .frame(width: 150)
-                                .onChange(of: babyName) { oldValue, newValue in
-                                    RandomWordList.shared.setBabyName(newValue)
-                                }
-                        }
-
-                        HStack {
-                            Text("Second Language Name")
-                                .foregroundColor(.secondary)
-                                .font(.subheadline)
-
-                            Spacer()
-
-                            TextField("Enter translation", text: $babyNameTranslation, onCommit: {
-                                // Do nothing, prevents form submission behavior
-                            })
-                                .textFieldStyle(RoundedBorderTextFieldStyle())
-                                .frame(width: 150)
-                                .onChange(of: babyNameTranslation) { oldValue, newValue in
-                                    RandomWordList.shared.setBabyNameTranslation(newValue)
-                                }
-                        }
-
-                        HStack {
-                            Text("Baby's Image")
-                                .foregroundColor(.secondary)
-                                .font(.subheadline)
-
-                            Spacer()
-
-                            if !babyImagePath.isEmpty {
-                                Text(URL(fileURLWithPath: babyImagePath).lastPathComponent)
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                    .lineLimit(1)
-                                    .frame(maxWidth: 100)
-                            }
-
-                            Button(action: selectBabyImage) {
-                                Text(babyImagePath.isEmpty ? "Select Image" : "Change")
-                            }
-                            .buttonStyle(.plain)
-
-                            if !babyImagePath.isEmpty {
-                                Button(action: {
-                                    babyImagePath = ""
-                                    RandomWordList.shared.setBabyImagePath("")
-                                }) {
-                                    Image(systemName: "xmark.circle")
-                                        .foregroundColor(.secondary)
-                                }
-                                .buttonStyle(.plain)
-                            }
-                        }
-
-                        Divider()
-                            .padding(.vertical, 8)
-
-                        HStack {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Other Custom Images")
-                                    .foregroundColor(.secondary)
-                                    .font(.subheadline)
-                                Text("Add images for mama, papa, family, etc.")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                if !randomWordList.customWordImages.isEmpty {
-                                    Text("\(randomWordList.customWordImages.count) custom image(s)")
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                }
-                            }
-
-                            Spacer()
-
-                            Button(action: {
-                                showCustomWordImageEditor = true
-                            }) {
-                                Image(systemName: "photo.on.rectangle.angled")
-                            }
-                            .buttonStyle(PlainButtonStyle())
-                        }
-                    }
-
-                    // Baby name probability slider (only for random word mode)
-                    if eventHandler.selectedLockEffect == .speakRandomWord {
-                        VStack(alignment: .leading, spacing: 5) {
-                            Text("Baby Name Frequency: \(String(format: "%.0f%%", babyNameProbability * 100))")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-
-                            HStack {
-                                Text("0%")
-                                    .font(.caption2)
-                                    .foregroundColor(.secondary)
-
-                                Slider(value: $babyNameProbability, in: 0...1, step: 0.01)
-                                    .onChange(of: babyNameProbability) { _, newValue in
-                                        RandomWordList.shared.setBabyNameProbability(newValue)
-                                    }
-
-                                Text("100%")
-                                    .font(.caption2)
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                        .padding(.top, 5)
-                    }
-
                     if eventHandler.selectedLockEffect == .speakRandomWord {
                         Toggle(isOn: Binding(
                             get: { eventHandler.gamifyRandomWordEnabled },
@@ -395,163 +146,34 @@ struct ContentView: View {
                         .toggleStyle(CheckboxToggleStyle())
                     }
 
-                    // Word display duration settings
                     VStack(alignment: .leading, spacing: 5) {
-                        Text("Word Display Duration: \(String(format: "%.1f", wordDisplayDuration))s")
+                        Text("Word source mode: \(randomWordList.wordSourceMode.title)")
                             .font(.caption)
                             .foregroundColor(.secondary)
-                        
-                        HStack {
-                            Text("1s")
+                        if randomWordList.wordSourceMode == .legacySets {
+                            Text("Legacy sets: \(randomWordList.enabledWordSetNames)")
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
-                            
-                            Slider(value: $wordDisplayDuration, in: 1...10, step: 0.5)
-                            
-                            Text("10s")
+                        } else {
+                            Text("Featured topics: \(randomWordList.featuredTopicSummary)")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                            Text("Extra words: \(randomWordList.getFeaturedWords().count)")
                                 .font(.caption2)
                                 .foregroundColor(.secondary)
                         }
                     }
-                    .padding(.top, 5)
-                    
-                    // Random words editor button
-                    if eventHandler.selectedLockEffect == .speakRandomWord {
-                        HStack {
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text("Word Sets")
-                                    .foregroundColor(.secondary)
-                                    .font(.subheadline)
-                                Text("\(randomWordList.enabledSetIndices.count) enabled (\(randomWordList.words.count) words)")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                if !randomWordList.enabledWordSetNames.isEmpty && randomWordList.enabledWordSetNames != "None" {
-                                    Text(randomWordList.enabledWordSetNames)
-                                        .font(.caption)
-                                        .foregroundColor(.secondary)
-                                        .lineLimit(2)
-                                }
-                            }
+                    .padding(.top, 6)
 
-                            Spacer()
-
-                            Button(action: {
-                                showRandomWordEditor = true
-                            }) {
-                                Image(systemName: "pencil")
-                            }
-                            .buttonStyle(PlainButtonStyle())
-                        }
-
-                        Toggle(isOn: Binding(
-                            get: { randomWordList.learningRotationEnabled },
-                            set: { randomWordList.setLearningRotationEnabled($0) }
-                        )) {
-                            Text("Learning Rotation")
-                        }
-                        .toggleStyle(CheckboxToggleStyle())
-
-                        let poolInfo = randomWordList.getLearningPoolInfo()
-                        VStack(alignment: .leading, spacing: 4) {
-                            let lastSync = poolInfo.lastSync.map { learningPoolDateFormatter.string(from: $0) } ?? "never"
-                            Text("Pool: \(poolInfo.count) words")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            Text("Refresh: daily (last: \(lastSync))")
-                                .font(.caption2)
-                                .foregroundColor(.secondary)
-                        }
-
-                        Button("Refresh pool now") {
-                            randomWordList.refreshLearningPool(force: true)
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text("Word, speech, and media controls moved to Settings.")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        SettingsLink {
+                            Text("Open Settings")
                         }
                         .buttonStyle(.plain)
                         .foregroundColor(.secondary)
-
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text("Known mix: \(Int(randomWordList.learningKnownRatio * 100))%")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            Slider(
-                                value: Binding(
-                                    get: { randomWordList.learningKnownRatio },
-                                    set: { randomWordList.setLearningKnownRatio($0) }
-                                ),
-                                in: 0.0...1.0,
-                                step: 0.05
-                            )
-                        }
-
-                        VStack(alignment: .leading, spacing: 6) {
-                            Text("Favorites mix: \(Int(randomWordList.learningFavoriteRatio * 100))%")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-                            Slider(
-                                value: Binding(
-                                    get: { randomWordList.learningFavoriteRatio },
-                                    set: { randomWordList.setLearningFavoriteRatio($0) }
-                                ),
-                                in: 0.0...1.0,
-                                step: 0.05
-                            )
-                        }
-
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text("Tag mix")
-                                .font(.caption)
-                                .foregroundColor(.secondary)
-
-                            ForEach(randomWordList.getLearningTags(), id: \.self) { tag in
-                                VStack(alignment: .leading, spacing: 4) {
-                                    let ratio = randomWordList.learningTagRatios[tag] ?? 0.0
-                                    Text("\(tag): \(Int(ratio * 100))%")
-                                        .font(.caption2)
-                                        .foregroundColor(.secondary)
-                                    Slider(
-                                        value: Binding(
-                                            get: { randomWordList.learningTagRatios[tag] ?? 0.0 },
-                                            set: { randomWordList.setLearningTagRatio(tag: tag, value: $0) }
-                                        ),
-                                        in: 0.0...1.0,
-                                        step: 0.05
-                                    )
-                                }
-                            }
-                        }
-
-                        Button("Open Learning CSV") {
-                            randomWordList.openLearningCSV()
-                        }
-                        .buttonStyle(.plain)
-                        .foregroundColor(.secondary)
-
-                        Button("Edit Learning Words") {
-                            showLearningWordEditor = true
-                        }
-                        .buttonStyle(.plain)
-                        .foregroundColor(.secondary)
-                        
-                        // Image size slider for random word mode
-                        if showFlashcards && flashcardStyle != .none {
-                            VStack(alignment: .leading, spacing: 5) {
-                                Text("Image Size: \(Int(flashcardImageSize))px")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-                                
-                                HStack {
-                                    Text("50px")
-                                        .font(.caption2)
-                                        .foregroundColor(.secondary)
-                                    
-                                    Slider(value: $flashcardImageSize, in: 50...1000, step: 50)
-                                    
-                                    Text("1000px")
-                                        .font(.caption2)
-                                        .foregroundColor(.secondary)
-                                }
-                            }
-                            .padding(.top, 8)
-                        }
                     }
                 }
 
@@ -564,79 +186,14 @@ struct ContentView: View {
                         Text("Reset on error")
                     }
                     .toggleStyle(CheckboxToggleStyle())
-
-                    Text("Typing Languages")
+                    Text("Typing languages, set mode, and flashcards are in Settings.")
+                        .font(.caption)
                         .foregroundColor(.secondary)
-                        .font(.subheadline)
-
-                    let typingLanguages = TranslationLanguage.allCases.filter { $0 != .none }
-                    ForEach(typingLanguages) { language in
-                        Toggle(isOn: Binding(
-                            get: { TypingGameState.shared.selectedTypingLanguages.contains(language) },
-                            set: { TypingGameState.shared.setTypingLanguage(language, enabled: $0) }
-                        )) {
-                            Text(language.localizedString)
-                        }
-                        .toggleStyle(CheckboxToggleStyle())
+                    SettingsLink {
+                        Text("Open Settings")
                     }
-
-                    // Word set selection
-                    Picker("Word Set", selection: $eventHandler.selectedWordSetType) {
-                        ForEach(WordSetType.allCases) { type in
-                            Text(type.localizedString).tag(type)
-                        }
-                    }
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .onChange(of: eventHandler.selectedWordSetType) { _, newValue in
-                        savedWordSetType = newValue.rawValue
-                    }
-
-                    // Show flashcards toggle
-                    Toggle(isOn: $showFlashcards) {
-                        Text("Show Flashcards")
-                    }
-                    .toggleStyle(CheckboxToggleStyle())
-
-                    if showFlashcards {
-                        Text("Flashcard Style")
-                            .foregroundColor(.secondary)
-                            .font(.subheadline)
-
-                        FlashcardStylePicker(selectedStyle: $flashcardStyle)
-
-                        // Image size slider
-                        if flashcardStyle != .none {
-                            VStack(alignment: .leading, spacing: 5) {
-                                Text("Image Size: \(Int(flashcardImageSize))px")
-                                    .font(.caption)
-                                    .foregroundColor(.secondary)
-
-                                HStack {
-                                    Text("50px")
-                                        .font(.caption2)
-                                        .foregroundColor(.secondary)
-
-                                    Slider(value: $flashcardImageSize, in: 50...1000, step: 50)
-
-                                    Text("1000px")
-                                        .font(.caption2)
-                                        .foregroundColor(.secondary)
-                                }
-                            }
-                            .padding(.top, 8)
-                        }
-                    }
+                    .buttonStyle(.plain)
                 }
-
-                Toggle(isOn: $lockKeyboardOnLaunch) {
-                    Text("Lock keyboard on launch")
-                }
-                .toggleStyle(CheckboxToggleStyle())
-
-                Toggle(isOn: $launchOnStartup) {
-                    Text("Launch on startup")
-                }
-                .toggleStyle(CheckboxToggleStyle())
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("Keyboard shortcut: Ctrl + Option + U")
@@ -645,8 +202,19 @@ struct ContentView: View {
                         .foregroundColor(.secondary)
 
                     HStack(spacing: 16) {
-                        Button("Settings") {
-                            AdvancedSettingsView().openInWindow(id: "Settings", sender: self, focus: true)
+                        SettingsLink {
+                            Text("Settings")
+                        }
+                        .buttonStyle(.plain)
+                        .padding(.top, 8)
+
+                        Button("Shared library") {
+                            SharedLibraryView().openInWindow(
+                                title: "Daria Shared Library",
+                                id: SharedLibraryWindowID,
+                                sender: self,
+                                focus: true
+                            )
                         }
                         .buttonStyle(.plain)
                         .padding(.top, 8)
@@ -670,13 +238,6 @@ struct ContentView: View {
             if let type = WordSetType(rawValue: savedWordSetType) {
                 eventHandler.selectedWordSetType = type
             }
-            babyName = RandomWordList.shared.babyName
-            babyNameTranslation = RandomWordList.shared.babyNameTranslation
-            babyNameProbability = RandomWordList.shared.babyNameProbability
-            babyImagePath = RandomWordList.shared.babyImagePath
-            eventHandler.usePersonalVoice = usePersonalVoice
-            launchOnStartup = LaunchAtStartup.shared.isEnabled()
-
             // Set initial category based on current effect
             selectedCategory = eventHandler.selectedLockEffect.category
 
@@ -685,20 +246,24 @@ struct ContentView: View {
                 eventHandler.selectedLockEffect = .speakRandomWord
             }
 
-            // Request accessibility permissions if needed
-            if !eventHandler.accessibilityPermissionGranted {
-                NSApp.activate(ignoringOtherApps: true)
-                _ = eventHandler.requestAccessibilityPermissions()
-            }
+            enforceDemoFlashcardStyleIfNeeded()
+
+            // Refresh silent status only — launch prompt is owned by EventHandler.run()
+            // so we do not stack multiple system dialogs on appear.
+            eventHandler.refreshPermissionStatus()
         }
-        .onChange(of: eventHandler.isLocked) { oldVal, newVal in
-            playLockSound(isLocked: newVal)
-        }
-        .onReceive(eventHandler.$isLocked) { newVal in
+        // Single isLocked observer (was onChange + onReceive + Toggle onChange → triple fire).
+        .onChange(of: eventHandler.isLocked) { _, newVal in
             playLockSound(isLocked: newVal)
         }
         .onChange(of: eventHandler.selectedLockEffect) { oldVal, newVal in
             selectedLockEffect = newVal
+        }
+        .onChange(of: videoCardDemoMode) { _, _ in
+            enforceDemoFlashcardStyleIfNeeded()
+        }
+        .onChange(of: flashcardStyleStorage) { _, _ in
+            enforceDemoFlashcardStyleIfNeeded()
         }
         .onChange(of: selectedCategory) { oldValue, newValue in
             // When changing category, only switch if current effect is incompatible
@@ -718,42 +283,17 @@ struct ContentView: View {
             }
             // If current effect is compatible with new category, keep it unchanged
         }
-        .sheet(isPresented: $showWordSetEditor) {
-            WordSetEditorView()
-        }
-        .sheet(isPresented: $showRandomWordEditor) {
-            RandomWordEditorView()
-        }
-        .sheet(isPresented: $showCustomWordImageEditor) {
-            CustomWordImageEditorView()
-        }
-        .sheet(isPresented: $showLearningWordEditor) {
-            LearningWordEditorView()
-        }
-        .onReceive(NotificationCenter.default.publisher(for: .closeMenusRequested)) { _ in
-            showWordSetEditor = false
-            showRandomWordEditor = false
-            showCustomWordImageEditor = false
-            showLearningWordEditor = false
-        }
     }
-    
 
-    
-    private func selectBabyImage() {
-        let panel = NSOpenPanel()
-        panel.canChooseFiles = true
-        panel.canChooseDirectories = false
-        panel.allowsMultipleSelection = false
-        panel.allowedContentTypes = [.image]
-        panel.message = "Select an image for your baby"
-
-        panel.begin { response in
-            if response == .OK, let url = panel.url {
-                babyImagePath = url.path
-                RandomWordList.shared.setBabyImageURL(url)
+    /// Binding that never no-ops into a rejected Toggle write (setLocked is idempotent).
+    private var lockKeyboardBinding: Binding<Bool> {
+        Binding(
+            get: { eventHandler.isLocked },
+            set: { newValue in
+                guard newValue != eventHandler.isLocked else { return }
+                eventHandler.setLocked(isLocked: newValue)
             }
-        }
+        )
     }
 
     private func playLockSound(isLocked: Bool) {
@@ -763,6 +303,14 @@ struct ContentView: View {
             guard let nsSound = NSSound(named: "light-switch-off") else { return }
 
             nsSound.play()
+        }
+    }
+
+    private func enforceDemoFlashcardStyleIfNeeded() {
+        guard videoCardDemoMode else { return }
+        let simpleOnly = FlashcardStyle.serializedPool(Set([.simple]))
+        if flashcardStyleStorage != simpleOnly {
+            flashcardStyleStorage = simpleOnly
         }
     }
     
@@ -817,6 +365,268 @@ struct ContentView: View {
         }
     }
     
+}
+
+/// In-app Accessibility + event-tap status with actionable instructions.
+struct AccessibilityStatusPanel: View {
+    @ObservedObject var eventHandler: EventHandler
+    @State private var showDiagnostics = false
+    /// Cached so body evaluation never shells out to codesign / rebuild diagnostics mid-render.
+    @State private var instructionLines: [String] = []
+    @State private var diagnosticLines: [String] = []
+
+    private var needsAttention: Bool {
+        !eventHandler.accessibilityPermissionGranted || !eventHandler.eventTapState.isBlockingReady
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(spacing: 8) {
+                Image(systemName: statusSymbol)
+                    .foregroundColor(statusColor)
+                Text(statusTitle)
+                    .font(.headline)
+                Spacer()
+            }
+
+            Text(eventHandler.permissionStatusMessage)
+                .font(.callout)
+                .foregroundColor(.secondary)
+                .fixedSize(horizontal: false, vertical: true)
+
+            HStack(spacing: 12) {
+                statusChip(
+                    title: "Accessibility",
+                    ok: eventHandler.accessibilityPermissionGranted
+                )
+                statusChip(
+                    title: "Event tap",
+                    ok: eventHandler.eventTapState.isBlockingReady,
+                    detail: eventHandler.eventTapState.statusLabel
+                )
+                statusChip(
+                    title: "Lock",
+                    ok: eventHandler.isLocked,
+                    detail: eventHandler.isLocked ? "on" : "off"
+                )
+            }
+
+            if needsAttention {
+                VStack(alignment: .leading, spacing: 6) {
+                    ForEach(Array(instructionLines.enumerated()), id: \.offset) { _, line in
+                        Text("• \(line)")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+
+                HStack(spacing: 8) {
+                    Button("Grant Accessibility Access") {
+                        NSApp.activate(ignoringOtherApps: true)
+                        _ = eventHandler.requestAccessibilityPermissions(prompt: true)
+                        refreshCachedDiagnostics()
+                    }
+                    .buttonStyle(.borderedProminent)
+
+                    Button("Open System Settings…") {
+                        AccessibilityPermission.openSystemSettingsAccessibilityPane()
+                    }
+
+                    Button("Recheck") {
+                        eventHandler.refreshPermissionStatus()
+                        if eventHandler.accessibilityPermissionGranted {
+                            eventHandler.startEventLoop()
+                        }
+                        refreshCachedDiagnostics()
+                    }
+                }
+            }
+
+            DisclosureGroup("Diagnostics (signing / path / bundle)", isExpanded: $showDiagnostics) {
+                VStack(alignment: .leading, spacing: 4) {
+                    ForEach(diagnosticLines, id: \.self) { line in
+                        Text(line)
+                            .font(.system(.caption, design: .monospaced))
+                            .textSelection(.enabled)
+                    }
+                    Text("Note: Debug and Release are different bundle IDs in System Settings.")
+                        .font(.caption2)
+                        .foregroundColor(.secondary)
+                        .padding(.top, 4)
+                }
+                .padding(.top, 4)
+            }
+            .font(.caption)
+        }
+        .padding(12)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: 10)
+                .fill(needsAttention ? Color.orange.opacity(0.12) : Color.green.opacity(0.10))
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 10)
+                .stroke(needsAttention ? Color.orange.opacity(0.35) : Color.green.opacity(0.25), lineWidth: 1)
+        )
+        .onAppear { refreshCachedDiagnostics() }
+        .onChange(of: eventHandler.accessibilityPermissionGranted) { _, _ in refreshCachedDiagnostics() }
+        .onChange(of: eventHandler.eventTapState) { _, _ in refreshCachedDiagnostics() }
+        .onChange(of: eventHandler.isLocked) { _, _ in refreshCachedDiagnostics() }
+        .onChange(of: eventHandler.permissionStatusMessage) { _, _ in
+            // Status line can change without trust/tap transitions (e.g. lock messages).
+            // Instructions/summary usually stable; only refresh when attention surface needs it.
+            if needsAttention || showDiagnostics {
+                refreshCachedDiagnostics()
+            }
+        }
+    }
+
+    private func refreshCachedDiagnostics() {
+        let diag = eventHandler.currentDiagnostics()
+        instructionLines = diag.instructions
+        diagnosticLines = diag.summaryLines
+    }
+
+    private var statusTitle: String {
+        if !eventHandler.accessibilityPermissionGranted {
+            return "Accessibility required"
+        }
+        if !eventHandler.eventTapState.isBlockingReady {
+            return "Event tap not ready"
+        }
+        return "Blocker foundation ready"
+    }
+
+    private var statusSymbol: String {
+        if eventHandler.isBlockerReady {
+            return "checkmark.shield.fill"
+        }
+        if eventHandler.accessibilityPermissionGranted {
+            return "exclamationmark.shield.fill"
+        }
+        return "lock.shield.fill"
+    }
+
+    private var statusColor: Color {
+        if eventHandler.isBlockerReady { return .green }
+        if eventHandler.accessibilityPermissionGranted { return .orange }
+        return .red
+    }
+
+    private func statusChip(title: String, ok: Bool, detail: String? = nil) -> some View {
+        HStack(spacing: 4) {
+            Circle()
+                .fill(ok ? Color.green : Color.red.opacity(0.85))
+                .frame(width: 7, height: 7)
+            Text(detail.map { "\(title): \($0)" } ?? "\(title): \(ok ? "ok" : "no")")
+                .font(.caption2)
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(Color.primary.opacity(0.06))
+        .clipShape(Capsule())
+    }
+}
+
+struct ActivePoolPreviewView: View {
+    let words: [LearningWord]
+    let onManageWords: () -> Void
+
+    @Environment(\.dismiss) private var dismiss
+    @State private var query = ""
+
+    private var filteredWords: [LearningWord] {
+        if query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            return words
+        }
+        let normalizedQuery = query.lowercased()
+        return words.filter { word in
+            displayLabel(for: word).lowercased().contains(normalizedQuery) ||
+            word.translation.lowercased().contains(normalizedQuery)
+        }
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            HStack {
+                Text("Active Pool")
+                    .font(.headline)
+                Text("\(filteredWords.count)/\(words.count)")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+
+                Spacer()
+
+                Button("Copy list") {
+                    copyCurrentListToClipboard()
+                }
+                .buttonStyle(.plain)
+
+                Button("Manage words") {
+                    onManageWords()
+                    dismiss()
+                }
+                .buttonStyle(.plain)
+
+                Button("Close") {
+                    dismiss()
+                }
+                .buttonStyle(.plain)
+            }
+
+            TextField("Filter by word or translation", text: $query)
+                .textFieldStyle(.roundedBorder)
+
+            if filteredWords.isEmpty {
+                Text("No words in the current pool.")
+                    .foregroundColor(.secondary)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+            } else {
+                List(filteredWords) { word in
+                    HStack(alignment: .firstTextBaseline, spacing: 12) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(displayLabel(for: word))
+                            if !word.translation.isEmpty {
+                                Text(word.translation)
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        }
+                        Spacer()
+                        Text("seen \(word.seenCount)")
+                            .font(.caption2)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.vertical, 2)
+                }
+                .listStyle(.plain)
+            }
+        }
+        .padding()
+        .frame(width: 720, height: 520)
+    }
+
+    private func displayLabel(for word: LearningWord) -> String {
+        let clarification = word.clarification.trimmingCharacters(in: .whitespacesAndNewlines)
+        if clarification.isEmpty {
+            return word.word
+        }
+        return "\(word.word) (\(clarification))"
+    }
+
+    private func copyCurrentListToClipboard() {
+        let lines = filteredWords.map { word in
+            let label = displayLabel(for: word)
+            if word.translation.isEmpty {
+                return label
+            }
+            return "\(label) - \(word.translation)"
+        }
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(lines.joined(separator: "\n"), forType: .string)
+    }
 }
 
 struct WordSetEditorView: View {
@@ -923,6 +733,10 @@ struct CustomWordImageEditorView: View {
     @State private var customImages: [CustomWordImage] = []
     @State private var newWord: String = ""
     @State private var newClarification: String = ""
+    @State private var showImagePreview = false
+    @State private var previewWordKey: String = ""
+    @State private var previewImagePaths: [String] = []
+    @State private var previewImageIndex: Int = 0
 
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
@@ -951,6 +765,13 @@ struct CustomWordImageEditorView: View {
                             .foregroundColor(.secondary)
                             .lineLimit(1)
                             .frame(maxWidth: 150)
+
+                        Button(action: {
+                            openPreview(for: customImage)
+                        }) {
+                            Image(systemName: "eye")
+                        }
+                        .buttonStyle(PlainButtonStyle())
 
                         Button(action: {
                             let parts = splitKey(customImage.word)
@@ -1029,8 +850,8 @@ struct CustomWordImageEditorView: View {
                 }
                 .buttonStyle(.plain)
 
-                Button("Granddad") {
-                    addQuickWord("granddad")
+                Button("Brother") {
+                    addQuickWord("brother")
                 }
                 .buttonStyle(.plain)
 
@@ -1061,6 +882,68 @@ struct CustomWordImageEditorView: View {
         .onExitCommand {
             presentationMode.wrappedValue.dismiss()
         }
+        .sheet(isPresented: $showImagePreview) {
+            VStack(alignment: .leading, spacing: 16) {
+                HStack {
+                    Text("Image Preview")
+                        .font(.headline)
+                    Spacer()
+                    Button("Close") {
+                        showImagePreview = false
+                    }
+                }
+
+                if let imagePath = currentPreviewPath(),
+                   let image = loadImageFromPath(imagePath) {
+                    let rotation = currentPreviewRotation()
+                    Image(nsImage: image)
+                        .resizable()
+                        .scaledToFit()
+                        .rotationEffect(.degrees(rotation))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                } else {
+                    Text("Image not available")
+                        .foregroundColor(.secondary)
+                }
+
+                HStack {
+                    Button(action: previousPreviewImage) {
+                        Image(systemName: "chevron.left")
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(previewImagePaths.count <= 1)
+
+                    Text(previewImagePaths.isEmpty ? "0/0" : "\(previewImageIndex + 1)/\(previewImagePaths.count)")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+
+                    Button(action: nextPreviewImage) {
+                        Image(systemName: "chevron.right")
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(previewImagePaths.count <= 1)
+
+                    Spacer()
+
+                    Button(action: { rotatePreview(clockwise: false) }) {
+                        Image(systemName: "rotate.left")
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(previewImagePaths.isEmpty)
+
+                    Button(action: { rotatePreview(clockwise: true) }) {
+                        Image(systemName: "rotate.right")
+                    }
+                    .buttonStyle(.plain)
+                    .disabled(previewImagePaths.isEmpty)
+                }
+            }
+            .padding()
+            .frame(width: 640, height: 520)
+            .onAppear {
+                centerMenuWindow()
+            }
+        }
     }
 
     private func loadCustomImages() {
@@ -1083,16 +966,40 @@ struct CustomWordImageEditorView: View {
         let panel = NSOpenPanel()
         panel.canChooseFiles = true
         panel.canChooseDirectories = false
-        panel.allowsMultipleSelection = false
-        panel.allowedContentTypes = [.image]
-        panel.message = "Select an image for '\(word)'"
+        panel.allowsMultipleSelection = true
+        panel.allowedContentTypes = [.image, .movie]
+        panel.message = replaceExisting
+            ? "Select one or more images/videos to replace '\(word)'"
+            : "Select one or more images/videos for '\(word)'"
 
         panel.begin { response in
-            if response == .OK, let url = panel.url {
+            if response == .OK {
+                let selectedURLs = panel.urls
+                guard !selectedURLs.isEmpty else { return }
+
                 if replaceExisting {
-                    randomWordList.setCustomWordImage(word: word, clarification: clarification, url: url)
+                    randomWordList.setCustomWordImage(
+                        word: word,
+                        clarification: clarification,
+                        url: selectedURLs[0]
+                    )
+                    if selectedURLs.count > 1 {
+                        for url in selectedURLs.dropFirst() {
+                            randomWordList.addCustomWordImage(
+                                word: word,
+                                clarification: clarification,
+                                url: url
+                            )
+                        }
+                    }
                 } else {
-                    randomWordList.addCustomWordImage(word: word, clarification: clarification, url: url)
+                    for url in selectedURLs {
+                        randomWordList.addCustomWordImage(
+                            word: word,
+                            clarification: clarification,
+                            url: url
+                        )
+                    }
                 }
                 loadCustomImages()
                 newWord = ""
@@ -1121,6 +1028,60 @@ struct CustomWordImageEditorView: View {
             return (String(parts[0]), String(parts[1]))
         }
         return (key, "")
+    }
+
+    private func openPreview(for customImage: CustomWordImage) {
+        previewWordKey = customImage.word
+        previewImagePaths = customImage.imagePaths
+        previewImageIndex = 0
+        showImagePreview = true
+    }
+
+    private func currentPreviewPath() -> String? {
+        guard previewImageIndex >= 0, previewImageIndex < previewImagePaths.count else { return nil }
+        return previewImagePaths[previewImageIndex]
+    }
+
+    private func currentPreviewRotation() -> Double {
+        guard let imagePath = currentPreviewPath() else { return 0.0 }
+        let parts = splitKey(previewWordKey)
+        return randomWordList.getCustomImageRotation(
+            for: parts.word,
+            clarification: parts.clarification,
+            imagePath: imagePath
+        )
+    }
+
+    private func rotatePreview(clockwise: Bool) {
+        guard let imagePath = currentPreviewPath() else { return }
+        let parts = splitKey(previewWordKey)
+        randomWordList.rotateCustomWordImage(
+            word: parts.word,
+            clarification: parts.clarification,
+            imagePath: imagePath,
+            clockwise: clockwise
+        )
+        loadCustomImages()
+    }
+
+    private func previousPreviewImage() {
+        guard !previewImagePaths.isEmpty else { return }
+        previewImageIndex = (previewImageIndex - 1 + previewImagePaths.count) % previewImagePaths.count
+    }
+
+    private func nextPreviewImage() {
+        guard !previewImagePaths.isEmpty else { return }
+        previewImageIndex = (previewImageIndex + 1) % previewImagePaths.count
+    }
+
+    private func loadImageFromPath(_ path: String) -> NSImage? {
+        let url = URL(fileURLWithPath: path)
+        let didStartAccessing = url.startAccessingSecurityScopedResource()
+        let image = NSImage(contentsOf: url)
+        if didStartAccessing {
+            url.stopAccessingSecurityScopedResource()
+        }
+        return image
     }
 }
 
