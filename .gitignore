@@ -49,3 +49,7 @@ GEMINI.md
 .claude
 AGENTS.md
 WARP.md
+
+# Raw local compile log and regenerated research/corpus caches.
+ai-notes/native-build.log
+output/vocabulary-research/

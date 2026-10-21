@@ -146,6 +146,7 @@ install:
 	@./scripts/install.sh
 
 help:
+	@printf "make build-only  # compile without installing or locking\n"
 	@printf "make deploy\n"
 	@printf "make update\n"
 	@printf "make verify-ax\n"
@@ -160,3 +161,8 @@ help:
 	@printf "make web-start [WEB_PORT=3000]\n"
 	@printf "make s3-bucket-setup S3_BUCKET=<bucket> [AWS_REGION=us-east-1] [S3_PREFIX=baby-keyboard]\n"
 	@printf "make s3-media-sync S3_BUCKET=<bucket> [S3_PREFIX=baby-keyboard]\n"
+
+# Compile only; no install, launch, Accessibility or keyboard-lock side effects.
+.PHONY: build-only
+build-only:
+	xcodebuild -project BabyKeyboardLock.xcodeproj -scheme BabyKeyboardLock -configuration Debug -derivedDataPath build/revival CODE_SIGNING_ALLOWED=NO build

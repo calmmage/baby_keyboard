@@ -1,3 +1,9 @@
+Independent keyboard game revived 21 Oct 2026. Canonical path: `~/calm/projects/p-baby-keyboard` (moved with full Git history from the deprecated daria folder). Browser companion: `../p-baby-button-locker`, route `/keyboard`.
+
+Original Find the letter: launch BabyKeyboardLock → **Подготовить «Найди букву» для Даши** (sets Russian speech, Russian letter targets, no English translation) → read the visible unlock shortcut → turn on **Lock Keyboard** yourself. Preparing selects the original gamified random-word mechanism and enables word cards; it never locks automatically. Correct physical keys earn the original word/story reward. Unlock: **Ctrl + Option + U**; **Exit App** is always visible. Accessibility permission is required for OS locking.
+
+Compile without installing or locking: `make build-only`. Open the built app only when ready: `open "build/revival/Build/Products/Debug/BabyKeyboardLock Debug.app"`. Native locking and speech require actual parent/device verification; a build is not proof of them.
+
 # BabyKeyboard Lock
 
 Baby keyboard lock is a Macos app that can lock your keyboard, while your toddlers or kids can still have fun with it. Find more on official site https://keyboardlock.app/

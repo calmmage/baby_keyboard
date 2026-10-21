@@ -277,7 +277,7 @@ class EventEffectHandler {
     
     private var wordSetType: WordSetType = .randomShortWords
     private let customWordSetsManager = CustomWordSetsManager.shared
-    private let gamifyLetters = Array("abcdefghijklmnopqrstuvwxyz")
+    private var gamifyLetters: [Character] { Array(primaryLanguage == .russian ? "абвгдеёжзийклмнопрстуфхцчшщъыьэюя" : "abcdefghijklmnopqrstuvwxyz") }
     private var gamifyTargetLetter: String = ""
     private var gamifyRandomWordEnabled: Bool = false
 
@@ -774,7 +774,8 @@ class EventEffectHandler {
             gamifyTargetLetter = String(letter)
         }
         if announce {
-            let utterance = createUtterance(for: gamifyTargetLetter)
+            let instruction = primaryLanguage == .russian ? "Найди букву \(gamifyTargetLetter)" : "Find the letter \(gamifyTargetLetter)"
+            let utterance = createUtterance(for: instruction, language: utteranceLanguage(for: primaryLanguage))
             synth.speak(utterance)
         }
     }
@@ -835,6 +836,16 @@ class EventEffectHandler {
     // Helper function to get key string
     private func getKeyString(event: CGEvent) -> String {
         let keyCode = event.getIntegerValueField(.keyboardEventKeycode)
+        // In Daria's Russian letter hunt, use the Russian key legends even if
+        // the parent's OS input source is still English. Other modes retain their layout.
+        if gamifyRandomWordEnabled && primaryLanguage == .russian {
+            let russianKeys: [Int64: String] = [
+                0:"ф", 1:"ы", 2:"в", 3:"а", 4:"р", 5:"п", 6:"я", 7:"ч", 8:"с", 9:"м", 11:"и",
+                12:"й", 13:"ц", 14:"у", 15:"к", 16:"н", 17:"е", 31:"щ", 32:"г", 34:"ш", 35:"з",
+                37:"д", 38:"о", 40:"л", 45:"т", 46:"ь", 18:"1", 30:"ъ", 33:"х", 39:"э", 41:"ж", 43:"б", 47:"ю", 50:"ё"
+            ]
+            return russianKeys[keyCode] ?? ""
+        }
         let source = TISCopyCurrentKeyboardInputSource().takeRetainedValue()
         var keyStr = ""
         

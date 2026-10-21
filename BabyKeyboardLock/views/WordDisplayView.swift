@@ -87,7 +87,7 @@ struct WordDisplayView: View {
                         .frame(width: maxWidth, height: maxHeight)
 
                     VStack(spacing: 16) {
-                        Text("Find the letter")
+                        Text(eventHandler.selectedPrimaryLanguage == .russian ? "Найди букву" : "Find the letter")
                             .font(.system(size: 28, weight: .medium))
                             .foregroundColor(.gray)
                         Text(eventHandler.gamifyRandomWordTarget.uppercased())

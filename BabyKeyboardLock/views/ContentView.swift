@@ -80,6 +80,33 @@ struct ContentView: View {
                 VStack(alignment: .leading, spacing: 22) {
                 AccessibilityStatusPanel(eventHandler: eventHandler)
                 
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Find the letter")
+                        .font(.headline)
+                    Text("Daria finds the shown letter on the real keyboard, then earns a word or story. Preparing the game does not lock anything.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                    Button("Подготовить «Найди букву» для Даши") {
+                        eventHandler.selectedPrimaryLanguage = .russian
+                        eventHandler.selectedTranslationLanguage = .none
+                        UserDefaults.standard.set(TranslationLanguage.russian.rawValue, forKey: "selectedPrimaryLanguage")
+                        UserDefaults.standard.set(TranslationLanguage.none.rawValue, forKey: "selectedTranslationLanguage")
+                        eventHandler.setGamifyRandomWordEnabled(false)
+                        eventHandler.selectedLockEffect = .speakRandomWord
+                        selectedLockEffect = .speakRandomWord
+                        selectedCategory = .words
+                        eventHandler.setGamifyRandomWordEnabled(true)
+                        UserDefaults.standard.set(true, forKey: "showFlashcards")
+                    }
+                    .buttonStyle(.borderedProminent)
+                    if eventHandler.selectedLockEffect == .speakRandomWord && eventHandler.gamifyRandomWordEnabled {
+                        Text("Ready: find \(eventHandler.gamifyRandomWordTarget.uppercased()). When you are ready, turn on Lock Keyboard above. Unlock at any time: Ctrl + Option + U, or Exit App.")
+                            .font(.caption)
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                }
+                .padding(.vertical, 6)
+
                 // Category selector
                 Picker("Category", selection: $selectedCategory) {
                     ForEach(EffectCategory.allCases) { category in
