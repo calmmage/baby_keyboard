@@ -29,5 +29,16 @@
   "installedOrLaunched": false,
   "OSLockRuntimeVerified": false,
   "foreignRepositoryWrites": false,
-  "upstreamDiscovery": "fffx read-only only; all Git writes explicitly to calmmage origin"
+  "upstreamDiscovery": "fffx read-only only; all Git writes explicitly to calmmage origin",
+  "remoteEvidenceCommit": "790450ffaf81be33f09f8c852c4ff6cfd52ada79",
+  "legacyCI": {
+    "state": "failure",
+    "url": "https://github.com/calmmage/baby_keyboard/actions/runs/39591444317",
+    "causes": [
+      "139 existing Python Ruff findings in research scripts",
+      "pytest tests/ target absent (0 collected)",
+      "commented ci_cd.yml has no active jobs"
+    ],
+    "nativeXcodeBuildResult": "passed separately; CI not claimed green"
+  }
 }
