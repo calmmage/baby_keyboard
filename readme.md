@@ -125,3 +125,5 @@ Now `make deploy` should work on the new Mac!
 
 - Sound effects are downloaded from https://freesound.org/
 - This app is inspired by https://github.com/kfv/keylock/
+
+Daria’s prepared Russian Find path uses the inspected simple artwork style and filters known English-text/meaning-mismatch source art through `DariaArtworkPolicy` before media selection and rendering. Original files and archived modes remain available. Reproduce the39-stem selector check with `swiftc BabyKeyboardLock/utils/DariaArtworkPolicy.swift ai-notes/native-art-policy-check.swift -o build/native-art-policy-check && build/native-art-policy-check`.

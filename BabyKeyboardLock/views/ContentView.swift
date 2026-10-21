@@ -97,6 +97,7 @@ struct ContentView: View {
                         selectedCategory = .words
                         eventHandler.setGamifyRandomWordEnabled(true)
                         UserDefaults.standard.set(true, forKey: "showFlashcards")
+                        flashcardStyleStorage = FlashcardStyle.simple.rawValue
                     }
                     .buttonStyle(.borderedProminent)
                     if eventHandler.selectedLockEffect == .speakRandomWord && eventHandler.gamifyRandomWordEnabled {

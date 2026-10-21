@@ -113,8 +113,9 @@ struct WordDisplayView: View {
                     
                     VStack(spacing: 20) {
                         // Flashcard image if available
-                        if let activeFlashcardStyle {
-                            let imageLookupWord = englishWordForImage.isEmpty ? word : englishWordForImage
+                        let imageLookupWord = englishWordForImage.isEmpty ? word : englishWordForImage
+                        if let activeFlashcardStyle,
+                           allowsDariaMedia(for: imageLookupWord, style: activeFlashcardStyle) {
                             let clarification = clarificationForImage
                             let wordForMedia = RandomWord(
                                 english: imageLookupWord,
@@ -347,12 +348,21 @@ struct WordDisplayView: View {
         return demoWord.isEmpty ? incomingWord : demoWord
     }
 
+    private func allowsDariaMedia(for englishWord: String, style: FlashcardStyle) -> Bool {
+        DariaArtworkPolicy.allows(
+            englishWord: englishWord,
+            style: style.rawValue,
+            isRussian: eventHandler.selectedPrimaryLanguage == .russian,
+            isLetterHunt: eventHandler.selectedLockEffect == .speakRandomWord && eventHandler.gamifyRandomWordEnabled
+        )
+    }
+
     private func updateMediaAvailability(
         englishWord: String,
         clarification: String?,
         style: FlashcardStyle?
     ) {
-        guard let style else {
+        guard let style, allowsDariaMedia(for: englishWord, style: style) else {
             customImageURL = nil
             customImageRotation = 0.0
             availableVideoURL = nil
