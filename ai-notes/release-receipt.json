@@ -1,0 +1,33 @@
+{
+  "date": "2026-10-21",
+  "repository": "https://github.com/calmmage/baby_keyboard",
+  "sourceCommit": "c8cb2daef6ddaa97527523cbb3242537d78c2890",
+  "mergeBaseSource": "3cf0a58f80b0e8b7512cf80dfbce64b6a30ee7c4",
+  "mergeChangedAppFiles": false,
+  "remoteBranches": [
+    "main",
+    "agent/keyboard-revival"
+  ],
+  "debugBuild": "BUILD SUCCEEDED",
+  "releaseArchive": "ARCHIVE SUCCEEDED",
+  "releaseExport": "EXPORT SUCCEEDED",
+  "app": "build/export/BabyKeyboardLock.app",
+  "version": "0.3.2",
+  "architectures": [
+    "x86_64",
+    "arm64"
+  ],
+  "signature": "Apple Development; codesign --verify --deep --strict passed",
+  "gatekeeper": {
+    "result": "rejected",
+    "exit": 3,
+    "notarization": "not performed; no documented notarization command or existing distribution profile found"
+  },
+  "artifact": "build/BabyKeyboardLock-v0.3.2-c8cb2da-development-signed.zip",
+  "artifactSHA256": "89d213816eb41cd3bf05f73afe07b6bc6ee3998c23e992a98f91dbcfa6fccb7e",
+  "publicReleaseCreated": false,
+  "installedOrLaunched": false,
+  "OSLockRuntimeVerified": false,
+  "foreignRepositoryWrites": false,
+  "upstreamDiscovery": "fffx read-only only; all Git writes explicitly to calmmage origin"
+}

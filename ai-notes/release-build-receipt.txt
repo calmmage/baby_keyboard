@@ -1,0 +1,24 @@
+release-build:
+PruneExplicitPrecompiledModules /Users/petrlavrov/calm/projects/p-baby-keyboard/build/revival/Build/Intermediates.noindex/ExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /Users/petrlavrov/calm/projects/p-baby-keyboard/build/revival/SDKExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /Users/petrlavrov/calm/projects/p-baby-keyboard/build/revival/Build/Intermediates.noindex/SwiftExplicitPrecompiledModules
+
+** BUILD SUCCEEDED **
+
+release-archive:
+
+PruneExplicitPrecompiledModules /Users/petrlavrov/Library/Developer/Xcode/DerivedData/BabyKeyboardLock-drtznxhegvjyvhdzdzkqxtjswqsa/Build/Intermediates.noindex/ArchiveIntermediates/BabyKeyboardLock/IntermediateBuildFilesPath/SwiftExplicitPrecompiledModules
+
+PruneExplicitPrecompiledModules /Users/petrlavrov/Library/Developer/Xcode/DerivedData/SDKExplicitPrecompiledModules
+
+warning: Skipping duplicate build file in Copy Bundle Resources build phase: /Users/petrlavrov/calm/projects/p-baby-keyboard/BabyKeyboardLock/Resources/FlashcardVideos/demo/simple_cat.mp4 (in target 'BabyKeyboardLock' from project 'BabyKeyboardLock')
+** ARCHIVE SUCCEEDED **
+
+release-export:
+📤 Exporting app...
+2026-10-21 14:23:53.617 xcodebuild[82696:18199851] [MT] IDEDistribution: -[IDEDistributionLogging _createLoggingBundleAtPath:]: Created bundle at path "/var/folders/n7/s_tl33t541gcg19dxy7g29wc0000gn/T/BabyKeyboardLock_2026-10-21_14-23-53.612.xcdistributionlogs".
+Exported BabyKeyboardLock to: /Users/petrlavrov/calm/projects/p-baby-keyboard/build/export
+** EXPORT SUCCEEDED **
+

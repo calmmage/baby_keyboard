@@ -1,0 +1,21 @@
+build/export/BabyKeyboardLock.app: valid on disk
+build/export/BabyKeyboardLock.app: satisfies its Designated Requirement
+codesign_exit=0
+Executable=/Users/petrlavrov/calm/projects/p-baby-keyboard/build/export/BabyKeyboardLock.app/Contents/MacOS/BabyKeyboardLock
+Identifier=com.fangxing.BabyKeyboardLock
+Format=app bundle with Mach-O universal (x86_64 arm64)
+CodeDirectory v=20500 size=3561 flags=0x10000(runtime) hashes=100+7 location=embedded
+Signature size=4779
+Authority=Apple Development: Petr Lavrov (8BH632TKSD)
+Authority=Apple Worldwide Developer Relations Certification Authority
+Authority=Apple Root CA
+Signed Time=21 Oct 2026 at 14:23:22
+Info.plist entries=29
+TeamIdentifier=5XCYR4LUMD
+Runtime Version=27.0.0
+Sealed Resources version=2 rules=13 files=960
+Internal requirements count=1 size=192
+Total signatures=1
+Chosen signature=1
+build/export/BabyKeyboardLock.app: rejected
+gatekeeper_exit=3
