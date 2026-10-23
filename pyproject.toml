@@ -87,3 +87,7 @@ packages = ["scripts"]
 # 1) by group - e.g. main, extras, dev, test, docs
 # 2) by type - e.g. cli, api, data, databases, etc.
 # 2.1) alternative - alphabetically in each group
+
+[tool.uv.exclude-newer-package]
+# Emergency CA snapshot; preserve the global release-age policy for other packages.
+certifi = "2026-10-22"
